@@ -1,0 +1,23 @@
+{
+  "appName": "Brain",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "retry": "Try again"
+  },
+  "states": {
+    "loading": "Loading…",
+    "empty": "Nothing here yet",
+    "error": "Something went wrong"
+  },
+  "errors": {
+    "UNAUTHENTICATED": "Please sign in to continue",
+    "FORBIDDEN": "You don't have access to this",
+    "NOT_FOUND": "We couldn't find that",
+    "VALIDATION_FAILED": "Please check the highlighted fields",
+    "INTERNAL": "Something went wrong on our side"
+  }
+}

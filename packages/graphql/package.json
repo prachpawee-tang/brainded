@@ -1,0 +1,27 @@
+{
+  "name": "@brain/graphql",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./schema.graphql": "./schema.graphql"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@brain/db": "workspace:*",
+    "@pothos/core": "^4.15.1",
+    "@pothos/plugin-errors": "^4.9.3",
+    "@pothos/plugin-relay": "^4.8.1",
+    "graphql": "^16.14.2",
+    "graphql-scalars": "^2.0.1"
+  },
+  "devDependencies": {
+    "@brain/config": "workspace:*"
+  }
+}

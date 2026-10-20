@@ -1,0 +1,47 @@
+{
+  "name": "brain",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.5.3",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:unit": "turbo run test:unit",
+    "test:int": "turbo run test:int",
+    "test:coverage": "turbo run test:coverage",
+    "typecheck": "turbo run typecheck",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "codegen": "turbo run codegen",
+    "commit": "cz",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@commitlint/cli": "^21.2.4",
+    "@commitlint/config-conventional": "^21.2.4",
+    "@commitlint/types": "^21.2.3",
+    "@types/node": "^26.6.5",
+    "@vitest/coverage-v8": "^5.0.5",
+    "commitizen": "^4.3.2",
+    "cz-git": "^1.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "tsx": "^4.23.15",
+    "turbo": "^2.11.9",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,jsonc,css,md}": "biome check --write --no-errors-on-unmatched"
+  }
+}

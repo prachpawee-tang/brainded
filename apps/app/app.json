@@ -1,0 +1,43 @@
+{
+  "expo": {
+    "name": "Brain",
+    "slug": "brain",
+    "scheme": "brain",
+    "version": "0.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.brain.app"
+    },
+    "android": {
+      "package": "dev.brain.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#FAF7F2",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false
+    },
+    "web": {
+      "bundler": "metro",
+      "output": "single",
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-localization",
+      "expo-font",
+      [
+        "expo-splash-screen",
+        { "backgroundColor": "#FAF7F2", "dark": { "backgroundColor": "#141311" } }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}

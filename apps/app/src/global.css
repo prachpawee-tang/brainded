@@ -1,0 +1,7 @@
+@import "tailwindcss";
+@import "uniwind";
+@import "../../../packages/ui/theme.css";
+
+/* Scan shared UI and every module for class names. */
+@source "../../../packages/ui/src";
+@source "../../../modules";

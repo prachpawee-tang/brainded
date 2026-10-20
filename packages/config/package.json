@@ -1,0 +1,10 @@
+{
+  "name": "@brain/config",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tsconfig/*": "./tsconfig/*",
+    "./vitest": "./vitest.preset.ts"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "app-web",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@brain/app", "exec", "expo", "start", "--web", "--port", "8081"],
+      "port": 8081
+    },
+    {
+      "name": "api",
+      "runtimeExecutable": "pnpm",
+      "runtimeArgs": ["--filter", "@brain/api", "dev"],
+      "port": 4000
+    }
+  ]
+}

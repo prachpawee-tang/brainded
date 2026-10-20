@@ -1,0 +1,7 @@
+{
+  "extends": "@brain/config/tsconfig/react-native.json",
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  },
+  "include": ["src", "scripts", "uniwind-env.d.ts"]
+}

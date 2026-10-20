@@ -1,0 +1,14 @@
+{
+  "$schema": "https://turborepo.com/schema.json",
+  "ui": "tui",
+  "tasks": {
+    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
+    "dev": { "cache": false, "persistent": true },
+    "typecheck": { "dependsOn": ["^typecheck"] },
+    "test": { "dependsOn": ["^typecheck"], "outputs": [] },
+    "test:unit": { "outputs": [] },
+    "test:int": { "outputs": [] },
+    "test:coverage": { "outputs": ["coverage/**"] },
+    "codegen": { "dependsOn": ["^codegen"], "outputs": ["**/generated/**", "schema.graphql"] }
+  }
+}

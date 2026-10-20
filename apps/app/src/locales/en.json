@@ -1,0 +1,13 @@
+{
+  "home": {
+    "greeting": "Hi there 👋",
+    "tagline": "Your second brain. Drop anything in, find it later.",
+    "modulesTitle": "Modules",
+    "petsComingSoon": "Pets — coming soon",
+    "api": {
+      "checking": "Checking…",
+      "online": "Connected",
+      "offline": "Offline"
+    }
+  }
+}

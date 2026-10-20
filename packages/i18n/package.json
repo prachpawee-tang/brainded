@@ -1,0 +1,22 @@
+{
+  "name": "@brain/i18n",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./testing": "./src/testing.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "i18next": "^26.5.2"
+  },
+  "devDependencies": {
+    "@brain/config": "workspace:*"
+  }
+}
