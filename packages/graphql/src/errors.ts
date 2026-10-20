@@ -24,6 +24,18 @@ export class ForbiddenError extends AppError {
   }
 }
 
+export class UnauthenticatedError extends AppError {
+  constructor() {
+    super('UNAUTHENTICATED')
+  }
+}
+
+/** Returns the signed-in viewer or throws UnauthenticatedError. Use in every user-data resolver. */
+export const requireViewer = <V>(context: { viewer: V | null }): V => {
+  if (!context.viewer) throw new UnauthenticatedError()
+  return context.viewer
+}
+
 export type ValidationIssue = { path: (string | number)[]; code: string }
 
 export class ValidationError extends AppError {

@@ -4,6 +4,8 @@ export {
   AppError,
   ForbiddenError,
   NotFoundError,
+  requireViewer,
+  UnauthenticatedError,
   ValidationError,
   type ValidationIssue,
 } from './errors'

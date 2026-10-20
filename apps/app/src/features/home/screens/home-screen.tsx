@@ -1,54 +1,65 @@
 import { useQuery } from '@apollo/client/react'
-import { Text } from '@brain/ui'
+import type { ModuleManifest } from '@brain/core'
+import { Button, Text, Tile } from '@brain/ui'
+import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
-import { ScrollView, View } from 'react-native'
-import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import { ApiHealthQuery } from '../graphql/health'
+import { View } from 'react-native'
+import { ScreenLayout } from '@/components/screen-layout'
+import { ViewerQuery } from '@/features/viewer/graphql/viewer'
+import { MODULES, useModuleAccent } from '@/lib/modules'
 
-type ApiState = 'checking' | 'online' | 'offline'
-
-const DOT_CLASSES: Record<ApiState, string> = {
-  checking: 'bg-warning',
-  online: 'bg-success',
-  offline: 'bg-danger',
-}
-
-const useApiState = (): ApiState => {
-  const { data, error } = useQuery(ApiHealthQuery, { fetchPolicy: 'network-only' })
-  if (error) return 'offline'
-  return data ? 'online' : 'checking'
+const ModuleTile = ({ module }: { module: ModuleManifest }) => {
+  const { t } = useTranslation(module.namespace)
+  return (
+    <Tile
+      title={t('module.name')}
+      description={t('module.description')}
+      icon={module.icon}
+      accentColor={useModuleAccent(module.id)}
+      onPress={() => router.push(module.route)}
+    />
+  )
 }
 
 export const HomeScreen = () => {
   const { t } = useTranslation('app')
-  const insets = useSafeAreaInsets()
-  const apiState = useApiState()
+  const { data } = useQuery(ViewerQuery)
+  const viewer = data?.viewer
+  const enabledIds = new Set(viewer?.modules.filter((m) => m.enabled).map((m) => m.moduleId))
+  const modules = MODULES.filter((module) => enabledIds.has(module.id))
 
   return (
-    <ScrollView
-      className="flex-1 bg-bg"
-      contentContainerClassName="gap-8 px-6 pb-12"
-      contentContainerStyle={{ paddingTop: insets.top + 32 }}
-    >
-      <View className="gap-2">
-        <Text variant="display">{t('home.greeting')}</Text>
-        <Text tone="muted">{t('home.tagline')}</Text>
-      </View>
-
-      <View className="flex-row items-center gap-2 self-start rounded-full bg-surface px-3 py-1.5 border border-border">
-        <View className={`size-2 rounded-full ${DOT_CLASSES[apiState]}`} />
-        <Text variant="caption" tone="muted">
-          {t(`home.api.${apiState}`)}
-        </Text>
+    <ScreenLayout>
+      <View className="flex-row items-start justify-between gap-4">
+        <View className="flex-1 gap-2">
+          <Text variant="display">{t('home.greeting', { name: viewer?.name ?? '' })}</Text>
+          <Text tone="muted">{t('home.tagline')}</Text>
+        </View>
+        <Button
+          variant="ghost"
+          size="sm"
+          label={t('home.settings')}
+          onPress={() => router.push('/settings')}
+        />
       </View>
 
       <View className="gap-3">
         <Text variant="heading">{t('home.modulesTitle')}</Text>
-        <View className="rounded-xl bg-surface p-5 border border-border">
-          <View className="mb-3 size-10 rounded-lg bg-module-pets" />
-          <Text tone="muted">{t('home.petsComingSoon')}</Text>
-        </View>
+        {viewer && modules.length === 0 ? (
+          <View className="items-center gap-3 rounded-xl border border-dashed border-border p-8">
+            <Text className="text-3xl">🫙</Text>
+            <Text tone="muted">{t('home.emptyModules')}</Text>
+            <Button
+              variant="secondary"
+              size="sm"
+              label={t('home.openSettings')}
+              onPress={() => router.push('/settings')}
+            />
+          </View>
+        ) : (
+          modules.map((module) => <ModuleTile key={module.id} module={module} />)
+        )}
       </View>
-    </ScrollView>
+    </ScreenLayout>
   )
 }

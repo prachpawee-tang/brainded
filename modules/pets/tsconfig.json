@@ -1,0 +1,4 @@
+{
+  "extends": "@brain/config/tsconfig/node.json",
+  "include": ["src", "locales", "vitest.config.ts"]
+}

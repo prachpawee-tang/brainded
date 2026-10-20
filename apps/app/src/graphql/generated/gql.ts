@@ -14,10 +14,14 @@ import type { TypedDocumentNode as DocumentNode } from '@graphql-typed-document-
  * Learn more about it here: https://the-guild.dev/graphql/codegen/plugins/presets/preset-client#reducing-bundle-size
  */
 type Documents = {
-    "\n  query ApiHealth {\n    health {\n      status\n    }\n  }\n": typeof types.ApiHealthDocument,
+    "\n  query Viewer {\n    viewer {\n      id\n      name\n      username\n      email\n      locale\n      theme\n      modules {\n        moduleId\n        enabled\n      }\n    }\n  }\n": typeof types.ViewerDocument,
+    "\n  mutation UpdatePreferences($input: UpdatePreferencesInput!) {\n    updatePreferences(input: $input) {\n      __typename\n      ... on MutationUpdatePreferencesSuccess {\n        data {\n          id\n          locale\n          theme\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n": typeof types.UpdatePreferencesDocument,
+    "\n  mutation SetModuleEnabled($input: SetModuleEnabledInput!) {\n    setModuleEnabled(input: $input) {\n      __typename\n      ... on MutationSetModuleEnabledSuccess {\n        data {\n          moduleId\n          enabled\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n": typeof types.SetModuleEnabledDocument,
 };
 const documents: Documents = {
-    "\n  query ApiHealth {\n    health {\n      status\n    }\n  }\n": types.ApiHealthDocument,
+    "\n  query Viewer {\n    viewer {\n      id\n      name\n      username\n      email\n      locale\n      theme\n      modules {\n        moduleId\n        enabled\n      }\n    }\n  }\n": types.ViewerDocument,
+    "\n  mutation UpdatePreferences($input: UpdatePreferencesInput!) {\n    updatePreferences(input: $input) {\n      __typename\n      ... on MutationUpdatePreferencesSuccess {\n        data {\n          id\n          locale\n          theme\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n": types.UpdatePreferencesDocument,
+    "\n  mutation SetModuleEnabled($input: SetModuleEnabledInput!) {\n    setModuleEnabled(input: $input) {\n      __typename\n      ... on MutationSetModuleEnabledSuccess {\n        data {\n          moduleId\n          enabled\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n": types.SetModuleEnabledDocument,
 };
 
 /**
@@ -37,7 +41,15 @@ export function graphql(source: string): unknown;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "\n  query ApiHealth {\n    health {\n      status\n    }\n  }\n"): (typeof documents)["\n  query ApiHealth {\n    health {\n      status\n    }\n  }\n"];
+export function graphql(source: "\n  query Viewer {\n    viewer {\n      id\n      name\n      username\n      email\n      locale\n      theme\n      modules {\n        moduleId\n        enabled\n      }\n    }\n  }\n"): (typeof documents)["\n  query Viewer {\n    viewer {\n      id\n      name\n      username\n      email\n      locale\n      theme\n      modules {\n        moduleId\n        enabled\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation UpdatePreferences($input: UpdatePreferencesInput!) {\n    updatePreferences(input: $input) {\n      __typename\n      ... on MutationUpdatePreferencesSuccess {\n        data {\n          id\n          locale\n          theme\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation UpdatePreferences($input: UpdatePreferencesInput!) {\n    updatePreferences(input: $input) {\n      __typename\n      ... on MutationUpdatePreferencesSuccess {\n        data {\n          id\n          locale\n          theme\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n"];
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "\n  mutation SetModuleEnabled($input: SetModuleEnabledInput!) {\n    setModuleEnabled(input: $input) {\n      __typename\n      ... on MutationSetModuleEnabledSuccess {\n        data {\n          moduleId\n          enabled\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n"): (typeof documents)["\n  mutation SetModuleEnabled($input: SetModuleEnabledInput!) {\n    setModuleEnabled(input: $input) {\n      __typename\n      ... on MutationSetModuleEnabledSuccess {\n        data {\n          moduleId\n          enabled\n        }\n      }\n      ... on Error {\n        code\n      }\n    }\n  }\n"];
 
 export function graphql(source: string) {
   return (documents as any)[source] ?? {};

@@ -1,13 +1,68 @@
 {
+  "auth": {
+    "signIn": {
+      "title": "Welcome back 👋",
+      "subtitle": "Sign in to your second brain",
+      "identifier": "Username or email",
+      "password": "Password",
+      "submit": "Sign in",
+      "google": "Continue with Google",
+      "noAccount": "New here? Create an account",
+      "or": "or"
+    },
+    "signUp": {
+      "title": "Let's get you set up ✨",
+      "subtitle": "One account for everything you want to remember",
+      "name": "Display name",
+      "username": "Username",
+      "email": "Email",
+      "password": "Password",
+      "submit": "Create account",
+      "haveAccount": "Already have an account? Sign in"
+    },
+    "validation": {
+      "required": "This field is required",
+      "usernameFormat": "3–30 characters: a–z, 0–9, _ or .",
+      "email": "That doesn't look like an email",
+      "passwordLength": "At least 10 characters"
+    },
+    "errors": {
+      "invalidCredentials": "Wrong username/email or password",
+      "emailTaken": "That email is already registered",
+      "usernameTaken": "That username is taken",
+      "lastAccount": "You can't remove your only sign-in method",
+      "unknown": "Something went wrong. Please try again"
+    }
+  },
   "home": {
-    "greeting": "Hi there 👋",
+    "greeting": "Hi {{name}} 👋",
     "tagline": "Your second brain. Drop anything in, find it later.",
     "modulesTitle": "Modules",
-    "petsComingSoon": "Pets — coming soon",
-    "api": {
-      "checking": "Checking…",
-      "online": "Connected",
-      "offline": "Offline"
-    }
-  }
+    "settings": "Settings",
+    "emptyModules": "No modules turned on yet",
+    "openSettings": "Choose modules"
+  },
+  "settings": {
+    "title": "Settings",
+    "back": "Back",
+    "language": "Language",
+    "theme": "Theme",
+    "themes": {
+      "system": "Auto",
+      "light": "Light",
+      "dark": "Dark"
+    },
+    "modules": "Modules",
+    "accounts": "Sign-in methods",
+    "providers": {
+      "credential": "Username & password",
+      "google": "Google",
+      "facebook": "Facebook",
+      "apple": "Apple"
+    },
+    "link": "Connect {{provider}}",
+    "unlink": "Remove",
+    "signOut": "Sign out"
+  },
+  "comingSoon": "Coming soon — we're building this next 🛠️"
 }

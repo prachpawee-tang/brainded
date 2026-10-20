@@ -21,12 +21,60 @@ enum HealthStatus {
   OK
 }
 
+enum Language {
+  EN
+  TH
+}
+
+type Mutation {
+  setModuleEnabled(input: SetModuleEnabledInput!): MutationSetModuleEnabledResult!
+  updatePreferences(input: UpdatePreferencesInput!): MutationUpdatePreferencesResult!
+}
+
+union MutationSetModuleEnabledResult = MutationSetModuleEnabledSuccess | NotFoundError | UnauthenticatedError
+
+type MutationSetModuleEnabledSuccess {
+  data: UserModule!
+}
+
+union MutationUpdatePreferencesResult = MutationUpdatePreferencesSuccess | UnauthenticatedError
+
+type MutationUpdatePreferencesSuccess {
+  data: Viewer!
+}
+
 type NotFoundError implements Error {
   code: String!
 }
 
 type Query {
   health: Health!
+  viewer: Viewer
+}
+
+input SetModuleEnabledInput {
+  enabled: Boolean!
+  moduleId: String!
+}
+
+enum ThemePreference {
+  DARK
+  LIGHT
+  SYSTEM
+}
+
+type UnauthenticatedError implements Error {
+  code: String!
+}
+
+input UpdatePreferencesInput {
+  locale: Language
+  theme: ThemePreference
+}
+
+type UserModule {
+  enabled: Boolean!
+  moduleId: String!
 }
 
 type ValidationError implements Error {
@@ -37,4 +85,15 @@ type ValidationError implements Error {
 type ValidationIssue {
   code: String!
   path: [String!]!
+}
+
+type Viewer {
+  email: String!
+  id: ID!
+  image: String
+  locale: Language!
+  modules: [UserModule!]!
+  name: String!
+  theme: ThemePreference!
+  username: String
 }

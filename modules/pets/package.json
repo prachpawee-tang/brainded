@@ -1,0 +1,23 @@
+{
+  "name": "@brain/module-pets",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./manifest": "./src/manifest.ts",
+    "./locales": "./src/locales.ts"
+  },
+  "scripts": {
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "typecheck": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@brain/core": "workspace:*",
+    "@brain/i18n": "workspace:*"
+  },
+  "devDependencies": {
+    "@brain/config": "workspace:*"
+  }
+}

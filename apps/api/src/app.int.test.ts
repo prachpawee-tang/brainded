@@ -1,74 +1,61 @@
-import { createTestDb } from '@brain/db/testing'
-import { beforeAll, describe, expect, it } from 'vitest'
-import { createApp } from './app'
-
-const APP_ORIGIN = 'http://localhost:8081'
-
-type GraphQLResponse = { data?: Record<string, unknown>; errors?: { message: string }[] }
+import { describe, expect, it } from 'vitest'
+import { createTestApp, TEST_APP_ORIGIN } from './test/create-test-app'
 
 describe('api app', () => {
-  let app: ReturnType<typeof createApp>
-
-  const gql = async (query: string): Promise<GraphQLResponse> => {
-    const res = await app.request('/graphql', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query }),
-    })
-    return res.json() as Promise<GraphQLResponse>
-  }
-
-  beforeAll(async () => {
-    app = createApp({ db: await createTestDb(), isProduction: true, allowedOrigins: [APP_ORIGIN] })
-  })
-
   it('GET /healthz responds ok', async () => {
+    const { app } = await createTestApp()
     const res = await app.request('/healthz')
     expect(res.status).toBe(200)
     expect(await res.json()).toEqual({ status: 'ok' })
   })
 
-  it('answers the health query over GraphQL', async () => {
-    const body = await gql('{ health { status time } }')
+  it('answers the health query and reaches the database', async () => {
+    const { gql } = await createTestApp()
+    const body = await gql('{ health { status database time } }')
     expect(body.errors).toBeUndefined()
-    expect(body.data?.health).toMatchObject({ status: 'OK' })
-  })
-
-  it('reports the database as reachable', async () => {
-    const body = await gql('{ health { database } }')
-    expect(body.data?.health).toEqual({ database: true })
+    expect(body.data?.health).toMatchObject({ status: 'OK', database: true })
   })
 
   it('disables introspection in production', async () => {
+    const { gql } = await createTestApp()
     const body = await gql('{ __schema { types { name } } }')
     expect(body.errors?.[0]?.message).toMatch(/introspection/i)
   })
 
   it('allows introspection and GraphiQL outside production', async () => {
-    const devApp = createApp({ db: await createTestDb(), isProduction: false, allowedOrigins: [] })
-    const res = await devApp.request('/graphql', {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ query: '{ __schema { queryType { name } } }' }),
+    const { app, gql } = await createTestApp({ isProduction: false })
+    expect((await gql('{ __schema { queryType { name } } }')).data).toEqual({
+      __schema: { queryType: { name: 'Query' } },
     })
-    expect(await res.json()).toEqual({ data: { __schema: { queryType: { name: 'Query' } } } })
-    const page = await devApp.request('/graphql', { headers: { accept: 'text/html' } })
+    const page = await app.request('/graphql', { headers: { accept: 'text/html' } })
     expect(await page.text()).toContain('GraphiQL')
   })
-  const preflight = (origin: string) =>
-    app.request('/graphql', {
+
+  const preflight = async (path: string, origin: string) => {
+    const { app } = await createTestApp()
+    return app.request(path, {
       method: 'OPTIONS',
       headers: { origin, 'access-control-request-method': 'POST' },
     })
+  }
 
-  it('allows CORS with credentials from the app origin', async () => {
-    const res = await preflight(APP_ORIGIN)
-    expect(res.headers.get('access-control-allow-origin')).toBe(APP_ORIGIN)
-    expect(res.headers.get('access-control-allow-credentials')).toBe('true')
-  })
+  it.each(['/graphql', '/api/auth/sign-in/username'])(
+    'allows CORS with credentials from the app origin on %s',
+    async (path) => {
+      const res = await preflight(path, TEST_APP_ORIGIN)
+      expect(res.headers.get('access-control-allow-origin')).toBe(TEST_APP_ORIGIN)
+      expect(res.headers.get('access-control-allow-credentials')).toBe('true')
+    },
+  )
 
   it('does not allow CORS from unknown origins', async () => {
-    const res = await preflight('https://evil.example')
+    const res = await preflight('/graphql', 'https://evil.example')
     expect(res.headers.get('access-control-allow-origin')).toBeNull()
+  })
+
+  it('mounts Better Auth under /api/auth', async () => {
+    const { app } = await createTestApp()
+    const res = await app.request('/api/auth/ok')
+    expect(res.status).toBe(200)
   })
 })

@@ -33,11 +33,15 @@
       "expo-font",
       [
         "expo-splash-screen",
-        { "backgroundColor": "#FAF7F2", "dark": { "backgroundColor": "#141311" } }
-      ]
-    ],
-    "experiments": {
-      "typedRoutes": true
-    }
+        {
+          "backgroundColor": "#FAF7F2",
+          "dark": {
+            "backgroundColor": "#141311"
+          }
+        }
+      ],
+      "expo-secure-store",
+      "expo-web-browser"
+    ]
   }
 }

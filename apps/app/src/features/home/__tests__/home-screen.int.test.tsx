@@ -1,40 +1,46 @@
-import { render, screen } from '@testing-library/react-native'
+import { render, screen, userEvent } from '@testing-library/react-native'
+import { router } from 'expo-router'
 import { createTestProviders } from '@/test/create-test-providers'
-import { ApiHealthQuery } from '../graphql/health'
+import { buildViewer, viewerMock } from '@/test/viewer-fixture'
 import { HomeScreen } from '../screens/home-screen'
 
-const healthOk = {
-  request: { query: ApiHealthQuery },
-  result: { data: { health: { __typename: 'Health' as const, status: 'OK' as const } } },
-}
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }))
+jest.mock('uniwind', () => ({ useUniwind: () => ({ theme: 'light' }) }))
 
-const healthDown = {
-  request: { query: ApiHealthQuery },
-  error: new Error('Network request failed'),
+const setup = async (mocks = [viewerMock()]) => {
+  const user = userEvent.setup()
+  await render(<HomeScreen />, { wrapper: await createTestProviders({ lng: 'en', mocks }) })
+  return user
 }
 
 describe('HomeScreen', () => {
-  it('greets the user in their language', async () => {
-    const wrapper = await createTestProviders({ lng: 'th', mocks: [healthOk] })
-    await render(<HomeScreen />, { wrapper })
-    expect(screen.getByRole('header', { name: 'สวัสดี 👋' })).toBeOnTheScreen()
+  beforeEach(() => jest.clearAllMocks())
+
+  it('greets the viewer by name', async () => {
+    await setup()
+    expect(await screen.findByRole('header', { name: 'Hi Tnk 👋' })).toBeOnTheScreen()
   })
 
-  it('shows that the API is online when the health check succeeds', async () => {
-    const wrapper = await createTestProviders({ lng: 'en', mocks: [healthOk] })
-    await render(<HomeScreen />, { wrapper })
-    expect(await screen.findByText('Connected')).toBeOnTheScreen()
+  it('opens an enabled module from its tile', async () => {
+    const user = await setup()
+    await user.press(await screen.findByRole('button', { name: 'Pets' }))
+    expect(router.push).toHaveBeenCalledWith('/pets')
   })
 
-  it('shows offline when the API cannot be reached', async () => {
-    const wrapper = await createTestProviders({ lng: 'en', mocks: [healthDown] })
-    await render(<HomeScreen />, { wrapper })
-    expect(await screen.findByText('Offline')).toBeOnTheScreen()
+  it('shows an empty state when every module is off', async () => {
+    const viewer = buildViewer({
+      modules: [{ __typename: 'UserModule', moduleId: 'pets', enabled: false }],
+    })
+    const user = await setup([viewerMock(viewer)])
+    expect(await screen.findByText('No modules turned on yet')).toBeOnTheScreen()
+    expect(screen.queryByRole('button', { name: 'Pets' })).not.toBeOnTheScreen()
+    await user.press(screen.getByRole('button', { name: 'Choose modules' }))
+    expect(router.push).toHaveBeenCalledWith('/settings')
   })
 
-  it('shows a checking state while the health query is in flight', async () => {
-    const wrapper = await createTestProviders({ lng: 'en', mocks: [healthOk] })
-    await render(<HomeScreen />, { wrapper })
-    expect(screen.getByText('Checking…')).toBeOnTheScreen()
+  it('opens settings', async () => {
+    const user = await setup()
+    await user.press(await screen.findByRole('button', { name: 'Settings' }))
+    expect(router.push).toHaveBeenCalledWith('/settings')
   })
 })

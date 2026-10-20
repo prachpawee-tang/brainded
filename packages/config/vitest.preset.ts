@@ -12,6 +12,9 @@ export const vitestPreset = defineConfig({
     server: { deps: { inline: [/@pothos\//, /graphql-scalars/, /graphql-yoga/, /@graphql-/] } },
     include: ['src/**/*.test.ts'],
     passWithNoTests: false,
+    // Integration tests boot PGlite + Better Auth; give them room when turbo runs packages in parallel.
+    testTimeout: 30_000,
+    hookTimeout: 30_000,
     coverage: {
       provider: 'v8',
       include: ['src/**/*.ts'],

@@ -8,7 +8,7 @@ import { AppProviders } from './app-providers'
 
 const Probe = () => {
   const { t } = useTranslation('app')
-  return <Text>{t('home.greeting')}</Text>
+  return <Text>{t('home.greeting', { name: 'Tnk' })}</Text>
 }
 
 describe('AppProviders', () => {
@@ -17,12 +17,12 @@ describe('AppProviders', () => {
     await render(
       <AppProviders
         i18n={i18n}
-        client={createApolloClient('http://test/graphql')}
+        client={createApolloClient({ uri: 'http://test/graphql' })}
         safeAreaMetrics={TEST_SAFE_AREA_METRICS}
       >
         <Probe />
       </AppProviders>,
     )
-    expect(screen.getByText('Hi there 👋')).toBeOnTheScreen()
+    expect(screen.getByText('Hi Tnk 👋')).toBeOnTheScreen()
   })
 })

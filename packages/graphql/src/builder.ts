@@ -7,6 +7,7 @@ import {
   type AppError,
   ForbiddenError,
   NotFoundError,
+  UnauthenticatedError,
   ValidationError,
   type ValidationIssue,
 } from './errors'
@@ -39,7 +40,7 @@ export const createBuilder = () => {
     fields: (t) => ({ code: t.exposeString('code') }),
   })
 
-  for (const ErrorClass of [NotFoundError, ForbiddenError]) {
+  for (const ErrorClass of [NotFoundError, ForbiddenError, UnauthenticatedError]) {
     builder.objectType(ErrorClass, {
       name: ErrorClass.name,
       interfaces: [ErrorInterface],

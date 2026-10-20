@@ -2,6 +2,7 @@ import { fileURLToPath } from 'node:url'
 import { createBuilder } from '@brain/graphql'
 import { lexicographicSortSchema, printSchema } from 'graphql'
 import { registerHealth } from './core/health'
+import { registerViewer } from './core/viewer'
 
 export const SCHEMA_PATH = fileURLToPath(import.meta.resolve('@brain/graphql/schema.graphql'))
 
@@ -9,7 +10,9 @@ export const SCHEMA_PATH = fileURLToPath(import.meta.resolve('@brain/graphql/sch
 export const buildApiSchema = () => {
   const builder = createBuilder()
   builder.queryType({})
+  builder.mutationType({})
   registerHealth(builder)
+  registerViewer(builder)
   // registerPetsModule(builder)  ← Phase 2
   return builder.toSchema()
 }
