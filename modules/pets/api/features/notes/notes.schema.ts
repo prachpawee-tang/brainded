@@ -5,7 +5,13 @@ import { petIdFromGlobalId, toServiceContext } from '../../lib/context'
 import type { PetRef } from '../profile/profile.schema'
 import { addPetNote, listPetTimeline, toTimelineKind } from './notes.service'
 
-const TIMELINE_KINDS = ['WEIGHT', ...PET_NOTE_TYPES.map((type) => `NOTE_${type}`)] as const
+const TIMELINE_KINDS = [
+  'WEIGHT',
+  'LAB_RESULT',
+  'MEDICATION_STARTED',
+  'APPOINTMENT_DONE',
+  ...PET_NOTE_TYPES.map((type) => `NOTE_${type}`),
+] as const
 
 export const registerNotes = (builder: Builder, Pet: PetRef) => {
   const PetNoteType = builder.enumType('PetNoteType', { values: PET_NOTE_TYPES })

@@ -12,7 +12,11 @@
     "edit": "Edit",
     "saved": "Saved ✓",
     "kg": "{{value}} kg",
-    "unknown": "Unknown"
+    "unknown": "Unknown",
+    "seeAll": "See all",
+    "add": "Add",
+    "delete": "Delete",
+    "none": "—"
   },
   "species": {
     "DOG": "Dog",
@@ -63,7 +67,10 @@
     "NOTE_GENERAL": "Note",
     "NOTE_VET_VISIT": "Vet visit",
     "NOTE_VACCINE": "Vaccine",
-    "NOTE_GROOMING": "Grooming"
+    "NOTE_GROOMING": "Grooming",
+    "LAB_RESULT": "Vet results",
+    "MEDICATION_STARTED": "Started medication",
+    "APPOINTMENT_DONE": "Vet appointment"
   },
   "noteType": {
     "GENERAL": "Note",
@@ -110,12 +117,138 @@
     "INVALID_DATE": "That date isn't valid",
     "IN_FUTURE": "That date is in the future",
     "TOO_SMALL": "That's below 0.1 kg",
-    "TOO_BIG": "That's over 200 kg"
+    "TOO_BIG": "That's over 200 kg",
+    "RANGE_INVERTED": "Low must be below high",
+    "EMPTY_RESULT": "Add at least one value or photo",
+    "INVALID_TIME": "Use HH:MM, e.g. 08:00",
+    "BEFORE_START": "Ends before it starts"
   },
   "errors": {
     "PET_NOT_FOUND": "This pet no longer exists",
     "PHOTO_NOT_OWNED": "That photo can't be used",
     "UPLOAD_FAILED": "Couldn't upload the photo",
-    "UNKNOWN": "Something went wrong. Please try again"
+    "UNKNOWN": "Something went wrong. Please try again",
+    "LAB_RESULT_NOT_FOUND": "This result no longer exists",
+    "MEDICATION_NOT_FOUND": "This medication no longer exists",
+    "APPOINTMENT_NOT_FOUND": "This appointment no longer exists",
+    "DOSE_NOT_SCHEDULED": "That dose isn't on the schedule"
+  },
+  "weight": {
+    "title": "Weight",
+    "ranges": {
+      "3M": "3M",
+      "6M": "6M",
+      "1Y": "1Y",
+      "ALL": "All"
+    },
+    "average": "Average",
+    "min": "Lowest",
+    "max": "Highest",
+    "change": "Change",
+    "averageLine": "Average {{value}} kg",
+    "empty": "Log two weights to see the trend",
+    "summary": "Weight from {{first}} to {{last}} kg between {{from}} and {{to}}. Average {{average}} kg.",
+    "allWeights": "All weights",
+    "listTitle": "Weight log"
+  },
+  "today": {
+    "title": "Today",
+    "noDoses": "No doses today",
+    "dose": "{{time}} · {{name}}",
+    "nextAppointment": "Next vet visit",
+    "noAppointment": "No upcoming appointments"
+  },
+  "labs": {
+    "title": "Vet results",
+    "add": "+ Add results",
+    "empty": "No results yet. Add them after a vet visit.",
+    "abnormal_one": "{{count}} outside range",
+    "abnormal_other": "{{count}} outside range",
+    "allNormal": "All in range",
+    "listTitle": "Vet results",
+    "newTitle": "New vet results",
+    "date": "Date",
+    "name": "Title (e.g. Blood test)",
+    "clinic": "Clinic (optional)",
+    "note": "Note (optional)",
+    "values": "Values",
+    "presets": "Quick add",
+    "addValue": "+ Add a value",
+    "valueName": "Test",
+    "value": "Result",
+    "unit": "Unit",
+    "refLow": "Normal from",
+    "refHigh": "to",
+    "removeValue": "Remove",
+    "photos": "Report photos",
+    "addPhoto": "+ Add photo",
+    "save": "Save results",
+    "range": "Normal {{low}}–{{high}}",
+    "rangeLow": "Normal ≥ {{low}}",
+    "rangeHigh": "Normal ≤ {{high}}",
+    "deleteConfirm": "Delete these results? This cannot be undone.",
+    "flags": {
+      "LOW": "Low",
+      "NORMAL": "Normal",
+      "HIGH": "High",
+      "UNKNOWN": "No range"
+    },
+    "photo": "Report photo {{index}}"
+  },
+  "meds": {
+    "title": "Medications",
+    "add": "+ Add medication",
+    "empty": "No medications",
+    "listTitle": "Medications",
+    "ended": "Ended",
+    "active": "Current",
+    "sheetNew": "New medication",
+    "sheetEdit": "Edit medication",
+    "name": "Medicine",
+    "dosage": "Dose (e.g. ½ tablet)",
+    "times": "Times",
+    "timePresets": {
+      "08:00": "Morning",
+      "12:00": "Noon",
+      "18:00": "Evening",
+      "21:00": "Bedtime"
+    },
+    "customTime": "Other time (HH:MM)",
+    "addTime": "Add",
+    "removeTime": "Remove {{time}}",
+    "everyDays": "Repeat",
+    "daily": "Daily",
+    "everyN": "Every {{count}} days",
+    "weekly": "Weekly",
+    "startOn": "Start",
+    "endOn": "End (optional)",
+    "endPlaceholder": "Ongoing",
+    "note": "Note (optional)",
+    "schedule": "{{times}} · {{repeat}}",
+    "endsOn": "until {{date}}"
+  },
+  "appointments": {
+    "title": "Appointments",
+    "add": "+ Add appointment",
+    "empty": "No upcoming appointments",
+    "listTitle": "Appointments",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "sheetNew": "New appointment",
+    "sheetEdit": "Edit appointment",
+    "date": "Date",
+    "time": "Time (HH:MM)",
+    "reason": "Reason (e.g. Vaccines)",
+    "clinic": "Clinic (optional)",
+    "note": "Note (optional)",
+    "markDone": "Mark as done",
+    "cancel": "Cancel appointment",
+    "addResults": "Add results",
+    "statuses": {
+      "SCHEDULED": "Scheduled",
+      "DONE": "Done",
+      "CANCELLED": "Cancelled"
+    },
+    "when": "{{date}} · {{time}}"
   }
 }

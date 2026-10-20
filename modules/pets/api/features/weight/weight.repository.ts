@@ -1,4 +1,14 @@
-import { type Database, getTableColumns, inArray, sql } from '@brain/db'
+import {
+  and,
+  asc,
+  type Database,
+  eq,
+  getTableColumns,
+  gte,
+  inArray,
+  notDeleted,
+  sql,
+} from '@brain/db'
 import { petWeightLogs } from '../../db/schema'
 
 export type WeightLogRow = typeof petWeightLogs.$inferSelect
@@ -35,3 +45,18 @@ export const findRecentWeights = async (
     list.sort((a, b) => b.measuredOn.localeCompare(a.measuredOn) || b.id.localeCompare(a.id))
   return byPet
 }
+
+/** Weight history, oldest first, optionally from a date (for charts). */
+export const findWeights = (db: Database, ownerId: string, petId: string, since: string | null) =>
+  db
+    .select()
+    .from(petWeightLogs)
+    .where(
+      and(
+        eq(petWeightLogs.ownerId, ownerId),
+        eq(petWeightLogs.petId, petId),
+        notDeleted(petWeightLogs),
+        since ? gte(petWeightLogs.measuredOn, since) : undefined,
+      ),
+    )
+    .orderBy(asc(petWeightLogs.measuredOn), asc(petWeightLogs.id))

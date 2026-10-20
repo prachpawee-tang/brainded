@@ -1,3 +1,32 @@
+input AddPetAppointmentInput {
+  clinic: String
+  note: String
+  petId: ID!
+  reason: String!
+  scheduledAt: String!
+}
+
+input AddPetLabResultInput {
+  clinic: String
+  note: String
+  petId: ID!
+  photoKeys: [String!]
+  takenOn: LocalDate!
+  title: String!
+  values: [PetLabValueInput!]!
+}
+
+input AddPetMedicationInput {
+  dosage: String
+  endOn: LocalDate
+  everyDays: Int!
+  name: String!
+  note: String
+  petId: ID!
+  startOn: LocalDate!
+  times: [String!]!
+}
+
 input AddPetNoteInput {
   body: String!
   occurredOn: LocalDate!
@@ -24,6 +53,10 @@ input CreatePetInput {
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
 scalar DateTime
+
+input DeletePetLabResultInput {
+  id: ID!
+}
 
 interface Error {
   code: String!
@@ -61,13 +94,39 @@ input LogPetWeightInput {
 }
 
 type Mutation {
+  addPetAppointment(input: AddPetAppointmentInput!): MutationAddPetAppointmentResult!
+  addPetLabResult(input: AddPetLabResultInput!): MutationAddPetLabResultResult!
+  addPetMedication(input: AddPetMedicationInput!): MutationAddPetMedicationResult!
   addPetNote(input: AddPetNoteInput!): MutationAddPetNoteResult!
   archivePet(input: ArchivePetInput!): MutationArchivePetResult!
   createPet(input: CreatePetInput!): MutationCreatePetResult!
+  deletePetLabResult(input: DeletePetLabResultInput!): MutationDeletePetLabResultResult!
   logPetWeight(input: LogPetWeightInput!): MutationLogPetWeightResult!
+  setDoseTaken(input: SetDoseTakenInput!): MutationSetDoseTakenResult!
   setModuleEnabled(input: SetModuleEnabledInput!): MutationSetModuleEnabledResult!
+  setPetAppointmentStatus(input: SetPetAppointmentStatusInput!): MutationSetPetAppointmentStatusResult!
   updatePet(input: UpdatePetInput!): MutationUpdatePetResult!
+  updatePetAppointment(input: UpdatePetAppointmentInput!): MutationUpdatePetAppointmentResult!
+  updatePetMedication(input: UpdatePetMedicationInput!): MutationUpdatePetMedicationResult!
   updatePreferences(input: UpdatePreferencesInput!): MutationUpdatePreferencesResult!
+}
+
+union MutationAddPetAppointmentResult = MutationAddPetAppointmentSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationAddPetAppointmentSuccess {
+  data: PetAppointment!
+}
+
+union MutationAddPetLabResultResult = ForbiddenError | MutationAddPetLabResultSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationAddPetLabResultSuccess {
+  data: PetLabResult!
+}
+
+union MutationAddPetMedicationResult = MutationAddPetMedicationSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationAddPetMedicationSuccess {
+  data: PetMedication!
 }
 
 union MutationAddPetNoteResult = MutationAddPetNoteSuccess | NotFoundError | UnauthenticatedError | ValidationError
@@ -88,16 +147,46 @@ type MutationCreatePetSuccess {
   data: Pet!
 }
 
+union MutationDeletePetLabResultResult = MutationDeletePetLabResultSuccess | NotFoundError | UnauthenticatedError
+
+type MutationDeletePetLabResultSuccess {
+  data: Pet!
+}
+
 union MutationLogPetWeightResult = MutationLogPetWeightSuccess | NotFoundError | UnauthenticatedError | ValidationError
 
 type MutationLogPetWeightSuccess {
   data: Pet!
 }
 
+union MutationSetDoseTakenResult = MutationSetDoseTakenSuccess | NotFoundError | UnauthenticatedError
+
+type MutationSetDoseTakenSuccess {
+  data: PetDose!
+}
+
 union MutationSetModuleEnabledResult = MutationSetModuleEnabledSuccess | NotFoundError | UnauthenticatedError
 
 type MutationSetModuleEnabledSuccess {
   data: UserModule!
+}
+
+union MutationSetPetAppointmentStatusResult = MutationSetPetAppointmentStatusSuccess | NotFoundError | UnauthenticatedError
+
+type MutationSetPetAppointmentStatusSuccess {
+  data: PetAppointment!
+}
+
+union MutationUpdatePetAppointmentResult = MutationUpdatePetAppointmentSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationUpdatePetAppointmentSuccess {
+  data: PetAppointment!
+}
+
+union MutationUpdatePetMedicationResult = MutationUpdatePetMedicationSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationUpdatePetMedicationSuccess {
+  data: PetMedication!
 }
 
 union MutationUpdatePetResult = ForbiddenError | MutationUpdatePetSuccess | NotFoundError | UnauthenticatedError | ValidationError
@@ -128,12 +217,18 @@ type PageInfo {
 }
 
 type Pet implements Node {
+  appointments: [PetAppointment!]!
   birthDate: LocalDate
   breed: String
   createdAt: DateTime!
+  dosesOn(date: LocalDate!): [PetDose!]!
   id: ID!
+  labResult(id: ID!): PetLabResult
+  labResults(first: Int): [PetLabResult!]!
   latestWeight: PetWeight
+  medications: [PetMedication!]!
   name: String!
+  nextAppointment: PetAppointment
   notes: String
   photoUrl: String
   previousWeight: PetWeight
@@ -141,6 +236,82 @@ type Pet implements Node {
   species: PetSpecies!
   speciesOther: String
   timeline(after: String, before: String, first: Int, last: Int): PetTimelineConnection!
+  weights(since: LocalDate): [PetWeight!]!
+}
+
+type PetAppointment {
+  clinic: String
+  id: ID!
+  note: String
+  reason: String!
+  scheduledAt: DateTime!
+  status: PetAppointmentStatus!
+}
+
+enum PetAppointmentStatus {
+  CANCELLED
+  DONE
+  SCHEDULED
+}
+
+type PetAttachment {
+  id: ID!
+  url: String!
+}
+
+type PetDose {
+  date: LocalDate!
+  id: ID!
+  medication: PetMedication!
+  takenAt: DateTime
+  time: String!
+}
+
+enum PetLabFlag {
+  HIGH
+  LOW
+  NORMAL
+  UNKNOWN
+}
+
+type PetLabResult {
+  abnormalCount: Int!
+  clinic: String
+  id: ID!
+  note: String
+  photos: [PetAttachment!]!
+  takenOn: LocalDate!
+  title: String!
+  values: [PetLabValue!]!
+}
+
+type PetLabValue {
+  flag: PetLabFlag!
+  id: ID!
+  name: String!
+  refHigh: Float
+  refLow: Float
+  unit: String
+  value: Float!
+}
+
+input PetLabValueInput {
+  name: String!
+  refHigh: Float
+  refLow: Float
+  unit: String
+  value: Float!
+}
+
+type PetMedication {
+  dosage: String
+  endOn: LocalDate
+  everyDays: Int!
+  id: ID!
+  name: String!
+  note: String
+  startOn: LocalDate!
+  times: [String!]!
 }
 
 enum PetNoteType {
@@ -181,6 +352,9 @@ type PetTimelineEvent {
 }
 
 enum PetTimelineKind {
+  APPOINTMENT_DONE
+  LAB_RESULT
+  MEDICATION_STARTED
   NOTE_GENERAL
   NOTE_GROOMING
   NOTE_VACCINE
@@ -214,9 +388,21 @@ type QueryPetsConnectionEdge {
   node: Pet!
 }
 
+input SetDoseTakenInput {
+  date: LocalDate!
+  medicationId: ID!
+  taken: Boolean!
+  time: String!
+}
+
 input SetModuleEnabledInput {
   enabled: Boolean!
   moduleId: String!
+}
+
+input SetPetAppointmentStatusInput {
+  id: ID!
+  status: PetAppointmentStatus!
 }
 
 enum ThemePreference {
@@ -229,6 +415,14 @@ type UnauthenticatedError implements Error {
   code: String!
 }
 
+input UpdatePetAppointmentInput {
+  clinic: String
+  id: ID!
+  note: String
+  reason: String!
+  scheduledAt: String!
+}
+
 input UpdatePetInput {
   birthDate: LocalDate
   breed: String
@@ -239,6 +433,17 @@ input UpdatePetInput {
   sex: PetSex
   species: PetSpecies
   speciesOther: String
+}
+
+input UpdatePetMedicationInput {
+  dosage: String
+  endOn: LocalDate
+  everyDays: Int!
+  id: ID!
+  name: String!
+  note: String
+  startOn: LocalDate!
+  times: [String!]!
 }
 
 input UpdatePreferencesInput {

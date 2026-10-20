@@ -14,8 +14,16 @@ const NOTE_KIND_PREFIX = 'pets.note.'
 export const noteKind = (type: PetNoteType) => `${NOTE_KIND_PREFIX}${type.toLowerCase()}`
 
 /** Core kind string → GraphQL `PetTimelineKind`. Unknown kinds surface as NOTE_GENERAL. */
+const FIXED_KINDS: Record<string, string> = {
+  [WEIGHT_EVENT_KIND]: 'WEIGHT',
+  'pets.lab_result': 'LAB_RESULT',
+  'pets.medication.started': 'MEDICATION_STARTED',
+  'pets.appointment.done': 'APPOINTMENT_DONE',
+}
+
 export const toTimelineKind = (kind: string): string => {
-  if (kind === WEIGHT_EVENT_KIND) return 'WEIGHT'
+  const fixed = FIXED_KINDS[kind]
+  if (fixed) return fixed
   if (kind.startsWith(NOTE_KIND_PREFIX))
     return `NOTE_${kind.slice(NOTE_KIND_PREFIX.length).toUpperCase()}`
   return 'NOTE_GENERAL'

@@ -12,6 +12,9 @@ const KIND_EMOJI: Record<PetTimelineKind, string> = {
   NOTE_VET_VISIT: '🩺',
   NOTE_VACCINE: '💉',
   NOTE_GROOMING: '✂️',
+  LAB_RESULT: '🧪',
+  MEDICATION_STARTED: '💊',
+  APPOINTMENT_DONE: '🏥',
 }
 
 export const PetTimeline = ({ petId }: { petId: string }) => {

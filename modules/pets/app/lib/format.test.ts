@@ -1,9 +1,14 @@
 import {
   formatDate,
   formatMonth,
+  formatTime,
   formatWeightKg,
   groupByMonth,
+  isValidTime,
+  localDateTimeToIso,
+  parseDecimal,
   petAge,
+  rangeSince,
   speciesEmoji,
   weightDeltaGrams,
 } from './format'
@@ -63,5 +68,39 @@ describe('speciesEmoji', () => {
     ['OTHER', '🐾'],
   ] as const)('%s → %s', (species, emoji) => {
     expect(speciesEmoji(species)).toBe(emoji)
+  })
+})
+
+describe('time and ranges', () => {
+  it('formats a time in 24h', () => {
+    expect(formatTime('2026-11-01T02:30:00.000Z', 'en', 'Asia/Bangkok')).toBe('09:30')
+  })
+
+  it('builds an ISO instant from a local date and time', () => {
+    expect(localDateTimeToIso('2026-11-01', '09:30')).toBe(
+      new Date(2026, 10, 1, 9, 30).toISOString(),
+    )
+  })
+
+  it.each([
+    ['3M', '2026-07-20'],
+    ['6M', '2026-04-20'],
+    ['1Y', '2025-10-20'],
+    ['ALL', null],
+  ] as const)('range %s starts at %s', (range, since) => {
+    expect(rangeSince(range, new Date(2026, 9, 20))).toBe(since)
+  })
+
+  it('validates HH:MM', () => {
+    expect(isValidTime('08:05')).toBe(true)
+    expect(isValidTime('8:05')).toBe(false)
+    expect(isValidTime('24:00')).toBe(false)
+  })
+
+  it('parses decimal input with comma or dot', () => {
+    expect(parseDecimal('4,5')).toBe(4.5)
+    expect(parseDecimal(' 12.25 ')).toBe(12.25)
+    expect(parseDecimal('')).toBeNull()
+    expect(Number.isNaN(parseDecimal('abc'))).toBe(true)
   })
 })

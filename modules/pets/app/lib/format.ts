@@ -1,4 +1,4 @@
-import { fromIsoDate } from '@brain/ui'
+import { fromIsoDate, toIsoDate } from '@brain/ui'
 import type { PetSpecies } from '../../shared/validation'
 
 const GRAMS_PER_KG = 1000
@@ -51,3 +51,42 @@ export const groupByMonth = <T extends { occurredOn: string }>(items: readonly T
 
 const SPECIES_EMOJI: Record<PetSpecies, string> = { DOG: '🐶', CAT: '🐱', OTHER: '🐾' }
 export const speciesEmoji = (species: PetSpecies) => SPECIES_EMOJI[species]
+
+export const formatTime = (isoInstant: string, language: string, timeZone?: string) =>
+  new Intl.DateTimeFormat(intlLocale(language), {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+    timeZone,
+  }).format(new Date(isoInstant))
+
+/** Local calendar date + `HH:MM` → ISO instant (UTC) for the API. */
+export const localDateTimeToIso = (isoDate: string, time: string) => {
+  const [hours, minutes] = time.split(':').map(Number)
+  const date = fromIsoDate(isoDate)
+  date.setHours(hours ?? 0, minutes ?? 0, 0, 0)
+  return date.toISOString()
+}
+
+export const WEIGHT_RANGES = ['3M', '6M', '1Y', 'ALL'] as const
+export type WeightRange = (typeof WEIGHT_RANGES)[number]
+const RANGE_MONTHS: Record<Exclude<WeightRange, 'ALL'>, number> = { '3M': 3, '6M': 6, '1Y': 12 }
+
+/** First day included by a chart range (`null` = everything). */
+export const rangeSince = (range: WeightRange, today: Date = new Date()): string | null => {
+  if (range === 'ALL') return null
+  const since = new Date(
+    today.getFullYear(),
+    today.getMonth() - RANGE_MONTHS[range],
+    today.getDate(),
+  )
+  return toIsoDate(since)
+}
+
+export const isValidTime = (value: string) => /^([01]\d|2[0-3]):[0-5]\d$/.test(value)
+
+/** "4,5" / "4.5" → 4.5; empty → null; garbage → NaN (so validation can flag it). */
+export const parseDecimal = (value: string): number | null => {
+  const trimmed = value.trim()
+  return trimmed === '' ? null : Number(trimmed.replace(',', '.'))
+}

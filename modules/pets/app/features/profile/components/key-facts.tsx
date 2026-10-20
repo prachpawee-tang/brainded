@@ -41,12 +41,7 @@ export const KeyFacts = ({ pet }: { pet: Pet }) => {
           <>
             <View className="flex-row items-center gap-2">
               <Text variant="heading">{labels.kg(pet.latestWeight.weightGrams)}</Text>
-              {delta ? (
-                <Badge
-                  tone="neutral"
-                  label={`${delta > 0 ? '+' : '−'}${labels.kg(Math.abs(delta))}`}
-                />
-              ) : null}
+              {delta ? <Badge tone="neutral" label={labels.kgDelta(delta)} /> : null}
             </View>
             <Text variant="caption" tone="muted">
               {t('profile.weightOn', { date: labels.date(pet.latestWeight.measuredOn) })}

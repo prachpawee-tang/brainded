@@ -12,7 +12,11 @@
     "edit": "แก้ไข",
     "saved": "บันทึกแล้ว ✓",
     "kg": "{{value}} กก.",
-    "unknown": "ไม่ทราบ"
+    "unknown": "ไม่ทราบ",
+    "seeAll": "ดูทั้งหมด",
+    "add": "เพิ่ม",
+    "delete": "ลบ",
+    "none": "—"
   },
   "species": {
     "DOG": "หมา",
@@ -63,7 +67,10 @@
     "NOTE_GENERAL": "บันทึก",
     "NOTE_VET_VISIT": "พบหมอ",
     "NOTE_VACCINE": "วัคซีน",
-    "NOTE_GROOMING": "อาบน้ำตัดขน"
+    "NOTE_GROOMING": "อาบน้ำตัดขน",
+    "LAB_RESULT": "ผลตรวจ",
+    "MEDICATION_STARTED": "เริ่มให้ยา",
+    "APPOINTMENT_DONE": "ไปหาหมอแล้ว"
   },
   "noteType": {
     "GENERAL": "ทั่วไป",
@@ -110,12 +117,138 @@
     "INVALID_DATE": "วันที่ไม่ถูกต้อง",
     "IN_FUTURE": "วันที่อยู่ในอนาคต",
     "TOO_SMALL": "น้อยกว่า 0.1 กก.",
-    "TOO_BIG": "มากกว่า 200 กก."
+    "TOO_BIG": "มากกว่า 200 กก.",
+    "RANGE_INVERTED": "ค่าต่ำต้องน้อยกว่าค่าสูง",
+    "EMPTY_RESULT": "ใส่ค่าอย่างน้อย 1 รายการ หรือแนบรูป",
+    "INVALID_TIME": "ใช้รูปแบบ HH:MM เช่น 08:00",
+    "BEFORE_START": "วันสิ้นสุดอยู่ก่อนวันเริ่ม"
   },
   "errors": {
     "PET_NOT_FOUND": "ไม่พบน้องตัวนี้แล้ว",
     "PHOTO_NOT_OWNED": "ใช้รูปนี้ไม่ได้",
     "UPLOAD_FAILED": "อัปโหลดรูปไม่สำเร็จ",
-    "UNKNOWN": "มีบางอย่างผิดพลาด ลองใหม่อีกครั้ง"
+    "UNKNOWN": "มีบางอย่างผิดพลาด ลองใหม่อีกครั้ง",
+    "LAB_RESULT_NOT_FOUND": "ไม่พบผลตรวจนี้แล้ว",
+    "MEDICATION_NOT_FOUND": "ไม่พบยานี้แล้ว",
+    "APPOINTMENT_NOT_FOUND": "ไม่พบนัดนี้แล้ว",
+    "DOSE_NOT_SCHEDULED": "ยาเวลานี้ไม่ได้อยู่ในตาราง"
+  },
+  "weight": {
+    "title": "น้ำหนัก",
+    "ranges": {
+      "3M": "3 ด.",
+      "6M": "6 ด.",
+      "1Y": "1 ปี",
+      "ALL": "ทั้งหมด"
+    },
+    "average": "เฉลี่ย",
+    "min": "ต่ำสุด",
+    "max": "สูงสุด",
+    "change": "เปลี่ยนไป",
+    "averageLine": "เฉลี่ย {{value}} กก.",
+    "empty": "บันทึกน้ำหนักอย่างน้อย 2 ครั้งเพื่อดูแนวโน้ม",
+    "summary": "น้ำหนักจาก {{first}} เป็น {{last}} กก. ระหว่าง {{from}} ถึง {{to}} เฉลี่ย {{average}} กก.",
+    "allWeights": "น้ำหนักทั้งหมด",
+    "listTitle": "บันทึกน้ำหนัก"
+  },
+  "today": {
+    "title": "วันนี้",
+    "noDoses": "วันนี้ไม่มียา",
+    "dose": "{{time}} · {{name}}",
+    "nextAppointment": "นัดหมอครั้งถัดไป",
+    "noAppointment": "ยังไม่มีนัด"
+  },
+  "labs": {
+    "title": "ผลตรวจ",
+    "add": "+ เพิ่มผลตรวจ",
+    "empty": "ยังไม่มีผลตรวจ เพิ่มได้หลังไปหาหมอ",
+    "abnormal_one": "ผิดปกติ {{count}} ค่า",
+    "abnormal_other": "ผิดปกติ {{count}} ค่า",
+    "allNormal": "ปกติทุกค่า",
+    "listTitle": "ผลตรวจ",
+    "newTitle": "เพิ่มผลตรวจ",
+    "date": "วันที่ตรวจ",
+    "name": "หัวข้อ (เช่น ตรวจเลือด)",
+    "clinic": "คลินิก (ไม่ใส่ก็ได้)",
+    "note": "หมายเหตุ (ไม่ใส่ก็ได้)",
+    "values": "ค่าที่ตรวจ",
+    "presets": "เพิ่มด่วน",
+    "addValue": "+ เพิ่มค่า",
+    "valueName": "รายการ",
+    "value": "ผล",
+    "unit": "หน่วย",
+    "refLow": "ค่าปกติตั้งแต่",
+    "refHigh": "ถึง",
+    "removeValue": "ลบ",
+    "photos": "รูปใบผล",
+    "addPhoto": "+ แนบรูป",
+    "save": "บันทึกผลตรวจ",
+    "range": "ปกติ {{low}}–{{high}}",
+    "rangeLow": "ปกติ ≥ {{low}}",
+    "rangeHigh": "ปกติ ≤ {{high}}",
+    "deleteConfirm": "ลบผลตรวจนี้ไหม? ย้อนกลับไม่ได้นะ",
+    "flags": {
+      "LOW": "ต่ำ",
+      "NORMAL": "ปกติ",
+      "HIGH": "สูง",
+      "UNKNOWN": "ไม่มีช่วงปกติ"
+    },
+    "photo": "รูปใบผล {{index}}"
+  },
+  "meds": {
+    "title": "ยา",
+    "add": "+ เพิ่มยา",
+    "empty": "ยังไม่มียา",
+    "listTitle": "ยา",
+    "ended": "หยุดแล้ว",
+    "active": "กำลังให้",
+    "sheetNew": "เพิ่มยา",
+    "sheetEdit": "แก้ไขยา",
+    "name": "ชื่อยา",
+    "dosage": "ขนาด (เช่น ½ เม็ด)",
+    "times": "เวลา",
+    "timePresets": {
+      "08:00": "เช้า",
+      "12:00": "กลางวัน",
+      "18:00": "เย็น",
+      "21:00": "ก่อนนอน"
+    },
+    "customTime": "เวลาอื่น (HH:MM)",
+    "addTime": "เพิ่ม",
+    "removeTime": "ลบ {{time}}",
+    "everyDays": "ความถี่",
+    "daily": "ทุกวัน",
+    "everyN": "ทุก {{count}} วัน",
+    "weekly": "ทุกสัปดาห์",
+    "startOn": "เริ่ม",
+    "endOn": "สิ้นสุด (ไม่ใส่ก็ได้)",
+    "endPlaceholder": "ให้ต่อเนื่อง",
+    "note": "หมายเหตุ (ไม่ใส่ก็ได้)",
+    "schedule": "{{times}} · {{repeat}}",
+    "endsOn": "ถึง {{date}}"
+  },
+  "appointments": {
+    "title": "นัดหมอ",
+    "add": "+ เพิ่มนัด",
+    "empty": "ยังไม่มีนัด",
+    "listTitle": "นัดหมอ",
+    "upcoming": "ที่จะถึง",
+    "past": "ที่ผ่านมา",
+    "sheetNew": "เพิ่มนัด",
+    "sheetEdit": "แก้ไขนัด",
+    "date": "วันที่",
+    "time": "เวลา (HH:MM)",
+    "reason": "เรื่อง (เช่น ฉีดวัคซีน)",
+    "clinic": "คลินิก (ไม่ใส่ก็ได้)",
+    "note": "หมายเหตุ (ไม่ใส่ก็ได้)",
+    "markDone": "ไปมาแล้ว",
+    "cancel": "ยกเลิกนัด",
+    "addResults": "เพิ่มผลตรวจ",
+    "statuses": {
+      "SCHEDULED": "นัดไว้",
+      "DONE": "ไปแล้ว",
+      "CANCELLED": "ยกเลิก"
+    },
+    "when": "{{date}} · {{time}} น."
   }
 }

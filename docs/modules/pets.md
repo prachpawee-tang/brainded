@@ -1,6 +1,6 @@
 # Module: Pets (`pets`)
 
-Status: **Phase 2 — MVP in progress.** Brief confirmed 2026-10-20.
+Status: **Phase 2 MVP ✅ · Phase 3a in progress** (vet results, weight chart, medications, appointments). Phase 3a scope confirmed 2026-10-20.
 
 ## Job
 
@@ -59,6 +59,38 @@ Success:
 - Mutations: `createPet`, `updatePet`, `archivePet`, `logPetWeight`, `addPetNote`. Each takes an `input` argument and returns typed errors: `PET_NOT_FOUND`, `VALIDATION_FAILED`, `UNAUTHENTICATED`.
 - Photos are uploaded with `POST /api/files` (authenticated; `image/*` only; up to 5 MB). It returns `{ key }`, which the client passes as `photoKey`.
 
+## Phase 3a
+
+### Weight trend
+- Show a line chart on the profile (one series, in the module chart color). Range selector: 3M / 6M / 1Y / All (default 6M).
+- Show these stats for the selected range: average, minimum, maximum, and change (last − first).
+- Press-and-drag on the chart shows the nearest point (crosshair + readout). Every value can also be reached as text (stats plus "All weights" list), so the chart never hides data.
+- API: `Pet.weights(since)` returns weight logs in ascending order. The client computes the stats.
+
+### Vet results (lab results)
+- One result = date, title (e.g. "Blood test"), optional clinic and note, a list of **values**, and optional **photos** of the report.
+- A value has name, number, unit, and an optional reference range (low/high). The flag is computed (`LOW` / `NORMAL` / `HIGH` / `UNKNOWN`). The result shows its abnormal count.
+- The value editor has quick-add presets for common tests (HCT, WBC, PLT, BUN, CREA, ALT, ALP, GLU) with default units. Presets are only suggestions, never required.
+- Photos use the core **Attachment** primitive (`core_attachments`, entity `pets.lab_result`). Upload through `POST /api/files`.
+- Adding a result writes a timeline event (`LAB_RESULT`, with the title in the body).
+- Screens: the results list (`/pets/[id]/labs`), result detail (`/pets/[id]/labs/[labId]`), and a new result editor (`/pets/[id]/labs/new`). Delete is available from the detail screen. Editing a result is planned for later.
+
+### Medications
+- A medication has name, dosage (free text), daily times (`HH:MM`, 1–6 times), repeat (`everyDays`: 1 = daily, 7 = weekly, …), start date, optional end date, and a note.
+- **Today's doses** come from the schedule. Each dose can be marked as taken or not taken (`pets_medication_doses`).
+- An ended medication (end date in the past) stays in the history list.
+- Adding a medication writes a timeline event (`MEDICATION_STARTED`).
+
+### Appointments
+- An appointment has date-time (timestamptz), clinic, reason, note, and status (`SCHEDULED` / `DONE` / `CANCELLED`).
+- The profile shows the next upcoming appointment. Marking it done writes a timeline event (`APPOINTMENT_DONE`) and offers "add results".
+
+### Profile layout (top to bottom)
+Hero, key facts, **Today** (doses due + next appointment), **Weight** (chart + stats), **Vet results** (latest 2 + see all), **Medications** (active), **Appointments** (upcoming), timeline. The quick-log bar stays pinned.
+
+### Deferred to Phase 3b
+To-dos, and local notifications on the device for doses and appointments (built on the core `Reminder` primitive). Comparing weight against age/breed norms comes in a later phase.
+
 ## Out of scope (later phases)
 
-Medication, appointments, reminders and notifications, AI photo analysis, sharing a pet with another user, weight charts, and units other than kg.
+AI photo analysis, sharing a pet with another user, comparing weight against breed norms, and units other than kg.

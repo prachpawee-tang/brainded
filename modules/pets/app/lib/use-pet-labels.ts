@@ -1,6 +1,9 @@
+import { toIsoDate } from '@brain/ui'
 import { useTranslation } from 'react-i18next'
 import type { PetSex, PetSpecies } from '../../shared/validation'
-import { formatDate, formatWeightKg, petAge } from './format'
+import { formatDate, formatTime, formatWeightKg, petAge } from './format'
+
+const localDateOf = (isoInstant: string) => toIsoDate(new Date(isoInstant))
 
 /** Translated, locale-formatted labels shared by pets screens. */
 export const usePetLabels = () => {
@@ -25,6 +28,19 @@ export const usePetLabels = () => {
 
   const kg = (grams: number) => t('common.kg', { value: formatWeightKg(grams, language) })
   const date = (isoDate: string) => formatDate(isoDate, language)
+  /** Signed change, e.g. "+0.3 kg" / "−0.15 kg". */
+  const kgDelta = (grams: number) =>
+    `${grams > 0 ? '+' : grams < 0 ? '−' : ''}${kg(Math.abs(grams))}`
+  const time = (isoInstant: string) => formatTime(isoInstant, language)
+  /** Date + time of an instant, in the device time zone. */
+  const dateTime = (isoInstant: string) =>
+    t('appointments.when', {
+      date: formatDate(
+        isoInstant.slice(0, 10) === isoInstant ? isoInstant : localDateOf(isoInstant),
+        language,
+      ),
+      time: time(isoInstant),
+    })
 
-  return { t, language, species, sex, age, kg, date }
+  return { t, language, species, sex, age, kg, kgDelta, date, time, dateTime }
 }

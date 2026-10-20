@@ -2,7 +2,7 @@ import { type Builder, NotFoundError, UnauthenticatedError, ValidationError } fr
 import { petIdFromGlobalId, toServiceContext } from '../../lib/context'
 import { contextLoader } from '../../lib/loaders'
 import type { PetRef } from '../profile/profile.schema'
-import { findRecentWeights, type WeightLogRow } from './weight.repository'
+import { findRecentWeights, findWeights, type WeightLogRow } from './weight.repository'
 import { logPetWeight } from './weight.service'
 
 export const registerWeight = (builder: Builder, Pet: PetRef) => {
@@ -29,6 +29,12 @@ export const registerWeight = (builder: Builder, Pet: PetRef) => {
       type: PetWeight,
       nullable: true,
       resolve: async (pet, _args, context) => (await recentWeights(pet, context))[0] ?? null,
+    }),
+    weights: t.field({
+      type: [PetWeight],
+      args: { since: t.arg({ type: 'LocalDate' }) },
+      resolve: (pet, { since }, context) =>
+        findWeights(context.db, pet.ownerId, pet.id, since ?? null),
     }),
     previousWeight: t.field({
       type: PetWeight,

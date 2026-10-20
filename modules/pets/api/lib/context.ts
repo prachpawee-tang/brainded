@@ -42,3 +42,12 @@ export const DEFAULT_PAGE_SIZE = 20
 export const MAX_PAGE_SIZE = 100
 export const pageSize = (first: number | null | undefined) =>
   Math.min(Math.max(first ?? DEFAULT_PAGE_SIZE, 1), MAX_PAGE_SIZE)
+
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+/** Raw entity ids (lab results, medications, …) — null when malformed so lookups return NOT_FOUND. */
+export const asUuid = (id: unknown): string | null =>
+  typeof id === 'string' && UUID_PATTERN.test(id) ? id : null
+
+/** Today's date in UTC as YYYY-MM-DD (server-side default; clients pass their local date when it matters). */
+export const todayIso = () => new Date().toISOString().slice(0, 10)

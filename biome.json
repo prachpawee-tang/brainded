@@ -133,7 +133,8 @@
         "apps/app/src/app/_layout.tsx",
         "**/src/test/**",
         "**/app/test/**",
-        "**/api/test/**"
+        "**/api/test/**",
+        "modules/pets/app/features/today/components/today-card.tsx"
       ],
       "linter": {
         "rules": {

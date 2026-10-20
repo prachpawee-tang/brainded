@@ -1,3 +1,4 @@
+export { attachments } from './attachments'
 export { authAccounts, authSchema, authSessions, authUsers, authVerifications } from './auth'
 export { notDeleted, ownedColumns } from './columns'
 export { timelineEvents } from './timeline'

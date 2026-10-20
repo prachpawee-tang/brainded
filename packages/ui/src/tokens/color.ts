@@ -52,3 +52,12 @@ export const colors: Record<Theme, SemanticColors> = {
 export const moduleColors: Record<string, Record<Theme, string>> = {
   pets: { light: '#e8833a', dark: '#f5a05a' },
 }
+
+/**
+ * Module colors for chart marks (lines, dots). Darker than the identity accent so a 2px line
+ * passes 3:1 against the card surface and sits inside the dataviz lightness band in both themes
+ * (validated with the dataviz palette script).
+ */
+export const moduleChartColors: Record<string, Record<Theme, string>> = {
+  pets: { light: '#c96a22', dark: '#cf7329' },
+}

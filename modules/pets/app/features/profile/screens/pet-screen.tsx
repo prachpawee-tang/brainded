@@ -8,8 +8,11 @@ import { PetProfileQuery } from '../../../graphql/pets'
 import { usePetsAccent } from '../../../lib/accent'
 import { speciesEmoji } from '../../../lib/format'
 import { usePetLabels } from '../../../lib/use-pet-labels'
+import { LabResultsSection } from '../../labs/components/lab-results-section'
 import { NoteSheet } from '../../logging/components/note-sheet'
 import { WeightSheet } from '../../logging/components/weight-sheet'
+import { TodayCard } from '../../today/components/today-card'
+import { WeightTrendCard } from '../../weight-trend/components/weight-trend-card'
 import { KeyFacts } from '../components/key-facts'
 import { PetTimeline } from '../components/pet-timeline'
 
@@ -117,6 +120,10 @@ export const PetScreen = () => {
         <Text variant="heading">{t('profile.keyFacts')}</Text>
         <KeyFacts pet={pet} />
       </View>
+
+      <TodayCard petId={pet.id} />
+      <WeightTrendCard petId={pet.id} />
+      <LabResultsSection petId={pet.id} />
 
       <View className="gap-3">
         <Text variant="heading">{t('profile.timeline')}</Text>

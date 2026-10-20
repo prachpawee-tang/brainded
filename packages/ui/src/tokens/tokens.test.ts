@@ -1,5 +1,5 @@
 import { contrastRatio } from '../lib/contrast'
-import { colors, THEMES } from './color'
+import { colors, moduleChartColors, THEMES } from './color'
 
 const WCAG_AA_TEXT = 4.5
 const WCAG_AA_LARGE = 3
@@ -21,6 +21,15 @@ describe.each(THEMES)('%s theme colors', (theme) => {
     '%s is distinguishable on bg (large text / icons)',
     (token) => {
       expect(contrastRatio(c[token], c.bg)).toBeGreaterThanOrEqual(WCAG_AA_LARGE)
+    },
+  )
+
+  it.each(Object.keys(moduleChartColors))(
+    '%s chart color reaches 3:1 on the card surface',
+    (moduleId) => {
+      expect(
+        contrastRatio(moduleChartColors[moduleId]?.[theme] ?? '#000000', c.surface),
+      ).toBeGreaterThanOrEqual(WCAG_AA_LARGE)
     },
   )
 
