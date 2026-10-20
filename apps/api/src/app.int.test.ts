@@ -2,6 +2,8 @@ import { createTestDb } from '@brain/db/testing'
 import { beforeAll, describe, expect, it } from 'vitest'
 import { createApp } from './app'
 
+const APP_ORIGIN = 'http://localhost:8081'
+
 type GraphQLResponse = { data?: Record<string, unknown>; errors?: { message: string }[] }
 
 describe('api app', () => {
@@ -17,7 +19,7 @@ describe('api app', () => {
   }
 
   beforeAll(async () => {
-    app = createApp({ db: await createTestDb(), isProduction: true })
+    app = createApp({ db: await createTestDb(), isProduction: true, allowedOrigins: [APP_ORIGIN] })
   })
 
   it('GET /healthz responds ok', async () => {
@@ -43,7 +45,7 @@ describe('api app', () => {
   })
 
   it('allows introspection and GraphiQL outside production', async () => {
-    const devApp = createApp({ db: await createTestDb(), isProduction: false })
+    const devApp = createApp({ db: await createTestDb(), isProduction: false, allowedOrigins: [] })
     const res = await devApp.request('/graphql', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
@@ -52,5 +54,21 @@ describe('api app', () => {
     expect(await res.json()).toEqual({ data: { __schema: { queryType: { name: 'Query' } } } })
     const page = await devApp.request('/graphql', { headers: { accept: 'text/html' } })
     expect(await page.text()).toContain('GraphiQL')
+  })
+  const preflight = (origin: string) =>
+    app.request('/graphql', {
+      method: 'OPTIONS',
+      headers: { origin, 'access-control-request-method': 'POST' },
+    })
+
+  it('allows CORS with credentials from the app origin', async () => {
+    const res = await preflight(APP_ORIGIN)
+    expect(res.headers.get('access-control-allow-origin')).toBe(APP_ORIGIN)
+    expect(res.headers.get('access-control-allow-credentials')).toBe('true')
+  })
+
+  it('does not allow CORS from unknown origins', async () => {
+    const res = await preflight('https://evil.example')
+    expect(res.headers.get('access-control-allow-origin')).toBeNull()
   })
 })

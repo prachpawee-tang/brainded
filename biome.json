@@ -106,7 +106,8 @@
         "**/metro.config.js",
         "**/babel.config.js",
         "**/jest.setup.ts",
-        "**/codegen.ts"
+        "**/codegen.ts",
+        "neon.ts"
       ],
       "linter": {
         "rules": {

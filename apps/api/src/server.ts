@@ -3,6 +3,7 @@ import { serve } from '@hono/node-server'
 import { createApp } from './app'
 
 const DEFAULT_PORT = 4000
+const DEFAULT_APP_ORIGIN = 'http://localhost:8081'
 
 const databaseUrl = process.env.DATABASE_URL
 if (!databaseUrl) throw new Error('DATABASE_URL is required (see .env.example)')
@@ -11,6 +12,7 @@ const port = Number(process.env.PORT ?? DEFAULT_PORT)
 const app = createApp({
   db: createDb(databaseUrl),
   isProduction: process.env.NODE_ENV === 'production',
+  allowedOrigins: (process.env.APP_ORIGINS ?? DEFAULT_APP_ORIGIN).split(','),
 })
 
 serve({ fetch: app.fetch, port }, ({ port: actual }) => {

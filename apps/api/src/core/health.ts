@@ -1,5 +1,5 @@
+import { sql } from '@brain/db'
 import type { Builder } from '@brain/graphql'
-import { sql } from 'drizzle-orm'
 
 const HealthStatus = { OK: 'OK' } as const
 

@@ -25,6 +25,8 @@
     "@commitlint/cli": "^21.2.4",
     "@commitlint/config-conventional": "^21.2.4",
     "@commitlint/types": "^21.2.3",
+    "@neon/config": "^1.9.2",
+    "@neon/env": "^1.6.3",
     "@types/node": "^26.6.5",
     "@vitest/coverage-v8": "^5.0.5",
     "commitizen": "^4.3.2",

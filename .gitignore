@@ -49,3 +49,4 @@ coverage/
 **/uniwind-types.d.ts
 apps/app/ios
 apps/app/android
+.neon
