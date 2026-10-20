@@ -1,0 +1,362 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-20T10:11:55.871222+00:00",
+  "title": "Design System: Brain (codename)",
+  "extensions": {
+    "colorMeta": {
+      "violet-pop": {
+        "role": "primary",
+        "displayName": "Violet Pop",
+        "tonalRamp": [
+          "#110449",
+          "#1d0679",
+          "#2809aa",
+          "#330bda",
+          "#613df5",
+          "#9c86f9",
+          "#ccc0fc",
+          "#ebe7fe"
+        ]
+      },
+      "violet-pop-night": {
+        "role": "primary",
+        "displayName": "Violet Pop (night)"
+      },
+      "lavender-wash": {
+        "role": "primary",
+        "displayName": "Lavender Wash",
+        "tonalRamp": [
+          "#120449",
+          "#1e0679",
+          "#2a09aa",
+          "#370bda",
+          "#633df5",
+          "#9e86f9",
+          "#ccc0fc",
+          "#ece7fe"
+        ]
+      },
+      "lavender-wash-night": {
+        "role": "primary",
+        "displayName": "Lavender Wash (night)"
+      },
+      "apricot": {
+        "role": "secondary",
+        "displayName": "Apricot — Pets accent",
+        "tonalRamp": [
+          "#452108",
+          "#72380d",
+          "#a04e13",
+          "#ce6418",
+          "#ea8c48",
+          "#f2b78d",
+          "#f8dac4",
+          "#fcf1e8"
+        ]
+      },
+      "apricot-night": {
+        "role": "secondary",
+        "displayName": "Apricot (night)"
+      },
+      "oat-paper": {
+        "role": "neutral",
+        "displayName": "Oat Paper",
+        "tonalRamp": [
+          "#372b15",
+          "#5c4723",
+          "#816332",
+          "#a68040",
+          "#c6a46c",
+          "#dcc6a3",
+          "#ede2cf",
+          "#f8f4ed"
+        ]
+      },
+      "night-paper": {
+        "role": "neutral",
+        "displayName": "Night Paper"
+      },
+      "card-white": {
+        "role": "neutral",
+        "displayName": "Card White"
+      },
+      "card-night": {
+        "role": "neutral",
+        "displayName": "Card Night"
+      },
+      "oat-shade": {
+        "role": "neutral",
+        "displayName": "Oat Shade"
+      },
+      "oat-shade-night": {
+        "role": "neutral",
+        "displayName": "Oat Shade (night)"
+      },
+      "hairline": {
+        "role": "neutral",
+        "displayName": "Hairline"
+      },
+      "hairline-night": {
+        "role": "neutral",
+        "displayName": "Hairline (night)"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "tonalRamp": [
+          "#2a2722",
+          "#464139",
+          "#625b50",
+          "#7e7567",
+          "#a39b8f",
+          "#c6c0b9",
+          "#e1dedb",
+          "#f4f2f1"
+        ]
+      },
+      "ink-night": {
+        "role": "neutral",
+        "displayName": "Ink (night)"
+      },
+      "pencil": {
+        "role": "neutral",
+        "displayName": "Pencil"
+      },
+      "pencil-night": {
+        "role": "neutral",
+        "displayName": "Pencil (night)"
+      },
+      "leaf": {
+        "role": "status",
+        "displayName": "Leaf — success",
+        "tonalRamp": [
+          "#0e3e29",
+          "#176845",
+          "#219260",
+          "#2abb7c",
+          "#58daa1",
+          "#97e8c4",
+          "#c9f3e0",
+          "#eafaf3"
+        ]
+      },
+      "honey": {
+        "role": "status",
+        "displayName": "Honey — warning",
+        "tonalRamp": [
+          "#412b0b",
+          "#6d4812",
+          "#99651a",
+          "#c48221",
+          "#e1a651",
+          "#edc892",
+          "#f5e2c6",
+          "#fbf4e9"
+        ]
+      },
+      "berry": {
+        "role": "status",
+        "displayName": "Berry — error",
+        "tonalRamp": [
+          "#400c0c",
+          "#6b1515",
+          "#961d1d",
+          "#c02525",
+          "#de5454",
+          "#ea9494",
+          "#f4c7c7",
+          "#fbeaea"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "One greeting/hero per screen."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Screen titles."
+      },
+      "heading": {
+        "displayName": "Heading",
+        "purpose": "Sections and tile titles."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Default text, inputs, buttons."
+      },
+      "caption": {
+        "displayName": "Caption",
+        "purpose": "Secondary text, helpers, errors."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Field and segment labels."
+      }
+    },
+    "shadows": [
+      {
+        "name": "knob",
+        "value": "0 1px 2px rgba(28,26,23,0.15)",
+        "purpose": "Only on moving parts inside a track (switch knob, selected segment)."
+      }
+    ],
+    "motion": [
+      {
+        "name": "fast",
+        "value": "120ms",
+        "purpose": "Press feedback."
+      },
+      {
+        "name": "base",
+        "value": "200ms",
+        "purpose": "State changes (focus, toggle)."
+      },
+      {
+        "name": "slow",
+        "value": "320ms",
+        "purpose": "Larger transitions."
+      },
+      {
+        "name": "spring-gentle",
+        "value": "damping 18, stiffness 180, mass 1",
+        "purpose": "Default Reanimated spring."
+      },
+      {
+        "name": "spring-bouncy",
+        "value": "damping 10, stiffness 220, mass 0.9",
+        "purpose": "Celebratory/success moments."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "content-max",
+        "value": "36rem (max-w-xl)"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one main action in an area.",
+      "html": "<button class=\"ds-btn ds-btn-primary\">บันทึก</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 20px;border:none;border-radius:20px;font-size:16px;line-height:24px;font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;cursor:pointer;transition:transform .12s,opacity .12s}.ds-btn:active{transform:scale(.95);opacity:.9}.ds-btn:focus-visible{outline:2px solid var(--color-primary,#6d4aff);outline-offset:2px}.ds-btn:disabled{opacity:.5}.ds-btn-primary{background:var(--color-primary,#6d4aff);color:var(--color-on-primary,#fff)}"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Alternative action, e.g. Continue with Google.",
+      "html": "<button class=\"ds-btn ds-btn-secondary\">Continue with Google</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 20px;border:none;border-radius:20px;font-size:16px;line-height:24px;font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;cursor:pointer;transition:transform .12s,opacity .12s}.ds-btn:active{transform:scale(.95);opacity:.9}.ds-btn:focus-visible{outline:2px solid var(--color-primary,#6d4aff);outline-offset:2px}.ds-btn:disabled{opacity:.5}.ds-btn-secondary{background:var(--color-primary-soft,#ece7ff);color:var(--color-primary,#6d4aff)}"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Navigation and low-stakes actions.",
+      "html": "<button class=\"ds-btn ds-btn-ghost\">Settings</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;height:48px;padding:0 20px;border:none;border-radius:20px;font-size:16px;line-height:24px;font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;cursor:pointer;transition:transform .12s,opacity .12s}.ds-btn:active{transform:scale(.95);opacity:.9}.ds-btn:focus-visible{outline:2px solid var(--color-primary,#6d4aff);outline-offset:2px}.ds-btn:disabled{opacity:.5}.ds-btn-ghost{background:transparent;color:var(--color-primary,#6d4aff)}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "text-field",
+      "description": "Labeled input; label doubles as accessible name; error caption is an alert.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-field-label\">ชื่อผู้ใช้</span><input class=\"ds-field-input\" placeholder=\"tnk\"/></label>",
+      "css": ".ds-field{display:flex;flex-direction:column;gap:6px;width:280px}.ds-field-label{font-size:14px;line-height:21px;color:var(--color-text-muted,#66615a);font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;}.ds-field-input{height:48px;padding:0 16px;border:1px solid var(--color-border,#e7e1d8);border-radius:12px;background:var(--color-surface,#fff);color:var(--color-text,#1c1a17);font-size:16px;outline:none;transition:border-color .2s}.ds-field-input:focus-visible{border-color:var(--color-primary,#6d4aff)}"
+    },
+    {
+      "name": "Module Tile",
+      "kind": "card",
+      "refersTo": "tile",
+      "description": "Doorway into a module: accent bubble + emoji, title, caption, chevron.",
+      "html": "<button class=\"ds-tile\"><span class=\"ds-tile-icon\">🐾</span><span class=\"ds-tile-body\"><span class=\"ds-tile-title\">สัตว์เลี้ยง</span><span class=\"ds-tile-desc\">โปรไฟล์ สุขภาพ และการดูแลน้องๆ</span></span><span class=\"ds-tile-chev\">›</span></button>",
+      "css": ".ds-tile{display:flex;align-items:center;gap:16px;width:320px;padding:16px;border:1px solid var(--color-border,#e7e1d8);border-radius:28px;background:var(--color-surface,#fff);text-align:left;cursor:pointer;transition:transform .12s}.ds-tile:active{transform:scale(.98)}.ds-tile:focus-visible{outline:2px solid var(--color-primary,#6d4aff);outline-offset:2px}.ds-tile-icon{display:flex;align-items:center;justify-content:center;width:48px;height:48px;border-radius:20px;background:var(--color-module-pets,#e8833a);font-size:22px}.ds-tile-body{display:flex;flex-direction:column;flex:1}.ds-tile-title{font-size:18px;line-height:27px;color:var(--color-text,#1c1a17);font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;}.ds-tile-desc{font-size:14px;line-height:21px;color:var(--color-text-muted,#66615a)}.ds-tile-chev{color:var(--color-text-muted,#66615a)}"
+    },
+    {
+      "name": "Segmented Control",
+      "kind": "custom",
+      "refersTo": "segmented-control",
+      "description": "2–3 exclusive settings with radio semantics.",
+      "html": "<div class=\"ds-seg\" role=\"radiogroup\"><button class=\"ds-seg-opt is-on\" role=\"radio\" aria-checked=\"true\">ไทย</button><button class=\"ds-seg-opt\" role=\"radio\" aria-checked=\"false\">English</button></div>",
+      "css": ".ds-seg{display:flex;gap:4px;padding:4px;width:280px;border-radius:20px;background:var(--color-surface-muted,#f2eee7)}.ds-seg-opt{flex:1;height:36px;border:none;border-radius:12px;background:transparent;color:var(--color-text-muted,#66615a);font-size:14px;font-family:'IBMPlexSansThai_500Medium','IBM Plex Sans Thai',system-ui,sans-serif;cursor:pointer;transition:transform .12s}.ds-seg-opt:active{transform:scale(.95)}.ds-seg-opt.is-on{background:var(--color-surface,#fff);color:var(--color-text,#1c1a17);box-shadow:0 1px 2px rgba(28,26,23,.08)}"
+    },
+    {
+      "name": "Switch",
+      "kind": "custom",
+      "refersTo": "switch-on",
+      "description": "Pill toggle with sliding knob.",
+      "html": "<button class=\"ds-switch is-on\" role=\"switch\" aria-checked=\"true\" aria-label=\"Pets\"><span class=\"ds-switch-knob\"></span></button>",
+      "css": ".ds-switch{position:relative;width:48px;height:28px;padding:2px;border:none;border-radius:9999px;background:var(--color-border,#e7e1d8);cursor:pointer}.ds-switch.is-on{background:var(--color-primary,#6d4aff)}.ds-switch-knob{display:block;width:24px;height:24px;border-radius:9999px;background:var(--color-surface,#fff);box-shadow:0 1px 2px rgba(28,26,23,.15);transition:transform .2s}.ds-switch.is-on .ds-switch-knob{transform:translateX(20px)}.ds-switch:focus-visible{outline:2px solid var(--color-primary,#6d4aff);outline-offset:2px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Pocket Companion",
+    "overview": "Brain is a small, warm companion that lives in your pocket. It is always ready and never loud. The surface is calm: warm oat paper, ink-dark text, thin hairlines, and lots of room around every element. The personality appears when you touch it. Buttons squish softly, toggles slide, and finished actions give a small reward. Copy talks like a friend. The interface stays quiet so the user's own life (pets, notes, plans) is what fills the screen.\n\nThe system is mobile-first and one-handed. Everything important sits within thumb reach. The design is identical on iOS, Android, and web, with no per-OS styling. Each life module gets one accent color. The accent appears on the module's tile and in its own screens, so the user always knows where they are. Violet is the app's own voice, used for actions, never for decoration.\n\nFun is a reaction, not decoration. A screen at rest should look almost plain. Delight comes from motion, emoji, empty-state wording, and small success moments.",
+    "keyCharacteristics": [
+      "Warm paper background, white cards, hairline borders, no drop shadows at rest.",
+      "One violet action color plus one accent per module.",
+      "Generous rounding: rounded corners on controls and cards, full pills on toggles.",
+      "IBM Plex Sans Thai throughout, with tall line heights so Thai script never clips.",
+      "Emoji as icons for now. A module's emoji sits in a rounded square of the module accent color.",
+      "Soft, springy feedback on press. Every interaction must stay usable with reduce-motion on."
+    ],
+    "rules": [
+      {
+        "name": "The One Voice Rule",
+        "body": "Violet means \"you can act here\". Never use it for decoration, illustration, or headings.",
+        "section": "colors"
+      },
+      {
+        "name": "The Semantic-Only Rule",
+        "body": "Components use only semantic tokens (`bg-surface`, `text-text-muted`, `bg-module-pets`). Raw palette classes (`bg-blue-500`) and hex values inside components are forbidden. The one exception is a module accent passed as data, such as the Tile `accentColor` prop.",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast-Is-Tested Rule",
+        "body": "Text/surface pairs are checked against WCAG AA by unit tests in both themes. A new color pair either joins that test or isn't shipped.",
+        "section": "colors"
+      },
+      {
+        "name": "The Thai Line-Height Rule",
+        "body": "Never reduce line height below the token. Thai vowel and tone marks stack above and below the line and clip easily.",
+        "section": "typography"
+      },
+      {
+        "name": "The One Hero Rule",
+        "body": "Use only one display line per screen. Everything else steps down.",
+        "section": "typography"
+      },
+      {
+        "name": "The Thumb Rule",
+        "body": "Primary actions sit low and wide: full-width buttons, 48px tall. Small header actions use the 36px `sm` button with an 8px hit slop.",
+        "section": "layout"
+      },
+      {
+        "name": "The Flat-At-Rest Rule",
+        "body": "Cards, tiles, and inputs never have drop shadows. If something needs to stand out, give it a tone step or the accent color.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** build screens only from `@brain/ui` components and semantic classes. If a component is missing, add it to `packages/ui` with a test.",
+      "**Do** keep one display line per screen and one primary button per action area.",
+      "**Do** give every module an accent in `moduleColors` and use it only for that module's identity.",
+      "**Do** write every string through i18n in both Thai and English, in a friendly voice. Short and warm beats formal.",
+      "**Do** design the empty state, the loading state, and the error state together with the happy path.",
+      "**Do** keep touch targets at least 44px and keep primary actions in thumb reach."
+    ],
+    "donts": [
+      "**Don't** add drop shadows to cards, tiles, or inputs (The Flat-At-Rest Rule).",
+      "**Don't** use violet for decoration or headings (The One Voice Rule).",
+      "**Don't** use raw Tailwind palette colors or hex values in components (The Semantic-Only Rule).",
+      "**Don't** reduce Thai line heights or use all-caps on Thai text.",
+      "**Don't** add per-OS styling. The same design ships on iOS, Android, and web.",
+      "**Don't** invent a logo, mascot, or brand name. They are undecided."
+    ]
+  }
+}
