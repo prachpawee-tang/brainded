@@ -26,6 +26,23 @@ describe('createBuilder', () => {
     expect(result.data).toEqual({ now: '2026-01-02T03:04:05.000Z' })
   })
 
+  it('round-trips LocalDate as YYYY-MM-DD and rejects other formats', async () => {
+    const build = (b: ReturnType<typeof createBuilder>) =>
+      b.queryType({
+        fields: (t) => ({
+          echo: t.field({
+            type: 'LocalDate',
+            args: { on: t.arg({ type: 'LocalDate', required: true }) },
+            resolve: (_r, { on }) => on,
+          }),
+        }),
+      })
+    expect((await run(build, '{ echo(on: "2026-02-03") }')).result.data).toEqual({
+      echo: '2026-02-03',
+    })
+    expect((await run(build, '{ echo(on: "03/02/2026") }')).result.errors).toBeDefined()
+  })
+
   it('returns thrown AppErrors as typed error results with a code', async () => {
     const { result } = await run(
       (b) =>

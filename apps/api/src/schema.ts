@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { createBuilder } from '@brain/graphql'
+import { registerPetsModule } from '@brain/module-pets/api'
 import { lexicographicSortSchema, printSchema } from 'graphql'
 import { registerHealth } from './core/health'
 import { registerViewer } from './core/viewer'
@@ -13,7 +14,7 @@ export const buildApiSchema = () => {
   builder.mutationType({})
   registerHealth(builder)
   registerViewer(builder)
-  // registerPetsModule(builder)  ← Phase 2
+  registerPetsModule(builder)
   return builder.toSchema()
 }
 

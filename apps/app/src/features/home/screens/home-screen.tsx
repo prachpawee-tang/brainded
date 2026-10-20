@@ -1,10 +1,9 @@
 import { useQuery } from '@apollo/client/react'
 import type { ModuleManifest } from '@brain/core'
-import { Button, Text, Tile } from '@brain/ui'
+import { Button, ScreenLayout, Text, Tile } from '@brain/ui'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { ScreenLayout } from '@/components/screen-layout'
 import { ViewerQuery } from '@/features/viewer/graphql/viewer'
 import { MODULES, useModuleAccent } from '@/lib/modules'
 

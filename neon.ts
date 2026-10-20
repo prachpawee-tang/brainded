@@ -3,6 +3,10 @@ import { defineConfig } from '@neon/config/v1'
 export default defineConfig({
   // Declare your Neon services here
   auth: false,
+  // Private bucket for user uploads (pet photos, attachments). Keys are stored in Postgres.
+  buckets: {
+    'brain-files': {},
+  },
   // Branch policy: per-branch tuning
   branch: (branch) => {
     if (branch.isDefault) {

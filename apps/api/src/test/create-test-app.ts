@@ -1,5 +1,6 @@
 import { createAuth } from '@brain/auth'
 import { createTestDb } from '@brain/db/testing'
+import { createMemoryStorage } from '@brain/storage'
 import { createApp } from '../app'
 
 export const TEST_APP_ORIGIN = 'http://localhost:8081'
@@ -19,7 +20,8 @@ export const createTestApp = async ({ isProduction = true } = {}) => {
     baseURL: BASE_URL,
     trustedOrigins: [TEST_APP_ORIGIN],
   })
-  const app = createApp({ db, auth, isProduction, allowedOrigins: [TEST_APP_ORIGIN] })
+  const storage = createMemoryStorage()
+  const app = createApp({ db, auth, storage, isProduction, allowedOrigins: [TEST_APP_ORIGIN] })
 
   /** Signs up a user and returns its session cookie. */
   const signUp = async (username = 'tnk'): Promise<string> => {
@@ -56,5 +58,5 @@ export const createTestApp = async ({ isProduction = true } = {}) => {
     return (await res.json()) as GraphQLResponse & { data?: T | null }
   }
 
-  return { app, db, signUp, gql }
+  return { app, db, storage, signUp, gql }
 }

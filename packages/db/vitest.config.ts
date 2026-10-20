@@ -8,7 +8,12 @@ export default mergeConfig(
       coverage: {
         // Table definitions are declarative (their callbacks only run in drizzle-kit);
         // their behavior is covered by *.int.test.ts against the real migrations.
-        exclude: ['src/testing/**', 'src/schema/auth.ts', 'src/schema/user-modules.ts'],
+        exclude: [
+          'src/testing/**',
+          'src/schema/auth.ts',
+          'src/schema/user-modules.ts',
+          'src/schema/timeline.ts',
+        ],
       },
     },
   }),

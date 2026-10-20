@@ -4,15 +4,21 @@
   "private": true,
   "type": "module",
   "exports": {
-    ".": "./src/index.ts"
+    ".": "./src/index.ts",
+    "./server": "./src/server.ts"
   },
   "scripts": {
     "test": "vitest run",
     "test:unit": "vitest run",
     "test:coverage": "vitest run --coverage",
-    "typecheck": "tsc -p tsconfig.json"
+    "typecheck": "tsc -p tsconfig.json",
+    "test:int": "vitest run int.test"
   },
   "devDependencies": {
-    "@brain/config": "workspace:*"
+    "@brain/config": "workspace:*",
+    "@electric-sql/pglite": "^0.5.10"
+  },
+  "dependencies": {
+    "@brain/db": "workspace:*"
   }
 }

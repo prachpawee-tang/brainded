@@ -2,5 +2,120 @@
   "module": {
     "name": "Pets",
     "description": "Profiles, health and everyday care for your pets"
+  },
+  "common": {
+    "back": "Back",
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "retry": "Try again",
+    "edit": "Edit",
+    "saved": "Saved ✓",
+    "kg": "{{value}} kg",
+    "unknown": "Unknown"
+  },
+  "species": {
+    "DOG": "Dog",
+    "CAT": "Cat",
+    "OTHER": "Other"
+  },
+  "sex": {
+    "MALE": "Male",
+    "FEMALE": "Female",
+    "UNKNOWN": "Not sure"
+  },
+  "overview": {
+    "title": "Pets",
+    "add": "Add a pet",
+    "emptyMessage": "No pets yet. Who's first?",
+    "emptyAddDog": "Add a dog",
+    "emptyAddCat": "Add a cat",
+    "emptyAddOther": "Something else",
+    "error": "Couldn't load your pets",
+    "noWeight": "No weight yet"
+  },
+  "age": {
+    "newborn": "Under a month",
+    "months_one": "{{count}} month",
+    "months_other": "{{count}} months",
+    "years_one": "{{count}} year",
+    "years_other": "{{count}} years",
+    "yearsMonths": "{{years}} {{months}}"
+  },
+  "profile": {
+    "notFound": "We couldn't find this pet",
+    "keyFacts": "At a glance",
+    "age": "Age",
+    "born": "Born {{date}}",
+    "noBirthday": "Birthday not set",
+    "weight": "Weight",
+    "weightOn": "on {{date}}",
+    "notes": "Important notes",
+    "noNotes": "No notes",
+    "logWeight": "+ Weight",
+    "addNote": "+ Note",
+    "timeline": "History",
+    "timelineEmpty": "Nothing logged yet. Start with a weight or a note.",
+    "loadMore": "Show older"
+  },
+  "timeline": {
+    "WEIGHT": "Weight {{value}} kg",
+    "NOTE_GENERAL": "Note",
+    "NOTE_VET_VISIT": "Vet visit",
+    "NOTE_VACCINE": "Vaccine",
+    "NOTE_GROOMING": "Grooming"
+  },
+  "noteType": {
+    "GENERAL": "Note",
+    "VET_VISIT": "Vet",
+    "VACCINE": "Vaccine",
+    "GROOMING": "Grooming"
+  },
+  "editor": {
+    "newTitle": "New pet",
+    "editTitle": "Edit {{name}}",
+    "photo": "Photo",
+    "choosePhoto": "Choose photo",
+    "changePhoto": "Change photo",
+    "uploading": "Uploading…",
+    "name": "Name",
+    "species": "Species",
+    "speciesOther": "What kind of pet?",
+    "breed": "Breed (optional)",
+    "sex": "Sex",
+    "birthday": "Birthday (optional)",
+    "birthdayPlaceholder": "Not set",
+    "clear": "Clear",
+    "notes": "Important notes (allergies, meds…)",
+    "create": "Add pet",
+    "archive": "Archive this pet",
+    "archiveConfirm": "Archive {{name}}? Their history is kept, but they'll disappear from your list."
+  },
+  "weightSheet": {
+    "title": "Log weight",
+    "weight": "Weight (kg)",
+    "date": "Date",
+    "note": "Note (optional)"
+  },
+  "noteSheet": {
+    "title": "Add a note",
+    "type": "Type",
+    "body": "What happened?",
+    "date": "Date"
+  },
+  "validation": {
+    "REQUIRED": "This field is required",
+    "TOO_LONG": "That's too long",
+    "INVALID": "Please pick a valid option",
+    "INVALID_DATE": "That date isn't valid",
+    "IN_FUTURE": "That date is in the future",
+    "TOO_SMALL": "That's below 0.1 kg",
+    "TOO_BIG": "That's over 200 kg"
+  },
+  "errors": {
+    "PET_NOT_FOUND": "This pet no longer exists",
+    "PHOTO_NOT_OWNED": "That photo can't be used",
+    "UPLOAD_FAILED": "Couldn't upload the photo",
+    "UNKNOWN": "Something went wrong. Please try again"
   }
 }

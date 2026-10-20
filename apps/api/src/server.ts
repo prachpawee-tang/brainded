@@ -1,5 +1,7 @@
+import { S3Client } from '@aws-sdk/client-s3'
 import { createAuth } from '@brain/auth'
 import { createDb } from '@brain/db'
+import { createS3Storage } from '@brain/storage'
 import { serve } from '@hono/node-server'
 import { createApp } from './app'
 
@@ -33,7 +35,14 @@ const auth = createAuth({
     : {}),
 })
 
-const app = createApp({ db, auth, isProduction, allowedOrigins })
+// S3-compatible object storage (Neon Object Storage now; R2/S3 later). Credentials, endpoint and
+// region come from the standard AWS_* env vars written by `neon env pull`.
+const storage = createS3Storage({
+  bucket: process.env.STORAGE_BUCKET ?? 'brain-files',
+  client: new S3Client({ forcePathStyle: true }),
+})
+
+const app = createApp({ db, auth, storage, isProduction, allowedOrigins })
 
 serve({ fetch: app.fetch, port }, ({ port: actual }) => {
   console.warn(`api ready → http://localhost:${actual}/graphql`)

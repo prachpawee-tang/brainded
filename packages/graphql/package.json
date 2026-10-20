@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@brain/db": "workspace:*",
+    "@brain/storage": "workspace:*",
     "@pothos/core": "^4.15.1",
     "@pothos/plugin-errors": "^4.9.3",
     "@pothos/plugin-relay": "^4.8.1",

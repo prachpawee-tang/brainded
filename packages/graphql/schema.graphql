@@ -1,3 +1,25 @@
+input AddPetNoteInput {
+  body: String!
+  occurredOn: LocalDate!
+  petId: ID!
+  type: PetNoteType!
+}
+
+input ArchivePetInput {
+  id: ID!
+}
+
+input CreatePetInput {
+  birthDate: LocalDate
+  breed: String
+  name: String!
+  notes: String
+  photoKey: String
+  sex: PetSex
+  species: PetSpecies!
+  speciesOther: String
+}
+
 """
 A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `date-time` format outlined in section 5.6 of the RFC 3339 profile of the ISO 8601 standard for representation of dates and times using the Gregorian calendar.
 """
@@ -26,9 +48,50 @@ enum Language {
   TH
 }
 
+"""
+A local date string (i.e., with no associated timezone) in `YYYY-MM-DD` format, e.g. `2020-01-01`.
+"""
+scalar LocalDate
+
+input LogPetWeightInput {
+  measuredOn: LocalDate!
+  note: String
+  petId: ID!
+  weightKg: Float!
+}
+
 type Mutation {
+  addPetNote(input: AddPetNoteInput!): MutationAddPetNoteResult!
+  archivePet(input: ArchivePetInput!): MutationArchivePetResult!
+  createPet(input: CreatePetInput!): MutationCreatePetResult!
+  logPetWeight(input: LogPetWeightInput!): MutationLogPetWeightResult!
   setModuleEnabled(input: SetModuleEnabledInput!): MutationSetModuleEnabledResult!
+  updatePet(input: UpdatePetInput!): MutationUpdatePetResult!
   updatePreferences(input: UpdatePreferencesInput!): MutationUpdatePreferencesResult!
+}
+
+union MutationAddPetNoteResult = MutationAddPetNoteSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationAddPetNoteSuccess {
+  data: Pet!
+}
+
+union MutationArchivePetResult = MutationArchivePetSuccess | NotFoundError | UnauthenticatedError
+
+type MutationArchivePetSuccess {
+  data: Pet!
+}
+
+union MutationCreatePetResult = ForbiddenError | MutationCreatePetSuccess | UnauthenticatedError | ValidationError
+
+type MutationCreatePetSuccess {
+  data: Pet!
+}
+
+union MutationLogPetWeightResult = MutationLogPetWeightSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationLogPetWeightSuccess {
+  data: Pet!
 }
 
 union MutationSetModuleEnabledResult = MutationSetModuleEnabledSuccess | NotFoundError | UnauthenticatedError
@@ -37,19 +100,118 @@ type MutationSetModuleEnabledSuccess {
   data: UserModule!
 }
 
+union MutationUpdatePetResult = ForbiddenError | MutationUpdatePetSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationUpdatePetSuccess {
+  data: Pet!
+}
+
 union MutationUpdatePreferencesResult = MutationUpdatePreferencesSuccess | UnauthenticatedError
 
 type MutationUpdatePreferencesSuccess {
   data: Viewer!
 }
 
+interface Node {
+  id: ID!
+}
+
 type NotFoundError implements Error {
   code: String!
 }
 
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type Pet implements Node {
+  birthDate: LocalDate
+  breed: String
+  createdAt: DateTime!
+  id: ID!
+  latestWeight: PetWeight
+  name: String!
+  notes: String
+  photoUrl: String
+  previousWeight: PetWeight
+  sex: PetSex!
+  species: PetSpecies!
+  speciesOther: String
+  timeline(after: String, before: String, first: Int, last: Int): PetTimelineConnection!
+}
+
+enum PetNoteType {
+  GENERAL
+  GROOMING
+  VACCINE
+  VET_VISIT
+}
+
+enum PetSex {
+  FEMALE
+  MALE
+  UNKNOWN
+}
+
+enum PetSpecies {
+  CAT
+  DOG
+  OTHER
+}
+
+type PetTimelineConnection {
+  edges: [PetTimelineConnectionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type PetTimelineConnectionEdge {
+  cursor: String!
+  node: PetTimelineEvent!
+}
+
+type PetTimelineEvent {
+  body: String
+  id: ID!
+  kind: PetTimelineKind!
+  occurredOn: LocalDate!
+  weightGrams: Int
+}
+
+enum PetTimelineKind {
+  NOTE_GENERAL
+  NOTE_GROOMING
+  NOTE_VACCINE
+  NOTE_VET_VISIT
+  WEIGHT
+}
+
+type PetWeight {
+  id: ID!
+  measuredOn: LocalDate!
+  note: String
+  weightGrams: Int!
+}
+
 type Query {
   health: Health!
+  node(id: ID!): Node
+  nodes(ids: [ID!]!): [Node]!
+  pet(id: ID!): Pet
+  pets(after: String, before: String, first: Int, last: Int): QueryPetsConnection!
   viewer: Viewer
+}
+
+type QueryPetsConnection {
+  edges: [QueryPetsConnectionEdge!]!
+  pageInfo: PageInfo!
+}
+
+type QueryPetsConnectionEdge {
+  cursor: String!
+  node: Pet!
 }
 
 input SetModuleEnabledInput {
@@ -65,6 +227,18 @@ enum ThemePreference {
 
 type UnauthenticatedError implements Error {
   code: String!
+}
+
+input UpdatePetInput {
+  birthDate: LocalDate
+  breed: String
+  id: ID!
+  name: String
+  notes: String
+  photoKey: String
+  sex: PetSex
+  species: PetSpecies
+  speciesOther: String
 }
 
 input UpdatePreferencesInput {

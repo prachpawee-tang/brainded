@@ -2,5 +2,120 @@
   "module": {
     "name": "สัตว์เลี้ยง",
     "description": "โปรไฟล์ สุขภาพ และการดูแลน้องๆ ในทุกวัน"
+  },
+  "common": {
+    "back": "กลับ",
+    "save": "บันทึก",
+    "cancel": "ยกเลิก",
+    "close": "ปิด",
+    "retry": "ลองอีกครั้ง",
+    "edit": "แก้ไข",
+    "saved": "บันทึกแล้ว ✓",
+    "kg": "{{value}} กก.",
+    "unknown": "ไม่ทราบ"
+  },
+  "species": {
+    "DOG": "หมา",
+    "CAT": "แมว",
+    "OTHER": "อื่นๆ"
+  },
+  "sex": {
+    "MALE": "ผู้",
+    "FEMALE": "เมีย",
+    "UNKNOWN": "ไม่แน่ใจ"
+  },
+  "overview": {
+    "title": "สัตว์เลี้ยง",
+    "add": "เพิ่มน้อง",
+    "emptyMessage": "ยังไม่มีน้องเลย ใครจะเป็นตัวแรก?",
+    "emptyAddDog": "เพิ่มน้องหมา",
+    "emptyAddCat": "เพิ่มน้องแมว",
+    "emptyAddOther": "ตัวอื่นๆ",
+    "error": "โหลดข้อมูลน้องๆ ไม่ได้",
+    "noWeight": "ยังไม่มีน้ำหนัก"
+  },
+  "age": {
+    "newborn": "ไม่ถึงเดือน",
+    "months_one": "{{count}} เดือน",
+    "months_other": "{{count}} เดือน",
+    "years_one": "{{count}} ปี",
+    "years_other": "{{count}} ปี",
+    "yearsMonths": "{{years}} {{months}}"
+  },
+  "profile": {
+    "notFound": "หาน้องตัวนี้ไม่เจอ",
+    "keyFacts": "ข้อมูลสำคัญ",
+    "age": "อายุ",
+    "born": "เกิด {{date}}",
+    "noBirthday": "ยังไม่ได้ใส่วันเกิด",
+    "weight": "น้ำหนัก",
+    "weightOn": "เมื่อ {{date}}",
+    "notes": "หมายเหตุสำคัญ",
+    "noNotes": "ไม่มีหมายเหตุ",
+    "logWeight": "+ น้ำหนัก",
+    "addNote": "+ บันทึก",
+    "timeline": "ประวัติ",
+    "timelineEmpty": "ยังไม่มีบันทึก เริ่มจากน้ำหนักหรือโน้ตสั้นๆ ก็ได้",
+    "loadMore": "ดูย้อนหลัง"
+  },
+  "timeline": {
+    "WEIGHT": "น้ำหนัก {{value}} กก.",
+    "NOTE_GENERAL": "บันทึก",
+    "NOTE_VET_VISIT": "พบหมอ",
+    "NOTE_VACCINE": "วัคซีน",
+    "NOTE_GROOMING": "อาบน้ำตัดขน"
+  },
+  "noteType": {
+    "GENERAL": "ทั่วไป",
+    "VET_VISIT": "หาหมอ",
+    "VACCINE": "วัคซีน",
+    "GROOMING": "กรูมมิ่ง"
+  },
+  "editor": {
+    "newTitle": "เพิ่มน้องใหม่",
+    "editTitle": "แก้ไข {{name}}",
+    "photo": "รูป",
+    "choosePhoto": "เลือกรูป",
+    "changePhoto": "เปลี่ยนรูป",
+    "uploading": "กำลังอัปโหลด…",
+    "name": "ชื่อ",
+    "species": "ชนิด",
+    "speciesOther": "น้องเป็นสัตว์อะไร?",
+    "breed": "สายพันธุ์ (ไม่ใส่ก็ได้)",
+    "sex": "เพศ",
+    "birthday": "วันเกิด (ไม่ใส่ก็ได้)",
+    "birthdayPlaceholder": "ยังไม่ได้ใส่",
+    "clear": "ล้าง",
+    "notes": "หมายเหตุสำคัญ (แพ้อะไร, ยาประจำ…)",
+    "create": "เพิ่มน้อง",
+    "archive": "เก็บน้องเข้าคลัง",
+    "archiveConfirm": "เก็บ {{name}} เข้าคลังไหม? ประวัติยังอยู่ครบ แต่จะไม่แสดงในรายการแล้ว"
+  },
+  "weightSheet": {
+    "title": "บันทึกน้ำหนัก",
+    "weight": "น้ำหนัก (กก.)",
+    "date": "วันที่",
+    "note": "หมายเหตุ (ไม่ใส่ก็ได้)"
+  },
+  "noteSheet": {
+    "title": "เพิ่มบันทึก",
+    "type": "ประเภท",
+    "body": "เกิดอะไรขึ้นบ้าง?",
+    "date": "วันที่"
+  },
+  "validation": {
+    "REQUIRED": "กรุณากรอกช่องนี้",
+    "TOO_LONG": "ยาวเกินไปนิด",
+    "INVALID": "กรุณาเลือกตัวเลือกที่ถูกต้อง",
+    "INVALID_DATE": "วันที่ไม่ถูกต้อง",
+    "IN_FUTURE": "วันที่อยู่ในอนาคต",
+    "TOO_SMALL": "น้อยกว่า 0.1 กก.",
+    "TOO_BIG": "มากกว่า 200 กก."
+  },
+  "errors": {
+    "PET_NOT_FOUND": "ไม่พบน้องตัวนี้แล้ว",
+    "PHOTO_NOT_OWNED": "ใช้รูปนี้ไม่ได้",
+    "UPLOAD_FAILED": "อัปโหลดรูปไม่สำเร็จ",
+    "UNKNOWN": "มีบางอย่างผิดพลาด ลองใหม่อีกครั้ง"
   }
 }

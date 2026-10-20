@@ -10,7 +10,8 @@ try {
 
 export default defineConfig({
   dialect: 'postgresql',
-  schema: './src/schema/index.ts',
+  // Core tables + every module's tables (modules/<name>/api/db/schema.ts).
+  schema: ['./src/schema/index.ts', '../../modules/*/api/db/schema.ts'],
   out: './migrations',
   casing: 'snake_case',
   // Migrations need a DIRECT (non-pooled) connection — PgBouncer transaction mode breaks them.

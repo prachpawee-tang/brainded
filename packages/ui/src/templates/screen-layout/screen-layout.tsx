@@ -1,19 +1,22 @@
-import { cn } from '@brain/ui'
 import type { ReactNode } from 'react'
-import { KeyboardAvoidingView, Platform, ScrollView } from 'react-native'
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import { cn } from '../../lib/cn'
 
 const TOP_GAP = 24
 const BOTTOM_GAP = 32
+const FOOTER_GAP = 12
 
-type ScreenLayoutProps = {
+export type ScreenLayoutProps = {
   children: ReactNode
+  /** Pinned below the scroll area (e.g. quick actions), padded for the home indicator. */
+  footer?: ReactNode
   /** Center content vertically (auth screens). */
   centered?: boolean
 }
 
 /** Scrollable, keyboard-aware, safe-area-padded screen with a readable max width on web. */
-export const ScreenLayout = ({ children, centered = false }: ScreenLayoutProps) => {
+export const ScreenLayout = ({ children, footer, centered = false }: ScreenLayoutProps) => {
   const insets = useSafeAreaInsets()
   return (
     <KeyboardAvoidingView
@@ -34,6 +37,14 @@ export const ScreenLayout = ({ children, centered = false }: ScreenLayoutProps) 
       >
         {children}
       </ScrollView>
+      {footer ? (
+        <View
+          className="w-full max-w-xl self-center border-t border-border bg-bg px-6 pt-3"
+          style={{ paddingBottom: insets.bottom + FOOTER_GAP }}
+        >
+          {footer}
+        </View>
+      ) : null}
     </KeyboardAvoidingView>
   )
 }

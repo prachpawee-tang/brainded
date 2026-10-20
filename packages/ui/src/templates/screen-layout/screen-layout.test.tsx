@@ -1,0 +1,23 @@
+import { render, screen } from '@testing-library/react-native'
+import { Text } from 'react-native'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { ScreenLayout } from './screen-layout'
+
+const METRICS = {
+  frame: { x: 0, y: 0, width: 390, height: 844 },
+  insets: { top: 47, left: 0, right: 0, bottom: 34 },
+}
+
+describe('ScreenLayout', () => {
+  it('renders content and an optional pinned footer', async () => {
+    await render(
+      <SafeAreaProvider initialMetrics={METRICS}>
+        <ScreenLayout centered footer={<Text>footer</Text>}>
+          <Text>content</Text>
+        </ScreenLayout>
+      </SafeAreaProvider>,
+    )
+    expect(screen.getByText('content')).toBeOnTheScreen()
+    expect(screen.getByText('footer')).toBeOnTheScreen()
+  })
+})

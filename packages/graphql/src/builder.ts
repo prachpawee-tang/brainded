@@ -1,7 +1,7 @@
 import SchemaBuilder from '@pothos/core'
 import ErrorsPlugin from '@pothos/plugin-errors'
 import RelayPlugin from '@pothos/plugin-relay'
-import { DateTimeResolver } from 'graphql-scalars'
+import { DateTimeResolver, LocalDateResolver } from 'graphql-scalars'
 import type { GraphQLContext } from './context'
 import {
   type AppError,
@@ -18,6 +18,8 @@ export type BuilderTypes = {
   DefaultFieldNullability: false
   Scalars: {
     DateTime: { Input: Date; Output: Date }
+    /** Calendar date without time zone, `YYYY-MM-DD`. */
+    LocalDate: { Input: string; Output: string }
     ID: { Input: string; Output: string | number }
   }
 }
@@ -35,6 +37,7 @@ export const createBuilder = () => {
   })
 
   builder.addScalarType('DateTime', DateTimeResolver)
+  builder.addScalarType('LocalDate', LocalDateResolver)
 
   const ErrorInterface = builder.interfaceRef<AppError>('Error').implement({
     fields: (t) => ({ code: t.exposeString('code') }),

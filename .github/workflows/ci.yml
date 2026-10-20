@@ -28,6 +28,7 @@ jobs:
         run: |
           pnpm --filter @brain/api codegen
           pnpm --filter @brain/app codegen
+          pnpm --filter @brain/module-pets codegen
           pnpm --filter @brain/ui build:theme
           git diff --exit-code
       - name: Typecheck

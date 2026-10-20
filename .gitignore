@@ -50,3 +50,4 @@ coverage/
 apps/app/ios
 apps/app/android
 .neon
+.serena/

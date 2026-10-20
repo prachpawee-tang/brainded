@@ -1,8 +1,7 @@
-import { Button, Text } from '@brain/ui'
+import { Button, ScreenLayout, Text } from '@brain/ui'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { ScreenLayout } from '@/components/screen-layout'
 import { MODULES, useModuleAccent } from '@/lib/modules'
 
 export const ComingSoonScreen = ({ moduleId }: { moduleId: string }) => {

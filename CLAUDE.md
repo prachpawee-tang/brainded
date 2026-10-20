@@ -27,7 +27,7 @@
 | DB | PostgreSQL (Neon free tier) | Standard Postgres = portable anywhere |
 | ORM / driver | Drizzle ORM + drizzle-kit · `pg` (node-postgres) | Neon's recommendation for Node servers and for Cloudflare Workers via Hyperdrive. Import `sql`/`eq`/… from `@brain/db`, never `drizzle-orm` directly (keeps one instance) |
 | Auth | Better Auth | Google, Facebook, Apple, username/password, account linking, Expo plugin |
-| Files | Cloudflare R2 (S3 API) | 10 GB free, S3 API = swap to AWS S3 later |
+| Files | Neon Object Storage (S3 API) via `@brain/storage` | Same provider/branching as the DB, no extra account; S3 API = swap to R2/AWS S3 by env only |
 | Validation | Zod (shared between FE/BE) | One schema per input |
 | i18n | i18next + react-i18next + expo-localization | Namespaced per module |
 | AI (later) | Claude API via `packages/ai` | Vision for pet body/photo analysis |
@@ -47,7 +47,7 @@ In `apps/app`, add packages with `pnpm expo install <pkg>` (picks SDK-compatible
 | Web | Cloudflare Pages (`expo export -p web`) | Any static host / Vercel |
 | API | Cloudflare Workers | `apps/api` also builds a Node server + `Dockerfile` → Fly/Railway/AWS |
 | DB | Neon Postgres (project `winter-frost-81729253`, branch `production`, ap-southeast-1, PG 18) | Any Postgres (Supabase, RDS): only `DATABASE_URL` changes |
-| Files | Cloudflare R2 | Any S3-compatible |
+| Files | Neon Object Storage, bucket `brain-files` (private; presigned GET URLs) | R2 / AWS S3 / MinIO: change `AWS_*` env + `STORAGE_BUCKET` |
 | Mobile | EAS Build free tier + EAS Update (OTA) | Same |
 
 Rule: **no vendor-specific API in domain code**. Vendor access lives behind an adapter in `packages/*` (e.g. `storage`, `mailer`, `ai`).
@@ -61,7 +61,6 @@ Rule: **no vendor-specific API in domain code**. Vendor access lives behind an a
 │   │   └── src/
 │   │       ├── app/         # Expo Router routes ONLY (thin re-exports). `sign-in`, `sign-up` (signed-out),
 │   │       │                #   `(app)/…` (signed-in, guarded by Stack.Protected in _layout.tsx)
-│   │       ├── components/  # app-shell layout pieces (ScreenLayout)
 │   │       ├── features/    # app-shell features (home, settings…): screens/ graphql/ __tests__/
 │   │       ├── graphql/generated/  # codegen output (committed, never edit)
 │   │       ├── lib/         # config (API_ORIGIN), auth-client, apollo, i18n, modules (registry + accent)
@@ -79,8 +78,8 @@ Rule: **no vendor-specific API in domain code**. Vendor access lives behind an a
 │   ├── db/                  # createDb, ownedColumns/notDeleted, migrations, createTestDb (PGlite)
 │   ├── graphql/             # createBuilder (Pothos), AppError family, context, schema.graphql
 │   ├── auth/                # createAuth (Better Auth: email+username+password, Google, Expo plugin)
-│   ├── core/                # ModuleManifest/defineModule; (Phase 3) core primitives (§4)
-│   ├── storage/             # (Phase 2) file storage adapter (R2/S3)
+│   ├── core/                # `.`: ModuleManifest (isomorphic) · `./server`: timeline primitive (DB)
+│   ├── storage/             # ObjectStorage adapter: createS3Storage, createMemoryStorage, buildObjectKey
 │   └── ai/                  # (Phase 4) AI adapter
 ├── modules/
 │   └── pets/                # @brain/module-pets  (§3)
@@ -100,9 +99,13 @@ Every module is a package in `modules/<name>` with the same shape:
 
 ```
 modules/pets/
-├── manifest.ts              # id, nameKey, icon, color, routes, nav entry, feature flags
+├── src/manifest.ts, src/locales.ts   # `./manifest`, `./locales` (isomorphic)
+├── shared/validation.ts     # `./shared` zod schemas + error codes, used by BOTH api and app
+├── codegen.ts               # module's own GraphQL codegen → app/graphql/generated (not apps/app's)
 ├── api/
-│   ├── db/schema.ts         # drizzle tables (prefixed: pets_*)
+│   ├── db/schema.ts         # drizzle tables (prefixed: pets_*), builders from `@brain/db/pg-core`
+│   ├── lib/                 # context (toServiceContext, parseOrThrow, global ids, cursors), loaders (DataLoader)
+│   ├── test/                # harness: composed schema + PGlite + memory storage
 │   ├── features/
 │   │   ├── profile/         # one folder per feature
 │   │   │   ├── profile.schema.ts     # Pothos types/queries/mutations
@@ -113,6 +116,8 @@ modules/pets/
 │   │   └── medication/ ...
 │   └── index.ts             # registerPetsModule(builder)
 ├── app/
+│   ├── lib/                 # services context (host-injected, e.g. uploadPhoto), labels, format
+│   ├── test/                # renderPets (i18n + MockedProvider + services), fixtures
 │   ├── features/
 │   │   └── profile/
 │   │       ├── screens/     # page-level components (Atomic "pages")
@@ -131,6 +136,9 @@ Rules:
 - Enabled modules per user stored in `user_modules` (module_id, enabled, settings jsonb).
 - Feature flags in `manifest.features`; unfinished features ship behind a flag.
 - Each module has `docs/modules/<name>.md` (scope, entities, roadmap) written **before** code.
+- **Module ↔ app boundary**: modules never import `apps/app`. Things only the host can do (upload with the session cookie, …) are injected through a module services provider (`PetsServicesProvider`) in the module's route `_layout.tsx`. Shared layout comes from `@brain/ui` (`ScreenLayout`).
+- Module tests: Vitest for `shared/` + `api/` (`vitest.config.ts`), Jest for `app/` (`jest.config.js`). `pnpm test` runs both.
+- File uploads: `POST /api/files` (apps/api, auth, `image/*` ≤ 5 MB) → `{ key }` under `<ownerId>/uploads/`. Services must check the key starts with the owner id before attaching it.
 
 ## 4. Core primitives (`packages/core`) — the extensibility backbone
 
@@ -175,10 +183,10 @@ Class names: colors `bg-bg`, `bg-surface`, `bg-surface-muted`, `border-border`, 
 - `elevation`: `0..3`.
 
 **Atomic design** (`packages/ui/src/`):
-- `atoms/` — ✅ Text, ✅ Button; next: Icon, Input, Avatar, Badge, Switch…
-- `molecules/` — (create folder when the first one lands) FormField, ListItem, SearchBar, DatePickerField…
-- `organisms/` — Card lists, Forms, Header, EmptyState, ModuleTile…
-- `templates/` — layout skeletons (ScreenLayout, ListDetailLayout).
+- `atoms/` — ✅ Text, Button, Switch, Avatar, Badge, Skeleton; next: Icon
+- `molecules/` — ✅ TextField, SegmentedControl, DateField (`.web.tsx` = `<input type=date>`); next: ListItem, SearchBar
+- `organisms/` — ✅ Tile, EmptyState, Sheet (bottom sheet)
+- `templates/` — ✅ ScreenLayout (safe area, keyboard, max width, optional pinned `footer`)
 - **pages** = `screens/` inside modules (not in `ui`).
 - Shared `ui` components are domain-agnostic. Domain-specific components live in the module.
 - Every component lives in `<level>/<name>/<name>.tsx` + `<name>.test.tsx`, is exported from `src/index.ts`, has typed props, is accessible (role/label), works in dark mode (semantic tokens only), and accepts `className`.
@@ -307,7 +315,11 @@ pnpm commit                           # commitizen (cz-git)
 - **Apollo 4 + MockedProvider** need `__typename` in mock results. Codegen uses `nonOptionalTypename: true`, so fixtures must include it (`src/test/viewer-fixture.ts`).
 - **Typed routes are off**: they are generated only by `expo start` into the gitignored `.expo/`, which would break CI typecheck.
 - A RN `View` with `accessibilityRole` isn't queryable by RNTL `getByRole` unless it is `accessible`. Assert on the children (e.g. radios) instead.
-- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). Neon's `production` branch currently has `0000_init`.
+- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init` and `0001_pets_and_timeline`.
+- Pothos relay connection typenames come from the field, not the node: `QueryPetsConnection(Edge)`, `PetTimelineConnection(Edge)`. Mock fixtures must use them.
+- `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
+- Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
+- Thai `th-TH` `Intl` dates use the Buddhist year automatically (2569 = 2026).
 
 ## 13. Open decisions
 
@@ -320,7 +332,7 @@ pnpm commit                           # commitizen (cz-git)
 |---|---|
 | 0. Foundation ✅ | Monorepo, tooling, CI, tokens, ui atoms, i18n, test harness, API health, app home |
 | 1. Shell + Auth ✅ | Login (username/email + password, Google), account linking, home module tiles, settings (language, theme, modules, accounts). **Later:** Facebook, Apple, email verification, password reset |
-| 2. Pets MVP | Pet profile (name, species, breed, birthday, sex, photo), weight log, history timeline |
+| 2. Pets MVP ✅ | Pet profile (name, species, breed, birthday, sex, photo, notes), weight log, history timeline (core `TimelineEvent`), photo upload (object storage). Spec: `docs/modules/pets.md` |
 | 3. Pets v2 | Medication, vet appointments, todos — built on core `Reminder`/`Task` + push notifications |
 | 4. Pets AI | Photo/body-condition analysis via `packages/ai` |
 | 5. Second-brain core | Quick capture, global search, tags, cross-module links, timeline view |

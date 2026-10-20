@@ -1,6 +1,8 @@
 /** @type {import('jest').Config} */
 module.exports = {
   preset: 'jest-expo',
+  // Screens render real i18n + Apollo; leave headroom when turbo runs packages in parallel.
+  testTimeout: 30_000,
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
   moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
   collectCoverageFrom: [

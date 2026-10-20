@@ -128,7 +128,13 @@
       }
     },
     {
-      "includes": ["**/*.test.{ts,tsx}", "apps/app/src/app/_layout.tsx", "**/src/test/**"],
+      "includes": [
+        "**/*.test.{ts,tsx}",
+        "apps/app/src/app/_layout.tsx",
+        "**/src/test/**",
+        "**/app/test/**",
+        "**/api/test/**"
+      ],
       "linter": {
         "rules": {
           "style": {

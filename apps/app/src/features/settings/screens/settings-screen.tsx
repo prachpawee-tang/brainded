@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Button, SegmentedControl, Switch, Text } from '@brain/ui'
+import { Button, ScreenLayout, SegmentedControl, Switch, Text } from '@brain/ui'
 import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { ScreenLayout } from '@/components/screen-layout'
 import {
   SetModuleEnabledMutation,
   UpdatePreferencesMutation,
