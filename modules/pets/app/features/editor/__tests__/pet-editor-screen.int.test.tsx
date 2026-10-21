@@ -8,7 +8,7 @@ import { renderPets } from '../../../test/render'
 import { PetEditorScreen } from '../screens/pet-editor-screen'
 
 jest.mock('expo-router', () => ({
-  router: { replace: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, replace: jest.fn(), back: jest.fn() },
   useLocalSearchParams: jest.fn(),
 }))
 jest.mock('expo-image-picker', () => ({ launchImageLibraryAsync: jest.fn() }))

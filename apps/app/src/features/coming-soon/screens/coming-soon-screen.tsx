@@ -1,8 +1,8 @@
 import { Button, ScreenLayout, Text } from '@brain/ui'
-import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { MODULES, useModuleAccent } from '@/lib/modules'
+import { goBack } from '@/lib/navigation'
 
 export const ComingSoonScreen = ({ moduleId }: { moduleId: string }) => {
   const module = MODULES.find((m) => m.id === moduleId)
@@ -22,7 +22,7 @@ export const ComingSoonScreen = ({ moduleId }: { moduleId: string }) => {
         <Text tone="muted" className="text-center">
           {t('app:comingSoon')}
         </Text>
-        <Button variant="ghost" label={t('app:settings.back')} onPress={() => router.back()} />
+        <Button variant="ghost" label={t('app:settings.back')} onPress={() => goBack('/')} />
       </View>
     </ScreenLayout>
   )

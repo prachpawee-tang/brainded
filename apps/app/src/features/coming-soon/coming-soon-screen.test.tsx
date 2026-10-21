@@ -3,7 +3,7 @@ import { router } from 'expo-router'
 import { createTestProviders } from '@/test/create-test-providers'
 import { ComingSoonScreen } from './screens/coming-soon-screen'
 
-jest.mock('expo-router', () => ({ router: { back: jest.fn() } }))
+jest.mock('expo-router', () => ({ router: { canGoBack: () => true, back: jest.fn() } }))
 
 describe('ComingSoonScreen', () => {
   it('shows the module name and goes back', async () => {

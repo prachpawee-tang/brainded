@@ -13,7 +13,7 @@ import { renderPets } from '../../../test/render'
 import { PetScreen } from '../screens/pet-screen'
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, push: jest.fn(), back: jest.fn() },
   useLocalSearchParams: () => ({ id: 'UGV0OnBldC0x' }),
 }))
 

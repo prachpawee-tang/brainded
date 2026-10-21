@@ -16,7 +16,7 @@ import { LabResultScreen } from '../screens/lab-result-screen'
 import { LabResultsScreen } from '../screens/lab-results-screen'
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, push: jest.fn(), replace: jest.fn(), back: jest.fn() },
   useLocalSearchParams: jest.fn(),
 }))
 jest.mock('expo-image-picker', () => ({ launchImageLibraryAsync: jest.fn() }))

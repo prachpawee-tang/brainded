@@ -12,7 +12,7 @@ import { SettingsScreen } from '../screens/settings-screen'
 jest.mock('@/lib/auth-client', () =>
   jest.requireActual('@/test/mock-auth-client').createAuthClientMock(),
 )
-jest.mock('expo-router', () => ({ router: { back: jest.fn() } }))
+jest.mock('expo-router', () => ({ router: { canGoBack: () => true, back: jest.fn() } }))
 jest.mock('expo-linking', () => ({
   createURL: (path: string) => `brain://${path.replace(/^\//, '')}`,
 }))

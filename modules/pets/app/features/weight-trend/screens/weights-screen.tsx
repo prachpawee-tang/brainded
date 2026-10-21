@@ -16,7 +16,7 @@ export const WeightsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} />
+      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
       <Text variant="display">{t('weight.listTitle')}</Text>
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />

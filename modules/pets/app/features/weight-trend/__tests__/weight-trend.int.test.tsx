@@ -8,7 +8,7 @@ import { WeightTrendCard } from '../components/weight-trend-card'
 import { WeightsScreen } from '../screens/weights-screen'
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, push: jest.fn(), back: jest.fn() },
   useLocalSearchParams: () => ({ id: 'UGV0OnBldC0x' }),
 }))
 

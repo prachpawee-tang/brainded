@@ -320,6 +320,7 @@ pnpm commit                           # commitizen (cz-git)
 - `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
 - Thai `th-TH` `Intl` dates use the Buddhist year automatically (2569 = 2026).
+- **Never call `router.back()` directly.** On web a reload or deep link leaves no history, so it throws "GO_BACK was not handled". Use `goBack(parentHref)` (`app/lib/navigation.ts` in modules, `@/lib/navigation` in the app). `HeaderBar` requires `fallbackHref`. Router mocks in tests need `canGoBack: () => true`.
 - **i18n keys must not contain `:`**, because it is i18next's namespace separator (`meds.timePresets.08:00` breaks). Key by name (`morning`) instead.
 - Refetch with operation names (`refetchQueries: ['PetTimeline', 'PetWeights']`) to refresh every active query of that operation, whatever its variables are.
 - The Apollo cache merges entities by id. Fixtures that reuse an id (e.g. one medication across two doses) must give it identical fields.

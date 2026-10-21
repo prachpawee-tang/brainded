@@ -93,7 +93,11 @@ export const LabResultEditorScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} title={t('labs.newTitle')} />
+      <HeaderBar
+        backLabel={t('common.back')}
+        fallbackHref={`/pets/${id}`}
+        title={t('labs.newTitle')}
+      />
       <View className="gap-4">
         <DateField
           label={t('labs.date')}

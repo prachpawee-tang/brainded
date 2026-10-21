@@ -32,7 +32,7 @@ export const MedicationsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} />
+      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
       <Text variant="display">{t('meds.listTitle')}</Text>
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />

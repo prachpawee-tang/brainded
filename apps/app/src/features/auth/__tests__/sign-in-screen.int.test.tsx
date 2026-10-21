@@ -8,7 +8,9 @@ import { SignInScreen } from '../screens/sign-in-screen'
 jest.mock('@/lib/auth-client', () =>
   jest.requireActual('@/test/mock-auth-client').createAuthClientMock(),
 )
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), replace: jest.fn() } }))
+jest.mock('expo-router', () => ({
+  router: { canGoBack: () => true, push: jest.fn(), replace: jest.fn() },
+}))
 jest.mock('expo-linking', () => ({
   createURL: (path: string) => `brain://${path.replace(/^\//, '')}`,
 }))

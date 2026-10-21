@@ -6,7 +6,7 @@ import { inDays, TODAY, todayMock } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
 import { TodayCard } from '../components/today-card'
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }))
+jest.mock('expo-router', () => ({ router: { canGoBack: () => true, push: jest.fn() } }))
 
 describe('TodayCard', () => {
   beforeEach(() => jest.clearAllMocks())

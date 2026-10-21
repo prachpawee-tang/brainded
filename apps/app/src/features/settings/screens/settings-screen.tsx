@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from '@apollo/client/react'
 import { Button, ScreenLayout, SegmentedControl, Switch, Text } from '@brain/ui'
-import { router } from 'expo-router'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import {
@@ -11,6 +10,7 @@ import {
 import type { Language, ThemePreference } from '@/graphql/generated/graphql'
 import { authClient } from '@/lib/auth-client'
 import { MODULES } from '@/lib/modules'
+import { goBack } from '@/lib/navigation'
 import { LinkedAccounts } from '../components/linked-accounts'
 import { SettingsSection } from '../components/settings-section'
 
@@ -81,12 +81,7 @@ export const SettingsScreen = () => {
     <ScreenLayout>
       <View className="flex-row items-center justify-between">
         <Text variant="title">{t('settings.title')}</Text>
-        <Button
-          variant="ghost"
-          size="sm"
-          label={t('settings.back')}
-          onPress={() => router.back()}
-        />
+        <Button variant="ghost" size="sm" label={t('settings.back')} onPress={() => goBack('/')} />
       </View>
 
       <View className="gap-1">

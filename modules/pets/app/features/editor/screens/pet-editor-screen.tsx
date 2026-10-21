@@ -21,6 +21,7 @@ import {
 import { confirmAction } from '../../../lib/confirm'
 import { issuesToFieldErrors, zodToFieldErrors } from '../../../lib/field-errors'
 import { speciesEmoji } from '../../../lib/format'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { PhotoPicker } from '../components/photo-picker'
 
@@ -111,7 +112,7 @@ export const PetEditorScreen = () => {
       const payload = result?.updatePet
       if (payload?.__typename === 'ValidationError')
         return setErrors(issuesToFieldErrors(payload.issues))
-      if (payload?.__typename === 'MutationUpdatePetSuccess') router.back()
+      if (payload?.__typename === 'MutationUpdatePetSuccess') goBack(`/pets/${petId}`)
       return
     }
 
@@ -140,6 +141,7 @@ export const PetEditorScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
+        fallbackHref={petId ? `/pets/${petId}` : '/pets'}
         title={
           isEditing ? t('editor.editTitle', { name: existing?.name ?? '' }) : t('editor.newTitle')
         }

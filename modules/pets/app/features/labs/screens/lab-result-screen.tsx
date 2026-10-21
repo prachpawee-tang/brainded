@@ -1,11 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client/react'
 import { Badge, type BadgeTone, Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
-import { router, useLocalSearchParams } from 'expo-router'
+import { useLocalSearchParams } from 'expo-router'
 import { Image, View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
 import type { PetLabFlag } from '../../../graphql/generated/graphql'
 import { DeletePetLabResultMutation, PetLabResultQuery } from '../../../graphql/health'
 import { confirmAction } from '../../../lib/confirm'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { LabStatusBadge } from '../components/lab-status-badge'
 
@@ -51,7 +52,7 @@ export const LabResultScreen = () => {
     })
     if (!isConfirmed) return
     await deleteResult({ variables: { input: { id: result.id } } })
-    router.back()
+    goBack(`/pets/${id}/labs`)
   }
 
   if (loading && !data) {
@@ -68,7 +69,7 @@ export const LabResultScreen = () => {
         <EmptyState
           glyph="🔍"
           message={t('errors.LAB_RESULT_NOT_FOUND')}
-          action={{ label: t('common.back'), onPress: () => router.back() }}
+          action={{ label: t('common.back'), onPress: () => goBack(`/pets/${id}/labs`) }}
         />
       </ScreenLayout>
     )
@@ -76,7 +77,7 @@ export const LabResultScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} />
+      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}/labs`} />
       <View className="gap-2">
         <Text variant="title">{result.title}</Text>
         <Text tone="muted">

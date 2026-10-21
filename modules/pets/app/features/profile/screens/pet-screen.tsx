@@ -7,6 +7,7 @@ import { HeaderBar } from '../../../components/header-bar'
 import { PetProfileQuery } from '../../../graphql/pets'
 import { usePetsAccent } from '../../../lib/accent'
 import { speciesEmoji } from '../../../lib/format'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { AppointmentsSection } from '../../appointments/components/appointments-section'
 import { LabResultsSection } from '../../labs/components/lab-results-section'
@@ -58,7 +59,7 @@ export const PetScreen = () => {
         <EmptyState
           glyph="🔍"
           message={t('profile.notFound')}
-          action={{ label: t('common.back'), onPress: () => router.back() }}
+          action={{ label: t('common.back'), onPress: () => goBack('/pets') }}
         />
       </ScreenLayout>
     )
@@ -97,6 +98,7 @@ export const PetScreen = () => {
     >
       <HeaderBar
         backLabel={t('common.back')}
+        fallbackHref="/pets"
         action={{ label: t('common.edit'), onPress: () => router.push(`/pets/${pet.id}/edit`) }}
       />
 

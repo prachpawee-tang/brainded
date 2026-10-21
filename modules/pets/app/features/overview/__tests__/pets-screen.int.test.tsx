@@ -5,7 +5,9 @@ import { listMock } from '../../../test/fixtures'
 import { renderPets } from '../../../test/render'
 import { PetsScreen } from '../screens/pets-screen'
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }))
+jest.mock('expo-router', () => ({
+  router: { canGoBack: () => true, push: jest.fn(), back: jest.fn() },
+}))
 
 describe('PetsScreen', () => {
   beforeEach(() => jest.clearAllMocks())
@@ -57,5 +59,18 @@ describe('PetsScreen', () => {
     expect(screen.getByTestId('pets-loading', { includeHiddenElements: true })).toBeOnTheScreen()
     await user.press(screen.getByRole('button', { name: 'Back' }))
     expect(router.back).toHaveBeenCalled()
+  })
+})
+
+describe('PetsScreen back without history', () => {
+  it('goes home when opened directly (reload / deep link)', async () => {
+    jest.clearAllMocks()
+    const user = userEvent.setup()
+    ;(router as unknown as { canGoBack: () => boolean }).canGoBack = () => false
+    ;(router as unknown as { replace: jest.Mock }).replace = jest.fn()
+    await renderPets(<PetsScreen />, { mocks: [listMock([])] })
+    await user.press(screen.getByRole('button', { name: 'Back' }))
+    expect(router.replace).toHaveBeenCalledWith('/')
+    expect(router.back).not.toHaveBeenCalled()
   })
 })

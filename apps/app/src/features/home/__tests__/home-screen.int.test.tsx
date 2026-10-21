@@ -4,7 +4,7 @@ import { createTestProviders } from '@/test/create-test-providers'
 import { buildViewer, viewerMock } from '@/test/viewer-fixture'
 import { HomeScreen } from '../screens/home-screen'
 
-jest.mock('expo-router', () => ({ router: { push: jest.fn() } }))
+jest.mock('expo-router', () => ({ router: { canGoBack: () => true, push: jest.fn() } }))
 jest.mock('uniwind', () => ({ useUniwind: () => ({ theme: 'light' }) }))
 
 const setup = async (mocks = [viewerMock()]) => {

@@ -9,7 +9,7 @@ jest.mock('@/lib/auth-client', () =>
   jest.requireActual('@/test/mock-auth-client').createAuthClientMock(),
 )
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), replace: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, push: jest.fn(), replace: jest.fn(), back: jest.fn() },
 }))
 
 const auth = authClient as unknown as AuthClientMock

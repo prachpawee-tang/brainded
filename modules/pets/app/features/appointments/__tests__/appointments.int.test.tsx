@@ -16,7 +16,7 @@ import { AppointmentsSection } from '../components/appointments-section'
 import { AppointmentsScreen } from '../screens/appointments-screen'
 
 jest.mock('expo-router', () => ({
-  router: { push: jest.fn(), back: jest.fn() },
+  router: { canGoBack: () => true, push: jest.fn(), back: jest.fn() },
   useLocalSearchParams: () => ({ id: 'UGV0OnBldC0x' }),
 }))
 

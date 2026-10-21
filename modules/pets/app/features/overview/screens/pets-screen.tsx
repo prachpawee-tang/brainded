@@ -73,7 +73,7 @@ export const PetsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} />
+      <HeaderBar backLabel={t('common.back')} fallbackHref="/" />
       <Text variant="display">{t('overview.title')}</Text>
       {body()}
     </ScreenLayout>
