@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Checkbox, ListItem, Skeleton, Text, toIsoDate } from '@brain/ui'
+import { Checkbox, Icon, ListItem, Skeleton, Text, toIsoDate } from '@brain/ui'
 import { router } from 'expo-router'
+import { ChevronRight } from 'lucide-react-native'
 import { View } from 'react-native'
 import { PetTodayQuery, SetDoseTakenMutation } from '../../../graphql/health'
 import { usePetLabels } from '../../../lib/use-pet-labels'
@@ -74,7 +75,7 @@ export const TodayCard = ({ petId }: { petId: string }) => {
             subtitle={[labels.dateTime(next.scheduledAt), next.clinic].filter(Boolean).join(' · ')}
             accessibilityLabel={`${t('today.nextAppointment')}: ${next.reason}`}
             onPress={() => router.push(`/pets/${petId}/appointments`)}
-            trailing={<Text tone="muted">›</Text>}
+            trailing={<Icon icon={ChevronRight} tone="muted" />}
           />
         ) : (
           <Text tone="muted" className="py-2">

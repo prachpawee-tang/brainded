@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Button, EmptyState, ScreenLayout, Skeleton, Text, toIsoDate } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
+import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
 import { isMedicationActive } from '../../../../shared/health'
 import { HeaderBar } from '../../../components/header-bar'
@@ -50,7 +51,7 @@ export const MedicationsScreen = () => {
           </View>
         ))
       )}
-      <Button label={t('meds.add')} onPress={sheet.openNew} />
+      <Button icon={Plus} label={t('meds.add')} onPress={sheet.openNew} />
       <MedicationSheet
         petId={id}
         medication={sheet.medication}

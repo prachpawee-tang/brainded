@@ -100,7 +100,7 @@ describe('PetScreen', () => {
       },
       timeline,
     ])
-    await user.press(screen.getByRole('button', { name: '+ Weight' }))
+    await user.press(screen.getByRole('button', { name: 'Weight' }))
     await user.type(screen.getByLabelText('Weight (kg)'), '4,5')
     await user.press(screen.getByRole('button', { name: 'Save' }))
     await waitFor(() => expect(result).toHaveBeenCalled())
@@ -109,7 +109,7 @@ describe('PetScreen', () => {
 
   it('validates the weight before saving', async () => {
     const user = await setup()
-    await user.press(screen.getByRole('button', { name: '+ Weight' }))
+    await user.press(screen.getByRole('button', { name: 'Weight' }))
     await user.type(screen.getByLabelText('Weight (kg)'), '0')
     await user.press(screen.getByRole('button', { name: 'Save' }))
     expect(await screen.findByText("That's below 0.1 kg")).toBeOnTheScreen()
@@ -131,7 +131,7 @@ describe('PetScreen', () => {
       },
       timeline,
     ])
-    await user.press(screen.getByRole('button', { name: '+ Note' }))
+    await user.press(screen.getByRole('button', { name: 'Note' }))
     await user.press(screen.getByRole('radio', { name: 'Vaccine' }))
     await user.type(screen.getByLabelText('What happened?'), 'Rabies')
     await user.press(screen.getByRole('button', { name: 'Save' }))

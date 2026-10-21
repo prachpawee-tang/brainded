@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Button, ScreenLayout, SegmentedControl, Switch, Text } from '@brain/ui'
+import { Button, IconButton, ScreenLayout, SegmentedControl, Switch, Text } from '@brain/ui'
+import { ChevronLeft, LogOut } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import {
@@ -79,9 +80,9 @@ export const SettingsScreen = () => {
 
   return (
     <ScreenLayout>
-      <View className="flex-row items-center justify-between">
+      <View className="-ml-3 flex-row items-center gap-1">
+        <IconButton icon={ChevronLeft} label={t('settings.back')} onPress={() => goBack('/')} />
         <Text variant="title">{t('settings.title')}</Text>
-        <Button variant="ghost" size="sm" label={t('settings.back')} onPress={() => goBack('/')} />
       </View>
 
       <View className="gap-1">
@@ -125,7 +126,12 @@ export const SettingsScreen = () => {
         <LinkedAccounts />
       </SettingsSection>
 
-      <Button variant="ghost" label={t('settings.signOut')} onPress={() => authClient.signOut()} />
+      <Button
+        variant="ghost"
+        icon={LogOut}
+        label={t('settings.signOut')}
+        onPress={() => authClient.signOut()}
+      />
     </ScreenLayout>
   )
 }

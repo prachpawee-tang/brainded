@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client/react'
 import { Button, DateField, Sheet, Text, TextField, toIsoDate } from '@brain/ui'
 import { router } from 'expo-router'
+import { Check, X } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { appointmentInputSchema } from '../../../../shared/health'
@@ -174,8 +175,13 @@ export const AppointmentSheet = ({ petId, appointment, visible, onClose }: Props
           <Button label={t('common.save')} onPress={save} loading={add.loading || update.loading} />
           {appointment?.status === 'SCHEDULED' ? (
             <View className="gap-2">
-              <Button variant="secondary" label={t('appointments.markDone')} onPress={markDone} />
-              <Button variant="ghost" label={t('appointments.cancel')} onPress={cancel} />
+              <Button
+                variant="secondary"
+                icon={Check}
+                label={t('appointments.markDone')}
+                onPress={markDone}
+              />
+              <Button variant="ghost" icon={X} label={t('appointments.cancel')} onPress={cancel} />
             </View>
           ) : null}
         </>

@@ -148,7 +148,7 @@ Fun is a reaction, not decoration. A screen at rest should look almost plain. De
 - One violet action color plus one accent per module.
 - Generous rounding: rounded corners on controls and cards, full pills on toggles.
 - IBM Plex Sans Thai throughout, with tall line heights so Thai script never clips.
-- Emoji as icons for now. A module's emoji sits in a rounded square of the module accent color.
+- Two icon voices. **Line icons (lucide, 2px stroke)** are used for interface controls: back, settings, edit, add, close, delete. **Emoji** are reserved for content identity (module tiles, pet avatars, timeline kinds), where they add warmth.
 - Soft, springy feedback on press. Every interaction must stay usable with reduce-motion on.
 
 ## Colors
@@ -226,6 +226,12 @@ Buttons are tactile and confident, and they react to every touch.
 - **Ghost:** transparent with violet label. Use it for navigation and low-stakes actions ("Back", "Settings", "Sign out").
 - **Danger:** Berry background with white label. Use it for destructive actions.
 - **Press:** scales to 95% and dims slightly. **Disabled:** 50% opacity. **Loading:** a spinner appears next to the label, and the button is busy and blocks presses.
+
+### Icon Buttons
+Use these to keep chrome quiet.
+- A 44×44px round, icon-only button. Its label is required and becomes the accessible name.
+- **Ghost** (default) is for header navigation and secondary actions. **Soft** (Lavender Wash behind a violet icon) is for "add" in section headers. **Primary** is for a lone main action.
+- **The Words-Earn-Their-Place Rule.** Chrome actions with universally understood meaning (back, settings, edit, add, close, delete, see all) are icon-only. Primary task buttons keep a short label next to an icon (e.g. "Weight"). Destructive or unusual actions keep full words (e.g. "Archive this pet", "Sign out").
 
 ### Text Fields
 - **Style:** card-colored background, 1px hairline border, 12px corners, 48px tall. A medium-weight label sits above the input and is also its accessible name.

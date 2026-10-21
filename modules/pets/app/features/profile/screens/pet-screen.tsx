@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Avatar, Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
+import { NotebookPen, Pencil, Scale } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
@@ -83,12 +84,14 @@ export const PetScreen = () => {
           <View className="flex-row gap-3">
             <Button
               className="flex-1"
+              icon={Scale}
               label={t('profile.logWeight')}
               onPress={() => setOpenSheet('weight')}
             />
             <Button
               className="flex-1"
               variant="secondary"
+              icon={NotebookPen}
               label={t('profile.addNote')}
               onPress={() => setOpenSheet('note')}
             />
@@ -99,7 +102,13 @@ export const PetScreen = () => {
       <HeaderBar
         backLabel={t('common.back')}
         fallbackHref="/pets"
-        action={{ label: t('common.edit'), onPress: () => router.push(`/pets/${pet.id}/edit`) }}
+        actions={[
+          {
+            label: t('common.edit'),
+            icon: Pencil,
+            onPress: () => router.push(`/pets/${pet.id}/edit`),
+          },
+        ]}
       />
 
       <View className="items-center gap-3">

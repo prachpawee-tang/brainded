@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Badge, type BadgeTone, Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Badge, type BadgeTone, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
+import { Trash2 } from 'lucide-react-native'
 import { Image, View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
 import type { PetLabFlag } from '../../../graphql/generated/graphql'
@@ -77,7 +78,11 @@ export const LabResultScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}/labs`} />
+      <HeaderBar
+        backLabel={t('common.back')}
+        fallbackHref={`/pets/${id}/labs`}
+        actions={[{ label: t('common.delete'), icon: Trash2, onPress: remove }]}
+      />
       <View className="gap-2">
         <Text variant="title">{result.title}</Text>
         <Text tone="muted">
@@ -138,8 +143,6 @@ export const LabResultScreen = () => {
           <Text>{result.note}</Text>
         </View>
       ) : null}
-
-      <Button variant="ghost" label={t('common.delete')} onPress={remove} className="self-center" />
     </ScreenLayout>
   )
 }

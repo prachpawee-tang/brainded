@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { ListItem, Text } from '@brain/ui'
 import { router } from 'expo-router'
+import { ChevronRight, Plus } from 'lucide-react-native'
 import { Section } from '../../../components/section'
 import { PetLabResultsQuery } from '../../../graphql/health'
 import { usePetLabels } from '../../../lib/use-pet-labels'
@@ -18,9 +19,20 @@ export const LabResultsSection = ({ petId }: { petId: string }) => {
     <Section
       title={t('labs.title')}
       actions={[
-        { label: t('labs.add'), onPress: () => router.push(`/pets/${petId}/labs/new`) },
+        {
+          label: t('labs.add'),
+          icon: Plus,
+          isPrimary: true,
+          onPress: () => router.push(`/pets/${petId}/labs/new`),
+        },
         ...(results.length > 0
-          ? [{ label: t('common.seeAll'), onPress: () => router.push(`/pets/${petId}/labs`) }]
+          ? [
+              {
+                label: t('common.seeAll'),
+                icon: ChevronRight,
+                onPress: () => router.push(`/pets/${petId}/labs`),
+              },
+            ]
           : []),
       ]}
     >

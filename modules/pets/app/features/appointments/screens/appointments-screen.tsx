@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
+import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
 import { PetAppointmentsQuery } from '../../../graphql/health'
@@ -55,7 +56,7 @@ export const AppointmentsScreen = () => {
           </View>
         ))
       )}
-      <Button label={t('appointments.add')} onPress={sheet.openNew} />
+      <Button icon={Plus} label={t('appointments.add')} onPress={sheet.openNew} />
       <AppointmentSheet
         petId={id}
         appointment={sheet.appointment}

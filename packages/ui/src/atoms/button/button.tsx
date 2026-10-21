@@ -1,5 +1,7 @@
+import type { LucideIcon } from 'lucide-react-native'
 import { ActivityIndicator, Pressable, type PressableProps } from 'react-native'
 import { cn } from '../../lib/cn'
+import { Icon } from '../icon/icon'
 import { Text, type TextTone } from '../text/text'
 
 export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
@@ -11,6 +13,8 @@ export type ButtonProps = Omit<PressableProps, 'children'> & {
   variant?: ButtonVariant
   size?: ButtonSize
   loading?: boolean
+  /** Optional leading icon (lucide). */
+  icon?: LucideIcon
   className?: string
 }
 
@@ -39,6 +43,7 @@ export const Button = ({
   variant = 'primary',
   size = 'md',
   loading = false,
+  icon,
   disabled = false,
   className,
   ...props
@@ -61,6 +66,14 @@ export const Button = ({
       {...props}
     >
       {loading && <ActivityIndicator testID="button-spinner" size="small" />}
+      {icon && !loading ? (
+        <Icon
+          testID="button-icon"
+          icon={icon}
+          size={size === 'sm' ? 'sm' : 'md'}
+          tone={LABEL_TONE[variant]}
+        />
+      ) : null}
       <Text
         variant={size === 'sm' ? 'caption' : 'body'}
         tone={LABEL_TONE[variant]}

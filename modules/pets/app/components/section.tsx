@@ -1,31 +1,36 @@
-import { Button, Text } from '@brain/ui'
+import { IconButton, Text } from '@brain/ui'
+import type { LucideIcon } from 'lucide-react-native'
 import type { ReactNode } from 'react'
 import { View } from 'react-native'
 
-type Action = { label: string; onPress: () => void }
+export type SectionAction = {
+  label: string
+  icon: LucideIcon
+  onPress: () => void
+  isPrimary?: boolean
+}
 
-/** Profile section: heading + optional actions + a card body. */
+/** Profile section: heading + icon actions (labels are their accessible names) + a card body. */
 export const Section = ({
   title,
   actions = [],
   children,
 }: {
   title: string
-  actions?: Action[]
+  actions?: SectionAction[]
   children: ReactNode
 }) => (
-  <View className="gap-3">
-    <View className="flex-row items-center justify-between gap-2">
+  <View className="gap-2">
+    <View className="-mr-2 flex-row items-center justify-between gap-2">
       <Text variant="heading">{title}</Text>
-      <View className="flex-row">
+      <View className="flex-row gap-1">
         {actions.map((action) => (
-          <Button
+          <IconButton
             key={action.label}
-            variant="ghost"
-            size="sm"
+            icon={action.icon}
             label={action.label}
+            variant={action.isPrimary ? 'soft' : 'ghost'}
             onPress={action.onPress}
-            className="-mr-2"
           />
         ))}
       </View>

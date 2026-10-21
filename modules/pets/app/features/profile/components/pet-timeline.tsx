@@ -1,5 +1,6 @@
 import { useQuery } from '@apollo/client/react'
 import { Button, Skeleton, Text } from '@brain/ui'
+import { ChevronDown } from 'lucide-react-native'
 import { View } from 'react-native'
 import type { PetTimelineKind } from '../../../graphql/generated/graphql'
 import { PetTimelineQuery } from '../../../graphql/pets'
@@ -72,7 +73,12 @@ export const PetTimeline = ({ petId }: { petId: string }) => {
         </View>
       ))}
       {connection?.pageInfo.hasNextPage ? (
-        <Button variant="ghost" label={t('profile.loadMore')} onPress={loadMore} />
+        <Button
+          variant="ghost"
+          icon={ChevronDown}
+          label={t('profile.loadMore')}
+          onPress={loadMore}
+        />
       ) : null}
     </View>
   )

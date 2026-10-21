@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Text, toIsoDate } from '@brain/ui'
 import { router } from 'expo-router'
+import { ChevronRight, Plus } from 'lucide-react-native'
 import { isMedicationActive } from '../../../../shared/health'
 import { Section } from '../../../components/section'
 import { PetMedicationsQuery } from '../../../graphql/health'
@@ -21,11 +22,12 @@ export const MedicationsSection = ({ petId }: { petId: string }) => {
     <Section
       title={t('meds.title')}
       actions={[
-        { label: t('meds.add'), onPress: sheet.openNew },
+        { label: t('meds.add'), icon: Plus, isPrimary: true, onPress: sheet.openNew },
         ...(all.length > 0
           ? [
               {
                 label: t('common.seeAll'),
+                icon: ChevronRight,
                 onPress: () => router.push(`/pets/${petId}/medications`),
               },
             ]

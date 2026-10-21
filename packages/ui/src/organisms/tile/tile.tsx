@@ -1,4 +1,6 @@
+import { ChevronRight } from 'lucide-react-native'
 import { Pressable, View } from 'react-native'
+import { Icon } from '../../atoms/icon/icon'
 import { Text } from '../../atoms/text/text'
 import { cn } from '../../lib/cn'
 
@@ -38,6 +40,6 @@ export const Tile = ({ title, description, icon, accentColor, onPress, className
         </Text>
       ) : null}
     </View>
-    <Text tone="muted">›</Text>
+    <Icon icon={ChevronRight} tone="muted" />
   </Pressable>
 )

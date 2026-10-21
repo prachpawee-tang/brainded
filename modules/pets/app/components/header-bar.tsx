@@ -1,46 +1,42 @@
-import { Button, Text } from '@brain/ui'
+import { IconButton, Text } from '@brain/ui'
 import type { Href } from 'expo-router'
+import { ChevronLeft, type LucideIcon } from 'lucide-react-native'
 import { View } from 'react-native'
 import { goBack } from '../lib/navigation'
 
-/** Back (to `fallbackHref` when there is no history) + optional title + optional trailing action. */
+export type HeaderAction = { label: string; icon: LucideIcon; onPress: () => void }
+
+/** Icon-only back (to `fallbackHref` when there is no history) + optional title + optional icon actions. */
 export const HeaderBar = ({
   backLabel,
   fallbackHref,
   title,
-  action,
+  actions = [],
 }: {
   backLabel: string
   /** Parent screen, used after a reload or deep link. */
   fallbackHref: Href
   title?: string
-  action?: { label: string; onPress: () => void }
+  actions?: HeaderAction[]
 }) => (
-  <View className="flex-row items-center justify-between gap-2">
-    <Button
-      variant="ghost"
-      size="sm"
-      label={backLabel}
-      onPress={() => goBack(fallbackHref)}
-      className="-ml-3"
-    />
-    {title ? (
-      <Text variant="heading" numberOfLines={1} className="flex-1 text-center">
-        {title}
-      </Text>
-    ) : (
-      <View className="flex-1" />
-    )}
-    {action ? (
-      <Button
-        variant="ghost"
-        size="sm"
-        label={action.label}
-        onPress={action.onPress}
-        className="-mr-3"
-      />
-    ) : (
-      <View className="w-16" />
-    )}
+  <View className="-mx-3 flex-row items-center gap-1">
+    <IconButton icon={ChevronLeft} label={backLabel} onPress={() => goBack(fallbackHref)} />
+    <View className="flex-1">
+      {title ? (
+        <Text variant="heading" numberOfLines={1} className="text-center">
+          {title}
+        </Text>
+      ) : null}
+    </View>
+    <View className="min-w-11 flex-row justify-end">
+      {actions.map((action) => (
+        <IconButton
+          key={action.label}
+          icon={action.icon}
+          label={action.label}
+          onPress={action.onPress}
+        />
+      ))}
+    </View>
   </View>
 )

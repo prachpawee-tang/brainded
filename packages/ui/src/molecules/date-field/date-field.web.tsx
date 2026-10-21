@@ -1,6 +1,7 @@
+import { X } from 'lucide-react-native'
 import { createElement, useEffect, useRef } from 'react'
 import { View } from 'react-native'
-import { Button } from '../../atoms/button/button'
+import { IconButton } from '../../atoms/icon-button/icon-button'
 import { Text } from '../../atoms/text/text'
 import type { DateFieldProps } from './date-field.types'
 import { toIsoDate } from './date-value'
@@ -62,7 +63,7 @@ export const DateField = ({
           },
         })}
         {clearLabel && value ? (
-          <Button variant="ghost" size="sm" label={clearLabel} onPress={() => onChange(null)} />
+          <IconButton icon={X} label={clearLabel} onPress={() => onChange(null)} />
         ) : null}
       </View>
       {error ? (

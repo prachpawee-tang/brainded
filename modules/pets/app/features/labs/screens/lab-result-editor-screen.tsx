@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client/react'
-import { Button, DateField, ScreenLayout, Text, TextField, toIsoDate } from '@brain/ui'
+import { Button, DateField, IconButton, ScreenLayout, Text, TextField, toIsoDate } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
+import { Plus, Trash2 } from 'lucide-react-native'
 import { useState } from 'react'
 import { View } from 'react-native'
 import { LAB_PRESETS, labResultInputSchema } from '../../../../shared/health'
@@ -196,19 +197,18 @@ export const LabResultEditorScreen = () => {
                   />
                 </View>
               </View>
-              <Button
-                variant="ghost"
-                size="sm"
-                label={t('labs.removeValue')}
-                accessibilityLabel={`${t('labs.removeValue')} ${n}`}
+              <IconButton
+                icon={Trash2}
+                label={`${t('labs.removeValue')} ${n}`}
                 onPress={() => setRows((current) => current.filter((r) => r.key !== row.key))}
-                className="self-end"
+                className="-mb-2 -mr-2 self-end"
               />
             </View>
           )
         })}
         <Button
           variant="secondary"
+          icon={Plus}
           label={t('labs.addValue')}
           onPress={() => setRows((current) => [...current, newRow()])}
         />

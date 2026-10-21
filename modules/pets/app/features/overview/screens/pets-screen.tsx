@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router } from 'expo-router'
+import { Plus } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
@@ -64,6 +65,7 @@ export const PetsScreen = () => {
         ))}
         <Button
           variant="secondary"
+          icon={Plus}
           label={t('overview.add')}
           onPress={() => router.push('/pets/new')}
         />

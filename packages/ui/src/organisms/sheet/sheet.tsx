@@ -1,6 +1,7 @@
+import { X } from 'lucide-react-native'
 import type { ReactNode } from 'react'
 import { KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, View } from 'react-native'
-import { Button } from '../../atoms/button/button'
+import { IconButton } from '../../atoms/icon-button/icon-button'
 import { Text } from '../../atoms/text/text'
 
 export type SheetProps = {
@@ -28,7 +29,7 @@ export const Sheet = ({ visible, title, closeLabel, onClose, children }: SheetPr
           <Text variant="title" className="text-xl leading-8">
             {title}
           </Text>
-          <Button variant="ghost" size="sm" label={closeLabel} onPress={onClose} />
+          <IconButton icon={X} label={closeLabel} onPress={onClose} className="-mr-2" />
         </View>
         <ScrollView keyboardShouldPersistTaps="handled" contentContainerClassName="gap-4 px-6 pt-4">
           {children}

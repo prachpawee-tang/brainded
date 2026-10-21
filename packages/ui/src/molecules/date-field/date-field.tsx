@@ -1,7 +1,8 @@
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker'
+import { X } from 'lucide-react-native'
 import { useState } from 'react'
 import { Platform, Pressable, View } from 'react-native'
-import { Button } from '../../atoms/button/button'
+import { IconButton } from '../../atoms/icon-button/icon-button'
 import { Text } from '../../atoms/text/text'
 import { cn } from '../../lib/cn'
 import type { DateFieldProps } from './date-field.types'
@@ -45,7 +46,7 @@ export const DateField = ({
           <Text tone={value ? 'default' : 'muted'}>{value ? formatValue(value) : placeholder}</Text>
         </Pressable>
         {clearLabel && value ? (
-          <Button variant="ghost" size="sm" label={clearLabel} onPress={() => onChange(null)} />
+          <IconButton icon={X} label={clearLabel} onPress={() => onChange(null)} />
         ) : null}
       </View>
       {isOpen ? (

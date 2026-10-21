@@ -162,7 +162,7 @@ describe('MedicationsScreen', () => {
     await renderPets(<MedicationsScreen />, { mocks: [medicationsMock(MEDS)] })
     expect(await screen.findByText('Ended')).toBeOnTheScreen()
     expect(screen.getByText('Antibiotic')).toBeOnTheScreen()
-    await user.press(screen.getByRole('button', { name: '+ Add medication' }))
+    await user.press(screen.getByRole('button', { name: 'Add medication' }))
     expect(screen.getByRole('header', { name: 'New medication' })).toBeOnTheScreen()
   })
 })

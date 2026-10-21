@@ -1,7 +1,8 @@
 import { useQuery } from '@apollo/client/react'
 import type { ModuleManifest } from '@brain/core'
-import { Button, ScreenLayout, Text, Tile } from '@brain/ui'
+import { Button, IconButton, ScreenLayout, Text, Tile } from '@brain/ui'
 import { router } from 'expo-router'
+import { Settings } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { ViewerQuery } from '@/features/viewer/graphql/viewer'
@@ -34,11 +35,11 @@ export const HomeScreen = () => {
           <Text variant="display">{t('home.greeting', { name: viewer?.name ?? '' })}</Text>
           <Text tone="muted">{t('home.tagline')}</Text>
         </View>
-        <Button
-          variant="ghost"
-          size="sm"
+        <IconButton
+          icon={Settings}
           label={t('home.settings')}
           onPress={() => router.push('/settings')}
+          className="-mr-2"
         />
       </View>
 

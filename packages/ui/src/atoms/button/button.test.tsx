@@ -47,3 +47,12 @@ describe('Button', () => {
     expect(screen.getByText('Go')).toHaveProp('className', expect.stringContaining('text-sm'))
   })
 })
+
+describe('Button with icon', () => {
+  it('shows a leading icon and keeps the label as its name', async () => {
+    const { Plus } = jest.requireActual('lucide-react-native')
+    await render(<Button label="Weight" icon={Plus} onPress={jest.fn()} />)
+    expect(screen.getByRole('button', { name: 'Weight' })).toBeOnTheScreen()
+    expect(screen.getByTestId('button-icon', { includeHiddenElements: true })).toBeOnTheScreen()
+  })
+})

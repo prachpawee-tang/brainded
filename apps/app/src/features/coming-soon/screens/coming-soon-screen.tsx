@@ -1,4 +1,5 @@
 import { Button, ScreenLayout, Text } from '@brain/ui'
+import { ChevronLeft } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
 import { MODULES, useModuleAccent } from '@/lib/modules'
@@ -22,7 +23,12 @@ export const ComingSoonScreen = ({ moduleId }: { moduleId: string }) => {
         <Text tone="muted" className="text-center">
           {t('app:comingSoon')}
         </Text>
-        <Button variant="ghost" label={t('app:settings.back')} onPress={() => goBack('/')} />
+        <Button
+          variant="ghost"
+          icon={ChevronLeft}
+          label={t('app:settings.back')}
+          onPress={() => goBack('/')}
+        />
       </View>
     </ScreenLayout>
   )

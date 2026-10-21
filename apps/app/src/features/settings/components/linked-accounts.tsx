@@ -1,5 +1,6 @@
-import { Button, Text } from '@brain/ui'
+import { Button, IconButton, Text } from '@brain/ui'
 import { createURL } from 'expo-linking'
+import { Link2, Unlink } from 'lucide-react-native'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
@@ -44,11 +45,11 @@ export const LinkedAccounts = () => {
         <View key={account.id} className="h-12 flex-row items-center justify-between">
           <Text>{providerLabel(account.providerId)}</Text>
           {canUnlink ? (
-            <Button
-              variant="ghost"
-              size="sm"
+            <IconButton
+              icon={Unlink}
               label={t('settings.unlink')}
               onPress={() => unlink(account)}
+              className="-mr-2"
             />
           ) : null}
         </View>
@@ -58,6 +59,7 @@ export const LinkedAccounts = () => {
           key={provider}
           variant="secondary"
           size="sm"
+          icon={Link2}
           label={t('settings.link', { provider: providerLabel(provider) })}
           onPress={() => authClient.linkSocial({ provider, callbackURL: createURL('/settings') })}
         />

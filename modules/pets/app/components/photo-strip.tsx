@@ -1,5 +1,6 @@
 import { Button, Text } from '@brain/ui'
 import { launchImageLibraryAsync } from 'expo-image-picker'
+import { ImagePlus } from 'lucide-react-native'
 import { useState } from 'react'
 import { Image, View } from 'react-native'
 import { usePetsServices } from '../lib/pets-services'
@@ -64,6 +65,7 @@ export const PhotoStrip = ({
           <Button
             variant="secondary"
             size="sm"
+            icon={ImagePlus}
             label={t('labs.addPhoto')}
             loading={isUploading}
             onPress={add}

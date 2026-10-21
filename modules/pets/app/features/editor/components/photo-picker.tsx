@@ -1,5 +1,6 @@
 import { Avatar, Button, Text } from '@brain/ui'
 import { launchImageLibraryAsync } from 'expo-image-picker'
+import { Camera } from 'lucide-react-native'
 import { useState } from 'react'
 import { View } from 'react-native'
 import { usePetsAccent } from '../../../lib/accent'
@@ -62,6 +63,7 @@ export const PhotoPicker = ({ name, fallback, imageUrl, onUploaded }: Props) => 
       <Button
         variant="secondary"
         size="sm"
+        icon={Camera}
         label={shown ? t('editor.changePhoto') : t('editor.choosePhoto')}
         loading={isUploading}
         onPress={pick}

@@ -4,7 +4,12 @@ module.exports = {
   // Screens render real i18n + Apollo; leave headroom when turbo runs packages in parallel.
   testTimeout: 30_000,
   testMatch: ['<rootDir>/src/**/*.test.{ts,tsx}'],
-  moduleNameMapper: { '^@/(.*)$': '<rootDir>/src/$1' },
+  moduleNameMapper: {
+    // lucide's react-native entry is .mjs, which jest-expo doesn't transform; use its CJS build.
+    '^lucide-react-native$':
+      '<rootDir>/node_modules/lucide-react-native/dist/cjs/lucide-react-native.js',
+    '^@/(.*)$': '<rootDir>/src/$1',
+  },
   collectCoverageFrom: [
     'src/**/*.{ts,tsx}',
     '!src/**/*.test.{ts,tsx}',

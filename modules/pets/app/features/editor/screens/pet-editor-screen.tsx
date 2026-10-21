@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@apollo/client/react'
 import { Button, DateField, ScreenLayout, SegmentedControl, Text, TextField } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
+import { Archive } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import {
@@ -224,6 +225,7 @@ export const PetEditorScreen = () => {
       {isEditing ? (
         <Button
           variant="ghost"
+          icon={Archive}
           label={t('editor.archive')}
           onPress={archive}
           className="self-center"

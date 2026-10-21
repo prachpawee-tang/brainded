@@ -8,6 +8,12 @@ export {
   type ButtonVariant,
 } from './atoms/button/button'
 export { Checkbox, type CheckboxProps } from './atoms/checkbox/checkbox'
+export { Icon, type IconProps, type IconSize, type IconTone } from './atoms/icon/icon'
+export {
+  IconButton,
+  type IconButtonProps,
+  type IconButtonVariant,
+} from './atoms/icon-button/icon-button'
 export { Skeleton } from './atoms/skeleton/skeleton'
 export { Switch, type SwitchProps } from './atoms/switch/switch'
 export { Text, type TextProps, type TextTone, type TextVariant } from './atoms/text/text'

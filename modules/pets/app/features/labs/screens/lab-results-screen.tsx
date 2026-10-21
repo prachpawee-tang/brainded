@@ -1,6 +1,7 @@
 import { useQuery } from '@apollo/client/react'
 import { Button, EmptyState, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
+import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
 import { PetLabResultsQuery } from '../../../graphql/health'
@@ -35,7 +36,11 @@ export const LabResultsScreen = () => {
           ))}
         </View>
       )}
-      <Button label={t('labs.add')} onPress={() => router.push(`/pets/${id}/labs/new`)} />
+      <Button
+        icon={Plus}
+        label={t('labs.add')}
+        onPress={() => router.push(`/pets/${id}/labs/new`)}
+      />
     </ScreenLayout>
   )
 }

@@ -3,12 +3,14 @@ import {
   Button,
   Checkbox,
   DateField,
+  IconButton,
   SegmentedControl,
   Sheet,
   Text,
   TextField,
   toIsoDate,
 } from '@brain/ui'
+import { Plus, X } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
 import { medicationInputSchema } from '../../../../shared/health'
@@ -157,7 +159,8 @@ export const MedicationSheet = ({ petId, medication, visible, onClose }: Props) 
                 key={time}
                 variant="secondary"
                 size="sm"
-                label={`${time} ✕`}
+                icon={X}
+                label={time}
                 accessibilityLabel={t('meds.removeTime', { time })}
                 onPress={() => toggleTime(time, false)}
               />
@@ -175,11 +178,12 @@ export const MedicationSheet = ({ petId, medication, visible, onClose }: Props) 
               error={customTimeError ?? undefined}
             />
           </View>
-          <Button
-            variant="secondary"
+          <IconButton
+            icon={Plus}
+            variant="soft"
             label={t('meds.addTime')}
             onPress={addCustomTime}
-            className={customTimeError ? 'mb-7' : undefined}
+            className={customTimeError ? 'mb-7' : 'mb-0.5'}
           />
         </View>
         {error('times') ? (

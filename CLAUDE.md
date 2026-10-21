@@ -183,7 +183,7 @@ Class names: colors `bg-bg`, `bg-surface`, `bg-surface-muted`, `border-border`, 
 - `elevation`: `0..3`.
 
 **Atomic design** (`packages/ui/src/`):
-- `atoms/` — ✅ Text, Button, Switch, Checkbox, Avatar, Badge, Skeleton; next: Icon
+- `atoms/` — ✅ Text, Button (optional `icon`), IconButton, Icon (lucide), Switch, Checkbox, Avatar, Badge, Skeleton
 - `molecules/` — ✅ TextField, SegmentedControl, DateField (`.web.tsx` = `<input type=date>`), ListItem; next: SearchBar
 - `organisms/` — ✅ Tile, EmptyState, Sheet (bottom sheet), LineChart (react-native-svg; colors from `moduleChartColors`, validated with the dataviz script)
 - `templates/` — ✅ ScreenLayout (safe area, keyboard, max width, optional pinned `footer`)
@@ -320,6 +320,7 @@ pnpm commit                           # commitizen (cz-git)
 - `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
 - Thai `th-TH` `Intl` dates use the Buddhist year automatically (2569 = 2026).
+- **Icons**: lucide-react-native through `Icon`/`IconButton` only (semantic tones, `aria-hidden`). Never pass RN-only a11y props like `importantForAccessibility` to SVG, because they leak to the DOM on web. Jest maps `lucide-react-native` to its CJS build (its RN entry is `.mjs`). After installing a package, restart Metro, because it caches the file map and fails with "Unable to resolve ./icons/…".
 - **Never call `router.back()` directly.** On web a reload or deep link leaves no history, so it throws "GO_BACK was not handled". Use `goBack(parentHref)` (`app/lib/navigation.ts` in modules, `@/lib/navigation` in the app). `HeaderBar` requires `fallbackHref`. Router mocks in tests need `canGoBack: () => true`.
 - **i18n keys must not contain `:`**, because it is i18next's namespace separator (`meds.timePresets.08:00` breaks). Key by name (`morning`) instead.
 - Refetch with operation names (`refetchQueries: ['PetTimeline', 'PetWeights']`) to refresh every active query of that operation, whatever its variables are.
