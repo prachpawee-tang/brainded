@@ -13,6 +13,8 @@ export default mergeConfig(
           'src/schema/auth.ts',
           'src/schema/user-modules.ts',
           'src/schema/timeline.ts',
+          'src/schema/attachments.ts',
+          'src/pg-core.ts',
         ],
       },
     },

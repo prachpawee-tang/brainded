@@ -78,7 +78,7 @@ Rule: **no vendor-specific API in domain code**. Vendor access lives behind an a
 │   ├── db/                  # createDb, ownedColumns/notDeleted, migrations, createTestDb (PGlite)
 │   ├── graphql/             # createBuilder (Pothos), AppError family, context, schema.graphql
 │   ├── auth/                # createAuth (Better Auth: email+username+password, Google, Expo plugin)
-│   ├── core/                # `.`: ModuleManifest (isomorphic) · `./server`: timeline primitive (DB)
+│   ├── core/                # `.`: ModuleManifest (isomorphic) · `./server`: timeline + attachments primitives (DB)
 │   ├── storage/             # ObjectStorage adapter: createS3Storage, createMemoryStorage, buildObjectKey
 │   └── ai/                  # (Phase 4) AI adapter
 ├── modules/
@@ -183,9 +183,9 @@ Class names: colors `bg-bg`, `bg-surface`, `bg-surface-muted`, `border-border`, 
 - `elevation`: `0..3`.
 
 **Atomic design** (`packages/ui/src/`):
-- `atoms/` — ✅ Text, Button, Switch, Avatar, Badge, Skeleton; next: Icon
-- `molecules/` — ✅ TextField, SegmentedControl, DateField (`.web.tsx` = `<input type=date>`); next: ListItem, SearchBar
-- `organisms/` — ✅ Tile, EmptyState, Sheet (bottom sheet)
+- `atoms/` — ✅ Text, Button, Switch, Checkbox, Avatar, Badge, Skeleton; next: Icon
+- `molecules/` — ✅ TextField, SegmentedControl, DateField (`.web.tsx` = `<input type=date>`), ListItem; next: SearchBar
+- `organisms/` — ✅ Tile, EmptyState, Sheet (bottom sheet), LineChart (react-native-svg; colors from `moduleChartColors`, validated with the dataviz script)
 - `templates/` — ✅ ScreenLayout (safe area, keyboard, max width, optional pinned `footer`)
 - **pages** = `screens/` inside modules (not in `ui`).
 - Shared `ui` components are domain-agnostic. Domain-specific components live in the module.
@@ -315,11 +315,15 @@ pnpm commit                           # commitizen (cz-git)
 - **Apollo 4 + MockedProvider** need `__typename` in mock results. Codegen uses `nonOptionalTypename: true`, so fixtures must include it (`src/test/viewer-fixture.ts`).
 - **Typed routes are off**: they are generated only by `expo start` into the gitignored `.expo/`, which would break CI typecheck.
 - A RN `View` with `accessibilityRole` isn't queryable by RNTL `getByRole` unless it is `accessible`. Assert on the children (e.g. radios) instead.
-- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init` and `0001_pets_and_timeline`.
+- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init`, `0001_pets_and_timeline` and `0002_pets_health`.
 - Pothos relay connection typenames come from the field, not the node: `QueryPetsConnection(Edge)`, `PetTimelineConnection(Edge)`. Mock fixtures must use them.
 - `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
 - Thai `th-TH` `Intl` dates use the Buddhist year automatically (2569 = 2026).
+- **i18n keys must not contain `:`**, because it is i18next's namespace separator (`meds.timePresets.08:00` breaks). Key by name (`morning`) instead.
+- Refetch with operation names (`refetchQueries: ['PetTimeline', 'PetWeights']`) to refresh every active query of that operation, whatever its variables are.
+- The Apollo cache merges entities by id. Fixtures that reuse an id (e.g. one medication across two doses) must give it identical fields.
+- Inputs that need typed validation errors take strings (e.g. appointment `scheduledAt: String`) and validate them with the shared zod schema. A GraphQL scalar would fail at coercion before the zod check runs.
 
 ## 13. Open decisions
 
@@ -333,6 +337,7 @@ pnpm commit                           # commitizen (cz-git)
 | 0. Foundation ✅ | Monorepo, tooling, CI, tokens, ui atoms, i18n, test harness, API health, app home |
 | 1. Shell + Auth ✅ | Login (username/email + password, Google), account linking, home module tiles, settings (language, theme, modules, accounts). **Later:** Facebook, Apple, email verification, password reset |
 | 2. Pets MVP ✅ | Pet profile (name, species, breed, birthday, sex, photo, notes), weight log, history timeline (core `TimelineEvent`), photo upload (object storage). Spec: `docs/modules/pets.md` |
-| 3. Pets v2 | Medication, vet appointments, todos — built on core `Reminder`/`Task` + push notifications |
+| 3a. Pets health ✅ | Weight chart + stats, vet results (values, flags, report photos via core `Attachment`), medications with daily doses, appointments |
+| 3b. Pets reminders | To-dos + local device notifications (core `Reminder`/`Task`) |
 | 4. Pets AI | Photo/body-condition analysis via `packages/ai` |
 | 5. Second-brain core | Quick capture, global search, tags, cross-module links, timeline view |

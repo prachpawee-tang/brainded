@@ -2,7 +2,7 @@ import { useMutation } from '@apollo/client/react'
 import { Button, DateField, Sheet, TextField, toIsoDate } from '@brain/ui'
 import { useState } from 'react'
 import { petWeightInputSchema } from '../../../../shared/validation'
-import { LogPetWeightMutation, PetTimelineQuery } from '../../../graphql/pets'
+import { LogPetWeightMutation } from '../../../graphql/pets'
 import { issuesToFieldErrors, zodToFieldErrors } from '../../../lib/field-errors'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 
@@ -19,7 +19,8 @@ export const WeightSheet = ({ petId, visible, onClose, onSaved }: Props) => {
   const [note, setNote] = useState('')
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [logWeight, { loading }] = useMutation(LogPetWeightMutation, {
-    refetchQueries: [{ query: PetTimelineQuery, variables: { id: petId } }],
+    // Refetch by operation name: every active timeline + weight chart for this pet.
+    refetchQueries: ['PetTimeline', 'PetWeights'],
   })
 
   const save = async () => {

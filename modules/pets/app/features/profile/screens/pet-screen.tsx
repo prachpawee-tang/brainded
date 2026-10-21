@@ -8,9 +8,11 @@ import { PetProfileQuery } from '../../../graphql/pets'
 import { usePetsAccent } from '../../../lib/accent'
 import { speciesEmoji } from '../../../lib/format'
 import { usePetLabels } from '../../../lib/use-pet-labels'
+import { AppointmentsSection } from '../../appointments/components/appointments-section'
 import { LabResultsSection } from '../../labs/components/lab-results-section'
 import { NoteSheet } from '../../logging/components/note-sheet'
 import { WeightSheet } from '../../logging/components/weight-sheet'
+import { MedicationsSection } from '../../medications/components/medications-section'
 import { TodayCard } from '../../today/components/today-card'
 import { WeightTrendCard } from '../../weight-trend/components/weight-trend-card'
 import { KeyFacts } from '../components/key-facts'
@@ -124,6 +126,8 @@ export const PetScreen = () => {
       <TodayCard petId={pet.id} />
       <WeightTrendCard petId={pet.id} />
       <LabResultsSection petId={pet.id} />
+      <MedicationsSection petId={pet.id} />
+      <AppointmentsSection petId={pet.id} />
 
       <View className="gap-3">
         <Text variant="heading">{t('profile.timeline')}</Text>

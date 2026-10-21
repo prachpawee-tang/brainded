@@ -208,10 +208,10 @@
     "dosage": "Dose (e.g. ½ tablet)",
     "times": "Times",
     "timePresets": {
-      "08:00": "Morning",
-      "12:00": "Noon",
-      "18:00": "Evening",
-      "21:00": "Bedtime"
+      "morning": "Morning",
+      "noon": "Noon",
+      "evening": "Evening",
+      "bedtime": "Bedtime"
     },
     "customTime": "Other time (HH:MM)",
     "addTime": "Add",
