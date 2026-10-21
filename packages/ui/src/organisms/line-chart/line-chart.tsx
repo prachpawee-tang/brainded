@@ -57,11 +57,13 @@ export const LineChart = ({
   const firstX = points[0]?.x ?? 0
   const lastX = points.at(-1)?.x ?? 0
   const spanX = lastX - firstX || 1
+  /** One point, or several on the same x (e.g. two weights logged the same day): centre them. */
+  const isSingleX = lastX === firstX
 
   const plotWidth = Math.max(width - PAD_X * 2, 0)
   const plotHeight = height - PAD_TOP - PAD_BOTTOM
   const toX = (x: number) =>
-    points.length === 1 ? PAD_X + plotWidth / 2 : PAD_X + ((x - firstX) / spanX) * plotWidth
+    isSingleX ? PAD_X + plotWidth / 2 : PAD_X + ((x - firstX) / spanX) * plotWidth
   const toY = (y: number) => PAD_TOP + (1 - (y - lowY) / (highY - lowY)) * plotHeight
 
   const path = points
@@ -155,6 +157,7 @@ export const LineChart = ({
             ) : null}
             {shown ? (
               <Circle
+                testID="line-chart-dot"
                 cx={toX(shown.x)}
                 cy={toY(shown.y)}
                 r={DOT_RADIUS}

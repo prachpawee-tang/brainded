@@ -120,6 +120,7 @@ export type SetDoseTakenInput = {
 
 export type SetPetAppointmentStatusInput = {
   id: string | number;
+  localDate?: string | null | undefined;
   status: PetAppointmentStatus;
 };
 

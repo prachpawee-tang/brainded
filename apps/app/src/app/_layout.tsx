@@ -14,6 +14,7 @@ import { createApolloClient } from '@/lib/apollo'
 import { authClient } from '@/lib/auth-client'
 import { detectLanguage } from '@/lib/detect-language'
 import { initI18n } from '@/lib/i18n'
+import { useCacheResetOnUserChange } from '@/lib/use-cache-reset-on-user-change'
 import { AppProviders } from '@/providers/app-providers'
 
 SplashScreen.preventAutoHideAsync()
@@ -34,11 +35,7 @@ export default function RootLayout() {
     initI18n(detectLanguage()).then(setI18n)
   }, [])
 
-  // Never show one user's cached data to another.
-  // biome-ignore lint/correctness/useExhaustiveDependencies: userId is the trigger, not an input.
-  useEffect(() => {
-    client.clearStore()
-  }, [userId])
+  useCacheResetOnUserChange(client, userId)
 
   const isReady = fontsLoaded && i18n !== null && !isPending
 

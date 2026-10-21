@@ -58,6 +58,8 @@ export const registerAppointments = (builder: Builder, Pet: PetRef) => {
     fields: (t) => ({
       id: t.id({ required: true }),
       status: t.field({ type: Status, required: true }),
+      /** Appointment day in the user's time zone, used for the timeline entry. */
+      localDate: t.field({ type: 'LocalDate' }),
     }),
   })
 
@@ -89,7 +91,12 @@ export const registerAppointments = (builder: Builder, Pet: PetRef) => {
       errors: { types: [UnauthenticatedError, NotFoundError] },
       args: { input: t.arg({ type: SetPetAppointmentStatusInput, required: true }) },
       resolve: (_root, { input }, context) =>
-        setAppointmentStatus(toServiceContext(context), asUuid(input.id), input.status),
+        setAppointmentStatus(
+          toServiceContext(context),
+          asUuid(input.id),
+          input.status,
+          input.localDate,
+        ),
     }),
   )
 }

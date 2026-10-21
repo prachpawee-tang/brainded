@@ -88,7 +88,15 @@ export const AppointmentSheet = ({ petId, appointment, visible, onClose }: Props
 
   const markDone = async () => {
     if (!appointment) return
-    await setStatus({ variables: { input: { id: appointment.id, status: 'DONE' } } })
+    await setStatus({
+      variables: {
+        input: {
+          id: appointment.id,
+          status: 'DONE',
+          localDate: toIsoDate(new Date(appointment.scheduledAt)),
+        },
+      },
+    })
     setIsDone(true)
   }
 

@@ -72,4 +72,14 @@ describe('LineChart', () => {
     await render(<LineChart {...props} averageLabel={undefined} height={120} />)
     expect(screen.queryByText('avg')).not.toBeOnTheScreen()
   })
+  it('centres points that share one date instead of pinning them to the left edge', async () => {
+    const sameDay = [
+      { key: 'a', x: 5, y: 4100 },
+      { key: 'b', x: 5, y: 4350 },
+    ]
+    await render(<LineChart {...props} points={sameDay} />)
+    const surface = screen.getByTestId('line-chart-surface')
+    await fireEvent(surface, 'layout', { nativeEvent: { layout: { width: 200, height: 180 } } })
+    expect(screen.getByTestId('line-chart-dot', { includeHiddenElements: true }).props.cx).toBe(100)
+  })
 })

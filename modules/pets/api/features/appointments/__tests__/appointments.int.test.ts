@@ -85,4 +85,23 @@ describe('appointments', () => {
       { path: ['reason'], code: 'REQUIRED' },
     ])
   })
+  it("records the done event on the client's local date when given", async () => {
+    const { run } = await createPetsHarness()
+    const petId = await createPet(run)
+    // 06:00 in Bangkok is still the previous day in UTC.
+    const id = (
+      await run(ADD, {
+        input: { petId, scheduledAt: '2026-11-02T06:00:00+07:00', reason: 'เช้าตรู่' },
+      })
+    ).data?.addPetAppointment.data.id
+    await run(STATUS, { input: { id, status: 'DONE', localDate: '2026-11-02' } })
+    const tl = await run(
+      `query ($id: ID!) { pet(id: $id) { timeline { edges { node { kind occurredOn } } } } }`,
+      { id: petId },
+    )
+    expect(tl.data?.pet.timeline.edges[0].node).toEqual({
+      kind: 'APPOINTMENT_DONE',
+      occurredOn: '2026-11-02',
+    })
+  })
 })

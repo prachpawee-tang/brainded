@@ -35,6 +35,8 @@ export const WeightSheet = ({ petId, visible, onClose, onSaved }: Props) => {
       return setErrors(issuesToFieldErrors(result.issues))
     setWeight('')
     setNote('')
+    // Next log starts fresh: today's date, not the date picked for this one.
+    setMeasuredOn(toIsoDate(new Date()))
     onSaved()
   }
 

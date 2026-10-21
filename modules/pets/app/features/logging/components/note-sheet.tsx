@@ -27,6 +27,8 @@ export const NoteSheet = ({ petId, visible, onClose, onSaved }: Props) => {
     if (result?.__typename === 'ValidationError')
       return setErrors(issuesToFieldErrors(result.issues))
     setBody('')
+    // Next log starts fresh: today's date, not the date picked for this one.
+    setOccurredOn(toIsoDate(new Date()))
     onSaved()
   }
 

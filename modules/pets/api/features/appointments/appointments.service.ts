@@ -63,10 +63,15 @@ export const updateAppointment = async (
   return row
 }
 
+/**
+ * `localDate` is the appointment's calendar day in the user's time zone (the server can't know it).
+ * Without it we fall back to the UTC day, which can be off by one near midnight.
+ */
 export const setAppointmentStatus = async (
   context: PetsServiceContext,
   id: string | null,
   status: AppointmentStatus,
+  localDate?: string | null,
 ) => {
   const existing = await requireAppointment(context, id)
   return context.db.transaction(async (tx) => {
@@ -82,7 +87,7 @@ export const setAppointmentStatus = async (
         entityType: PET_ENTITY_TYPE,
         entityId: row.petId,
         kind: APPOINTMENT_DONE_KIND,
-        occurredOn: row.scheduledAt.toISOString().slice(0, 10),
+        occurredOn: localDate ?? row.scheduledAt.toISOString().slice(0, 10),
         body: row.reason,
         data: { appointmentId: row.id },
       })

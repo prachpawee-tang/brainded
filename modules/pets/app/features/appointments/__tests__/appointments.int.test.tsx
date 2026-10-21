@@ -1,3 +1,4 @@
+import { toIsoDate } from '@brain/ui'
 import { screen, userEvent, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { Alert } from 'react-native'
@@ -164,7 +165,13 @@ describe('AppointmentSheet', () => {
           {
             request: {
               query: SetPetAppointmentStatusMutation,
-              variables: { input: { id: 'a1', status: 'DONE' } },
+              variables: {
+                input: {
+                  id: 'a1',
+                  status: 'DONE',
+                  localDate: toIsoDate(new Date(existing.scheduledAt)),
+                },
+              },
             },
             result,
           },
