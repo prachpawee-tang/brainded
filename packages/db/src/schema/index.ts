@@ -1,5 +1,6 @@
 export { attachments } from './attachments'
 export { authAccounts, authSchema, authSessions, authUsers, authVerifications } from './auth'
 export { notDeleted, ownedColumns } from './columns'
+export { tasks } from './tasks'
 export { timelineEvents } from './timeline'
 export { userModules } from './user-modules'

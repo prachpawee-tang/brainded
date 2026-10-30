@@ -14,6 +14,7 @@ export default mergeConfig(
           'src/schema/user-modules.ts',
           'src/schema/timeline.ts',
           'src/schema/attachments.ts',
+          'src/schema/tasks.ts',
           'src/pg-core.ts',
         ],
       },

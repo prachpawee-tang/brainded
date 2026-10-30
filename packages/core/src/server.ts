@@ -7,6 +7,15 @@ export {
   removeAttachmentsFor,
 } from './attachments/attachments'
 export {
+  createTask,
+  deleteTask,
+  findTask,
+  listTasks,
+  setTaskCompleted,
+  type Task,
+  updateTask,
+} from './tasks/tasks'
+export {
   decodeTimelineCursor,
   encodeTimelineCursor,
   listTimelineEvents,
