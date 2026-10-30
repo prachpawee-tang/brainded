@@ -3,6 +3,7 @@ import { Button, IconButton, ScreenLayout, SegmentedControl, Switch, Text } from
 import { ChevronLeft, LogOut } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
+import { NotificationSettings } from '@/features/reminders/components/notification-settings'
 import {
   SetModuleEnabledMutation,
   UpdatePreferencesMutation,
@@ -120,6 +121,10 @@ export const SettingsScreen = () => {
             enabled={viewer.modules.find((m) => m.moduleId === module.id)?.enabled ?? true}
           />
         ))}
+      </SettingsSection>
+
+      <SettingsSection title={t('settings.notifications.title')}>
+        <NotificationSettings />
       </SettingsSection>
 
       <SettingsSection title={t('settings.accounts')}>
