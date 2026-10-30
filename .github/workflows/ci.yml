@@ -29,6 +29,7 @@ jobs:
           pnpm --filter @brain/api codegen
           pnpm --filter @brain/app codegen
           pnpm --filter @brain/module-pets codegen
+          pnpm --filter @brain/module-colors codegen
           pnpm --filter @brain/ui build:theme
           git diff --exit-code
       - name: Typecheck
@@ -38,3 +39,54 @@ jobs:
       - name: Commit messages follow Conventional Commits
         if: github.event_name == 'pull_request'
         run: pnpm exec commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+  # CD: every push to main that passes `check` ships the web app + API as one Cloudflare Worker.
+  # One-time setup (Cloudflare token, Hyperdrive, GitHub secrets): docs/deploy.md.
+  deploy:
+    needs: check
+    # Skipped until the one-time setup has set the HYPERDRIVE_ID variable.
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' && vars.HYPERDRIVE_ID != ''
+    runs-on: ubuntu-latest
+    environment: production
+    concurrency:
+      group: deploy-production
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - name: Build web app (API on the same origin)
+        run: pnpm --filter @brain/app build
+        env:
+          EXPO_PUBLIC_API_ORIGIN: same-origin
+      - name: Apply database migrations
+        run: pnpm --filter @brain/db db:migrate
+        env:
+          DATABASE_URL_UNPOOLED: ${{ secrets.DATABASE_URL_UNPOOLED }}
+      - name: Point the Worker at its Hyperdrive config
+        run: sed -i "s/00000000000000000000000000000000/${{ vars.HYPERDRIVE_ID }}/" apps/api/wrangler.jsonc
+      - name: Deploy Worker
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          workingDirectory: apps/api
+          packageManager: pnpm
+          secrets: |
+            BETTER_AUTH_SECRET
+            GOOGLE_CLIENT_ID
+            GOOGLE_CLIENT_SECRET
+            AWS_ACCESS_KEY_ID
+            AWS_SECRET_ACCESS_KEY
+            AWS_ENDPOINT_URL_S3
+        env:
+          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+          GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+          GOOGLE_CLIENT_SECRET: ${{ secrets.GOOGLE_CLIENT_SECRET }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ secrets.AWS_ENDPOINT_URL_S3 }}

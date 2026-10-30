@@ -44,8 +44,7 @@ In `apps/app`, add packages with `pnpm expo install <pkg>` (picks SDK-compatible
 
 | Piece | Now (free) | Escape hatch |
 |---|---|---|
-| Web | Cloudflare Pages (`expo export -p web`) | Any static host / Vercel |
-| API | Cloudflare Workers | `apps/api` also builds a Node server + `Dockerfile` → Fly/Railway/AWS |
+| Web + API | **One Cloudflare Worker** (`apps/api/wrangler.jsonc`): static assets from `expo export -p web` + API routes on the same origin. CD from GitHub Actions. See `docs/deploy.md` | `apps/api/src/server.ts` runs the same app on Node → Docker/Fly/Railway |
 | DB | Neon Postgres (project `winter-frost-81729253`, branch `production`, ap-southeast-1, PG 18) | Any Postgres (Supabase, RDS): only `DATABASE_URL` changes |
 | Files | Neon Object Storage, bucket `brain-files` (private; presigned GET URLs) | R2 / AWS S3 / MinIO: change `AWS_*` env + `STORAGE_BUCKET` |
 | Mobile | EAS Build free tier + EAS Update (OTA) | Same |
@@ -333,6 +332,7 @@ pnpm commit                           # commitizen (cz-git)
 - GraphQL `ValidationError.issues.path` is `[String]`, so array indexes come back as strings (`['values', '0', 'value']`).
 - Vet results: the catalog (`shared/lab-catalog.ts`) never ships reference ranges; the editor prefills them from the pet's previous value of the same test (`Pet.labTrend`).
 - Data-driven swatch colors (colors module) use inline `style` + `readableTextOn()`; that is the only exception to semantic-token classes.
+- **Worker runtime**: no Node-only APIs at module load (`import.meta.resolve`, `process.env` reads at import). Env reaches the app through `appConfigFromEnv()` (`apps/api/src/config.ts`), used by both `server.ts` and `worker.ts`. The web build uses `EXPO_PUBLIC_API_ORIGIN=same-origin`.
 - Jest mocks AsyncStorage globally via `apps/app/__mocks__/@react-native-async-storage/`.
 - After `expo install` changes peers, pnpm may leave stale links (e.g. "Cannot find package 'drizzle-orm'"). Run `pnpm install` at the root.
 - Inputs that need typed validation errors take strings (e.g. appointment `scheduledAt: String`) and validate them with the shared zod schema. A GraphQL scalar would fail at coercion before the zod check runs.
@@ -340,7 +340,7 @@ pnpm commit                           # commitizen (cz-git)
 ## 13. Open decisions
 
 - [ ] Brand name (internal codename stays `brain`)
-- [ ] Confirm hosting choice before first deploy
+- [x] Hosting: one Cloudflare Worker (web + API), Neon `production` via Hyperdrive (decided 2026-10-30)
 
 ## 14. Roadmap
 

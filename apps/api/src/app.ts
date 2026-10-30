@@ -7,7 +7,7 @@ import { createYoga } from 'graphql-yoga'
 import { Hono } from 'hono'
 import { cors } from 'hono/cors'
 import { registerFileRoutes } from './core/files'
-import { buildApiSchema } from './schema'
+import { getApiSchema } from './schema'
 
 export type AppDeps = {
   db: Database
@@ -21,7 +21,7 @@ export type AppDeps = {
 /** Runtime-agnostic app: the same instance runs on Node, Cloudflare Workers or Docker. */
 export const createApp = ({ db, auth, storage, isProduction, allowedOrigins }: AppDeps) => {
   const yoga = createYoga<Record<string, unknown>, GraphQLContext>({
-    schema: buildApiSchema(),
+    schema: getApiSchema(),
     graphqlEndpoint: '/graphql',
     graphiql: !isProduction,
     maskedErrors: true,

@@ -30,6 +30,7 @@
     "hono": "^4.13.13"
   },
   "devDependencies": {
-    "@brain/config": "workspace:*"
+    "@brain/config": "workspace:*",
+    "wrangler": "^4.155.0"
   }
 }

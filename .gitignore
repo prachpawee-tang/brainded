@@ -51,3 +51,7 @@ apps/app/ios
 apps/app/android
 .neon
 .serena/
+
+# Cloudflare Workers (wrangler)
+.wrangler/
+.dev.vars*

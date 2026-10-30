@@ -15,5 +15,5 @@ export {
   or,
   sql,
 } from 'drizzle-orm'
-export { createDb, type Database, withStrictSsl } from './client'
+export { closeDb, createDb, type Database, withStrictSsl } from './client'
 export * from './schema'

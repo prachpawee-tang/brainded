@@ -16,6 +16,12 @@ export const createDb = (databaseUrl: string): Database =>
     casing: 'snake_case',
   })
 
+/** Ends the pool behind `createDb`. Workers open one per request and close it when the response is done. */
+export const closeDb = async (db: Database): Promise<void> => {
+  // biome-ignore lint/style/useNamingConvention: drizzle's own property name
+  await (db as unknown as { $client: Pool }).$client.end()
+}
+
 /** pg already treats `require` as `verify-full`; make it explicit so behavior survives pg v9. */
 export const withStrictSsl = (databaseUrl: string): string =>
   databaseUrl.replace(/([?&])sslmode=require\b/, '$1sslmode=verify-full')
