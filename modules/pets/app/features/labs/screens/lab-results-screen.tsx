@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client/react'
-import { Button, EmptyState, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Button, EmptyState, HeaderBar, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetLabResultsQuery } from '../../../graphql/health'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { LabStatusBadge } from '../components/lab-status-badge'
 
@@ -17,7 +17,7 @@ export const LabResultsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}`)} />
       <Text variant="display">{t('labs.listTitle')}</Text>
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />

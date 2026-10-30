@@ -187,7 +187,7 @@ Class names: colors `bg-bg`, `bg-surface`, `bg-surface-muted`, `border-border`, 
 - `atoms/` — ✅ Text, Button (optional `icon`), IconButton, Icon (lucide), Switch, Checkbox, Avatar, Badge, Skeleton
 - `molecules/` — ✅ TextField, SegmentedControl, DateField (`.web.tsx` = `<input type=date>`), ListItem; next: SearchBar
 - `organisms/` — ✅ Tile, EmptyState, Sheet (bottom sheet), LineChart (react-native-svg; colors from `moduleChartColors`, validated with the dataviz script)
-- `templates/` — ✅ ScreenLayout (safe area, keyboard, max width, optional pinned `footer`)
+- `templates/` — ✅ ScreenLayout (safe area, keyboard, max width, optional pinned `footer`), HeaderBar (icon back via `onBack`, optional title + icon actions)
 - **pages** = `screens/` inside modules (not in `ui`).
 - Shared `ui` components are domain-agnostic. Domain-specific components live in the module.
 - Every component lives in `<level>/<name>/<name>.tsx` + `<name>.test.tsx`, is exported from `src/index.ts`, has typed props, is accessible (role/label), works in dark mode (semantic tokens only), and accepts `className`.
@@ -322,7 +322,8 @@ pnpm commit                           # commitizen (cz-git)
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
 - Thai `th-TH` `Intl` dates use the Buddhist year automatically (2569 = 2026).
 - **Icons**: lucide-react-native through `Icon`/`IconButton` only (semantic tones, `aria-hidden`). Never pass RN-only a11y props like `importantForAccessibility` to SVG, because they leak to the DOM on web. Jest maps `lucide-react-native` to its CJS build (its RN entry is `.mjs`). After installing a package, restart Metro, because it caches the file map and fails with "Unable to resolve ./icons/…".
-- **Never call `router.back()` directly.** On web a reload or deep link leaves no history, so it throws "GO_BACK was not handled". Use `goBack(parentHref)` (`app/lib/navigation.ts` in modules, `@/lib/navigation` in the app). `HeaderBar` requires `fallbackHref`. Router mocks in tests need `canGoBack: () => true`.
+- **Never call `router.back()` directly.** On web a reload or deep link leaves no history, so it throws "GO_BACK was not handled". Use `goBack(parentHref)` (`app/lib/navigation.ts` in modules, `@/lib/navigation` in the app). `HeaderBar` (`@brain/ui`) is router-agnostic: pass `onBack={() => goBack(parentHref)}`. Router mocks in tests need `canGoBack: () => true`.
+- Every module route folder (`apps/app/src/app/(app)/<module>/`) needs its own `_layout.tsx` with a `Stack`. Without it, `router.back()` on web does nothing after a deep link (`canGoBack()` is true, but nothing pops).
 - **i18n keys must not contain `:`**, because it is i18next's namespace separator (`meds.timePresets.08:00` breaks). Key by name (`morning`) instead.
 - Refetch with operation names (`refetchQueries: ['PetTimeline', 'PetWeights']`) to refresh every active query of that operation, whatever its variables are.
 - The Apollo cache merges entities by id. Fixtures that reuse an id (e.g. one medication across two doses) must give it identical fields.
@@ -332,7 +333,6 @@ pnpm commit                           # commitizen (cz-git)
 - GraphQL `ValidationError.issues.path` is `[String]`, so array indexes come back as strings (`['values', '0', 'value']`).
 - Vet results: the catalog (`shared/lab-catalog.ts`) never ships reference ranges; the editor prefills them from the pet's previous value of the same test (`Pet.labTrend`).
 - Data-driven swatch colors (colors module) use inline `style` + `readableTextOn()`; that is the only exception to semantic-token classes.
-- `HeaderBar` and `goBack` are copied into each module (modules can't import each other). Moving them into `@brain/ui` with an `onBack` prop is a pending refactor.
 - Jest mocks AsyncStorage globally via `apps/app/__mocks__/@react-native-async-storage/`.
 - After `expo install` changes peers, pnpm may leave stale links (e.g. "Cannot find package 'drizzle-orm'"). Run `pnpm install` at the root.
 - Inputs that need typed validation errors take strings (e.g. appointment `scheduledAt: String`) and validate them with the shared zod schema. A GraphQL scalar would fail at coercion before the zod check runs.

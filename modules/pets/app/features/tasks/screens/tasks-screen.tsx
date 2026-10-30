@@ -1,10 +1,10 @@
 import { useQuery } from '@apollo/client/react'
-import { Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Button, EmptyState, HeaderBar, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
 import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetTasksQuery } from '../../../graphql/tasks'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { TaskRows } from '../components/task-rows'
 import { TaskSheet } from '../components/task-sheet'
@@ -25,7 +25,7 @@ export const TasksScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}`)} />
       <Text variant="display">{t('tasks.listTitle')}</Text>
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />

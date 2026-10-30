@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client/react'
-import { Button, EmptyState, ScreenLayout, Skeleton, Text, toIsoDate } from '@brain/ui'
+import { Button, EmptyState, HeaderBar, ScreenLayout, Skeleton, Text, toIsoDate } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
 import { Plus } from 'lucide-react-native'
 import { View } from 'react-native'
 import { isMedicationActive } from '../../../../shared/health'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetMedicationsQuery } from '../../../graphql/health'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { MedicationRows } from '../components/medication-rows'
 import { MedicationSheet } from '../components/medication-sheet'
@@ -33,7 +33,7 @@ export const MedicationsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}`)} />
       <Text variant="display">{t('meds.listTitle')}</Text>
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />

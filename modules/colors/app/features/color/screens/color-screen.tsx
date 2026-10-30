@@ -1,4 +1,4 @@
-import { EmptyState, ScreenLayout, Text } from '@brain/ui'
+import { EmptyState, HeaderBar, ScreenLayout, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
 import { Heart, HeartOff } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +6,6 @@ import { View } from 'react-native'
 import { findColor, getCombination } from '../../../../shared/palette'
 import { CombinationStrip } from '../../../components/combination-strip'
 import { CopyRow } from '../../../components/copy-row'
-import { HeaderBar } from '../../../components/header-bar'
 import { goBack } from '../../../lib/navigation'
 import { useCopy } from '../../../lib/use-copy'
 import { useFavorites } from '../../../lib/use-favorites'
@@ -41,7 +40,7 @@ export const ColorScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref="/colors"
+        onBack={() => goBack('/colors')}
         actions={[
           {
             label: isFavorite ? t('favorites.remove') : t('favorites.add'),

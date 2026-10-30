@@ -1,11 +1,10 @@
-import { Button, EmptyState, ScreenLayout, Text } from '@brain/ui'
+import { Button, EmptyState, HeaderBar, ScreenLayout, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Check, Copy, Heart, HeartOff } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { Pressable, View } from 'react-native'
 import { readableTextOn } from '../../../../shared/color-math'
 import { getCombination } from '../../../../shared/palette'
-import { HeaderBar } from '../../../components/header-bar'
 import { goBack } from '../../../lib/navigation'
 import { useCopy } from '../../../lib/use-copy'
 import { useFavorites } from '../../../lib/use-favorites'
@@ -38,7 +37,7 @@ export const CombinationScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref="/colors"
+        onBack={() => goBack('/colors')}
         actions={[
           {
             label: isFavorite ? t('favorites.remove') : t('favorites.add'),

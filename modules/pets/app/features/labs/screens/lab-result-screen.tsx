@@ -1,9 +1,8 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Badge, EmptyState, Icon, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Badge, EmptyState, HeaderBar, Icon, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { ChevronRight, Pencil, Trash2 } from 'lucide-react-native'
 import { Image, Pressable, View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { DeletePetLabResultMutation, PetLabResultQuery } from '../../../graphql/health'
 import { confirmAction } from '../../../lib/confirm'
 import { goBack } from '../../../lib/navigation'
@@ -58,7 +57,7 @@ export const LabResultScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref={`/pets/${id}/labs`}
+        onBack={() => goBack(`/pets/${id}/labs`)}
         actions={[
           {
             label: t('common.edit'),

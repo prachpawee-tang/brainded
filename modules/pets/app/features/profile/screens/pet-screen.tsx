@@ -1,10 +1,9 @@
 import { useQuery } from '@apollo/client/react'
-import { Avatar, Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Avatar, Button, EmptyState, HeaderBar, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { NotebookPen, Pencil, Scale } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetProfileQuery } from '../../../graphql/pets'
 import { usePetsAccent } from '../../../lib/accent'
 import { speciesEmoji } from '../../../lib/format'
@@ -99,7 +98,7 @@ export const PetScreen = () => {
     >
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref="/pets"
+        onBack={() => goBack('/pets')}
         actions={[
           {
             label: t('common.edit'),

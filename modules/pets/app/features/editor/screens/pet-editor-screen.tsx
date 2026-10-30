@@ -1,5 +1,13 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Button, DateField, ScreenLayout, SegmentedControl, Text, TextField } from '@brain/ui'
+import {
+  Button,
+  DateField,
+  HeaderBar,
+  ScreenLayout,
+  SegmentedControl,
+  Text,
+  TextField,
+} from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Archive } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
@@ -11,7 +19,6 @@ import {
   type PetSpecies,
   petInputSchema,
 } from '../../../../shared/validation'
-import { HeaderBar } from '../../../components/header-bar'
 import {
   ArchivePetMutation,
   CreatePetMutation,
@@ -142,7 +149,7 @@ export const PetEditorScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref={petId ? `/pets/${petId}` : '/pets'}
+        onBack={() => goBack(petId ? `/pets/${petId}` : '/pets')}
         title={
           isEditing ? t('editor.editTitle', { name: existing?.name ?? '' }) : t('editor.newTitle')
         }

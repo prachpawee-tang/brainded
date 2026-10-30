@@ -1,4 +1,4 @@
-import { Button, ScreenLayout, SegmentedControl, Text, TextField } from '@brain/ui'
+import { Button, HeaderBar, ScreenLayout, SegmentedControl, Text, TextField } from '@brain/ui'
 import { router } from 'expo-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -12,7 +12,7 @@ import {
 } from '../../../../shared/palette'
 import { ColorRow } from '../../../components/color-row'
 import { CombinationStrip } from '../../../components/combination-strip'
-import { HeaderBar } from '../../../components/header-bar'
+import { goBack } from '../../../lib/navigation'
 import { FavoritesList } from '../../favorites/components/favorites-list'
 
 const PAGE_SIZE = 40
@@ -102,7 +102,7 @@ export const ColorsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref="/" />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack('/')} />
       <Text variant="display">{t('browse.title')}</Text>
       <TextField
         label={t('browse.search')}

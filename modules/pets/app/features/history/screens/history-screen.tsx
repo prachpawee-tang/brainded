@@ -1,6 +1,6 @@
-import { ScreenLayout, Text } from '@brain/ui'
+import { HeaderBar, ScreenLayout, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
-import { HeaderBar } from '../../../components/header-bar'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { PetTimeline } from '../components/pet-timeline'
 
@@ -9,7 +9,7 @@ export const HistoryScreen = () => {
   const { t } = usePetLabels()
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}`)} />
       <Text variant="display">{t('profile.timeline')}</Text>
       <PetTimeline petId={id} />
     </ScreenLayout>

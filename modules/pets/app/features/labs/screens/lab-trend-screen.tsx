@@ -1,11 +1,20 @@
 import { useQuery } from '@apollo/client/react'
-import { Badge, EmptyState, LineChart, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import {
+  Badge,
+  EmptyState,
+  HeaderBar,
+  LineChart,
+  ListItem,
+  ScreenLayout,
+  Skeleton,
+  Text,
+} from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { View } from 'react-native'
 import { findLabTest } from '../../../../shared/lab-catalog'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetLabTrendQuery } from '../../../graphql/health'
 import { usePetsChartColor } from '../../../lib/chart-color'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { FLAG_TONE, formatLabNumber, useLabDisplay } from '../lib/lab-display'
 import { chartLabTrend } from '../lib/trend'
@@ -39,7 +48,7 @@ export const LabTrendScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}/labs`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}/labs`)} />
       <Text variant="display">{title}</Text>
       {loading && !data ? (
         <Skeleton className="h-52 rounded-xl" />

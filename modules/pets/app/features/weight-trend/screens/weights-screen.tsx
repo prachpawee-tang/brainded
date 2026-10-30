@@ -1,9 +1,9 @@
 import { useQuery } from '@apollo/client/react'
-import { EmptyState, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { EmptyState, HeaderBar, ListItem, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { useLocalSearchParams } from 'expo-router'
 import { View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetWeightsQuery } from '../../../graphql/health'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { WeightTrendCard } from '../components/weight-trend-card'
 
@@ -17,7 +17,7 @@ export const WeightsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack(`/pets/${id}`)} />
       <Text variant="display">{t('weight.title')}</Text>
       <WeightTrendCard petId={id} />
       {loading && !data ? (

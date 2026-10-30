@@ -1,5 +1,14 @@
 import { useApolloClient, useMutation, useQuery } from '@apollo/client/react'
-import { Button, DateField, ScreenLayout, Skeleton, Text, TextField, toIsoDate } from '@brain/ui'
+import {
+  Button,
+  DateField,
+  HeaderBar,
+  ScreenLayout,
+  Skeleton,
+  Text,
+  TextField,
+  toIsoDate,
+} from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
 import { Plus } from 'lucide-react-native'
 import { useEffect, useRef, useState } from 'react'
@@ -7,7 +16,6 @@ import { View } from 'react-native'
 import { LAB_PRESETS, labResultInputSchema } from '../../../../shared/health'
 import { findLabTest, type LabTest } from '../../../../shared/lab-catalog'
 import { toValidationIssues } from '../../../../shared/validation'
-import { HeaderBar } from '../../../components/header-bar'
 import { PhotoStrip } from '../../../components/photo-strip'
 import {
   AddPetLabResultMutation,
@@ -16,6 +24,7 @@ import {
   UpdatePetLabResultMutation,
 } from '../../../graphql/health'
 import { issuesToPathErrors } from '../../../lib/field-errors'
+import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { LabValueRow } from '../components/lab-value-row'
 import { type PickedTest, TestPickerSheet } from '../components/test-picker-sheet'
@@ -162,7 +171,7 @@ export const LabResultEditorScreen = () => {
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref={labId ? `/pets/${id}/labs/${labId}` : `/pets/${id}/labs`}
+        onBack={() => goBack(labId ? `/pets/${id}/labs/${labId}` : `/pets/${id}/labs`)}
         title={isEdit ? t('labs.editTitle') : t('labs.newTitle')}
       />
       <View className="gap-4">

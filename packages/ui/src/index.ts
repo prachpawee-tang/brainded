@@ -40,4 +40,9 @@ export {
 export { Sheet, type SheetProps } from './organisms/sheet/sheet'
 export { Tile, type TileProps } from './organisms/tile/tile'
 // Templates
+export {
+  type HeaderAction,
+  HeaderBar,
+  type HeaderBarProps,
+} from './templates/header-bar/header-bar'
 export { ScreenLayout, type ScreenLayoutProps } from './templates/screen-layout/screen-layout'

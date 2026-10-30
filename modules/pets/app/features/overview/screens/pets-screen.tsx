@@ -1,11 +1,11 @@
 import { useQuery } from '@apollo/client/react'
-import { Button, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { Button, EmptyState, HeaderBar, ScreenLayout, Skeleton, Text } from '@brain/ui'
 import { router } from 'expo-router'
 import { Plus } from 'lucide-react-native'
 import { useTranslation } from 'react-i18next'
 import { View } from 'react-native'
-import { HeaderBar } from '../../../components/header-bar'
 import { PetListQuery } from '../../../graphql/pets'
+import { goBack } from '../../../lib/navigation'
 import { PetCard } from '../components/pet-card'
 
 const SHORTCUTS = [
@@ -75,7 +75,7 @@ export const PetsScreen = () => {
 
   return (
     <ScreenLayout>
-      <HeaderBar backLabel={t('common.back')} fallbackHref="/" />
+      <HeaderBar backLabel={t('common.back')} onBack={() => goBack('/')} />
       <Text variant="display">{t('overview.title')}</Text>
       {body()}
     </ScreenLayout>
