@@ -86,11 +86,16 @@ export const PetLabResultQuery = graphql(`
         title
         clinic
         note
+        remark
+        interpretation
         abnormalCount
         values {
           id
+          section
+          code
           name
           value
+          textValue
           unit
           refLow
           refHigh
@@ -98,6 +103,7 @@ export const PetLabResultQuery = graphql(`
         }
         photos {
           id
+          key
           url
         }
       }
@@ -122,6 +128,48 @@ export const AddPetLabResultMutation = graphql(`
       }
       ... on Error {
         code
+      }
+    }
+  }
+`)
+
+export const UpdatePetLabResultMutation = graphql(`
+  mutation UpdatePetLabResult($input: UpdatePetLabResultInput!) {
+    updatePetLabResult(input: $input) {
+      __typename
+      ... on MutationUpdatePetLabResultSuccess {
+        data {
+          id
+        }
+      }
+      ... on ValidationError {
+        issues {
+          path
+          code
+        }
+      }
+      ... on Error {
+        code
+      }
+    }
+  }
+`)
+
+export const PetLabTrendQuery = graphql(`
+  query PetLabTrend($id: ID!, $code: String!) {
+    pet(id: $id) {
+      id
+      labTrend(code: $code) {
+        id
+        takenOn
+        labResultId
+        name
+        value
+        textValue
+        unit
+        refLow
+        refHigh
+        flag
       }
     }
   }

@@ -191,9 +191,33 @@
       "LOW": "Low",
       "NORMAL": "Normal",
       "HIGH": "High",
-      "UNKNOWN": "No range"
+      "UNKNOWN": "No range",
+      "ABNORMAL": "Abnormal"
     },
-    "photo": "Report photo {{index}}"
+    "photo": "Report photo {{index}}",
+    "editTitle": "Edit vet results",
+    "sections": {
+      "CBC": "Blood count (CBC)",
+      "MORPHOLOGY": "Blood cell shape",
+      "PARASITE": "Blood parasites",
+      "CHEMISTRY": "Blood chemistry",
+      "URINE": "Urine",
+      "OTHER": "Other"
+    },
+    "remark": "Lab remark (optional)",
+    "interpretation": "What the vet said (optional)",
+    "addTest": "Add a test",
+    "searchTest": "Search, e.g. ค่าไต or CREA",
+    "addCustom": "Add “{{name}}”",
+    "valueHint": "A number, or text like 1+ or Not Found",
+    "trendEmpty": "Two numeric results are needed for a chart",
+    "latestRange": "Latest range: {{range}}",
+    "notCharted": "Not on the chart (different unit)",
+    "history": "Every result",
+    "removePhoto": "Remove report photo {{index}}",
+    "openTrend": "See {{name}} over time",
+    "remarkTitle": "Lab remark",
+    "interpretationTitle": "What the vet said"
   },
   "meds": {
     "title": "Medications",

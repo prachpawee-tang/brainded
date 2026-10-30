@@ -316,7 +316,7 @@ const unitKey = (unit: string) =>
 /** Convert to the catalog's canonical unit; null when the test or unit is unknown. */
 export const normalizeLabValue = (code: string, value: number, unit: string | null | undefined) => {
   const test = findLabTest(code)
-  if (!test || test.kind !== 'NUMERIC' || unit == null) return null
+  if (test?.kind !== 'NUMERIC' || unit == null) return null
   const key = unitKey(unit)
   if (key === unitKey(test.unit)) return { value, unit: test.unit }
   const factor = Object.entries(test.aliases ?? {}).find(([alias]) => unitKey(alias) === key)?.[1]

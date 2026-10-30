@@ -315,7 +315,7 @@ pnpm commit                           # commitizen (cz-git)
 - **Apollo 4 + MockedProvider** need `__typename` in mock results. Codegen uses `nonOptionalTypename: true`, so fixtures must include it (`src/test/viewer-fixture.ts`).
 - **Typed routes are off**: they are generated only by `expo start` into the gitignored `.expo/`, which would break CI typecheck.
 - A RN `View` with `accessibilityRole` isn't queryable by RNTL `getByRole` unless it is `accessible`. Assert on the children (e.g. radios) instead.
-- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init`, `0001_pets_and_timeline` and `0002_pets_health`; `0003_core_tasks` is generated but must still be applied.
+- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init`, `0001_pets_and_timeline` and `0002_pets_health`; `0003_core_tasks`; `0004_pets_lab_v2` is generated but must still be applied.
 - Pothos relay connection typenames come from the field, not the node: `QueryPetsConnection(Edge)`, `PetTimelineConnection(Edge)`. Mock fixtures must use them.
 - `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.
@@ -326,6 +326,10 @@ pnpm commit                           # commitizen (cz-git)
 - Refetch with operation names (`refetchQueries: ['PetTimeline', 'PetWeights']`) to refresh every active query of that operation, whatever its variables are.
 - The Apollo cache merges entities by id. Fixtures that reuse an id (e.g. one medication across two doses) must give it identical fields.
 - **Reminders** are local notifications planned on the device: modules expose a hook returning `ReminderItem[] | null` (`null` = data unknown, keep the schedule), and the app's `ReminderSync` replaces the whole schedule. `expo-notifications` is only imported from `features/reminders/notifications.ts`; `notifications.web.ts` is the no-op web twin. Reminder settings are per device (AsyncStorage), not on the server.
+- Module typecheck is `pnpm typecheck` (runs `tsconfig.json` **and** `tsconfig.app.json`). `tsc -p .` alone skips the app code.
+- Apollo 4 `MockedProvider`: to match loosely, pass `request.variables` as a callback `(vars) => boolean` (there is no `variableMatcher`).
+- GraphQL `ValidationError.issues.path` is `[String]`, so array indexes come back as strings (`['values', '0', 'value']`).
+- Vet results: the catalog (`shared/lab-catalog.ts`) never ships reference ranges; the editor prefills them from the pet's previous value of the same test (`Pet.labTrend`).
 - Jest mocks AsyncStorage globally via `apps/app/__mocks__/@react-native-async-storage/`.
 - After `expo install` changes peers, pnpm may leave stale links (e.g. "Cannot find package 'drizzle-orm'"). Run `pnpm install` at the root.
 - Inputs that need typed validation errors take strings (e.g. appointment `scheduledAt: String`) and validate them with the shared zod schema. A GraphQL scalar would fail at coercion before the zod check runs.
@@ -346,7 +350,7 @@ Full plan with scope per phase: **`docs/roadmap.md`** (agreed 2026-10-30). Summa
 | 2. Pets MVP ✅ | Pet profile, weight log, timeline (core `TimelineEvent`), photo upload |
 | 3a. Pets health ✅ | Weight chart + stats, vet results (core `Attachment`), medications + doses, appointments |
 | 3b. Pets reminders ✅ | To-dos (core `Task`) + on-device notifications (planned from data, `expo-notifications`) |
-| 4. Vet results v2 | Sections, qualitative values, unit multipliers, species test catalog + Thai names, per-test trends, edit |
+| 4. Vet results v2 ✅ | Sections, qualitative values, unit multipliers, species test catalog + Thai names, per-test trends, edit |
 | 5. AI foundation | `packages/ai`, input safety, cost caps, lab-report import (photo/text → reviewed draft), pet body analysis |
 | 6. Colors module | Wada color combinations: search, nearest color, pick from photo, favorites |
 | 7. Nutrition module | Meal log, targets from body profile, macro progress; 7b meal-photo AI |

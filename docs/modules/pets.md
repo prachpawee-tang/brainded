@@ -1,6 +1,6 @@
 # Module: Pets (`pets`)
 
-Status: **Phase 2 MVP ✅ · Phase 3a ✅ · Phase 3b ✅ · Phase 4 in progress** (vet results v2). Phase 3a scope confirmed 2026-10-20.
+Status: **Phase 2 MVP ✅ · Phase 3a ✅ · Phase 3b ✅ · Phase 4 ✅** (vet results v2). Phase 3a scope confirmed 2026-10-20.
 
 ## Job
 

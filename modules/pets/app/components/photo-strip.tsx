@@ -1,6 +1,6 @@
-import { Button, Text } from '@brain/ui'
+import { Button, IconButton, Text } from '@brain/ui'
 import { launchImageLibraryAsync } from 'expo-image-picker'
-import { ImagePlus } from 'lucide-react-native'
+import { ImagePlus, X } from 'lucide-react-native'
 import { useState } from 'react'
 import { Image, View } from 'react-native'
 import { usePetsServices } from '../lib/pets-services'
@@ -11,19 +11,26 @@ const MAX_PHOTOS = 10
 
 type Uploaded = { key: string; uri: string }
 
-/** Add several photos (one pick at a time); reports uploaded storage keys. */
+/** Add or remove photos (one pick at a time); reports the storage keys. `initial` = already saved. */
 export const PhotoStrip = ({
   label,
+  initial = [],
   onChange,
 }: {
   label: string
+  initial?: readonly Uploaded[]
   onChange: (keys: string[]) => void
 }) => {
   const { t } = usePetLabels()
   const { uploadPhoto } = usePetsServices()
-  const [photos, setPhotos] = useState<Uploaded[]>([])
+  const [photos, setPhotos] = useState<Uploaded[]>(() => [...initial])
   const [isUploading, setIsUploading] = useState(false)
   const [hasFailed, setHasFailed] = useState(false)
+
+  const update = (next: Uploaded[]) => {
+    setPhotos(next)
+    onChange(next.map((p) => p.key))
+  }
 
   const add = async () => {
     const result = await launchImageLibraryAsync({ mediaTypes: ['images'], quality: PHOTO_QUALITY })
@@ -37,9 +44,7 @@ export const PhotoStrip = ({
         mimeType: asset.mimeType,
         fileName: asset.fileName,
       })
-      const next = [...photos, { key, uri: asset.uri }]
-      setPhotos(next)
-      onChange(next.map((p) => p.key))
+      update([...photos, { key, uri: asset.uri }])
     } catch {
       setHasFailed(true)
     } finally {
@@ -54,12 +59,20 @@ export const PhotoStrip = ({
       </Text>
       <View className="flex-row flex-wrap items-center gap-3">
         {photos.map((photo, index) => (
-          <Image
-            key={photo.key}
-            accessibilityLabel={t('labs.photo', { index: index + 1 })}
-            source={{ uri: photo.uri }}
-            className="size-20 rounded-lg bg-surface-muted"
-          />
+          <View key={photo.key}>
+            <Image
+              accessibilityLabel={t('labs.photo', { index: index + 1 })}
+              source={{ uri: photo.uri }}
+              className="size-20 rounded-lg bg-surface-muted"
+            />
+            <IconButton
+              icon={X}
+              variant="soft"
+              label={t('labs.removePhoto', { index: index + 1 })}
+              onPress={() => update(photos.filter((p) => p.key !== photo.key))}
+              className="absolute -right-2 -top-2"
+            />
+          </View>
         ))}
         {photos.length < MAX_PHOTOS ? (
           <Button

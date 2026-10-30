@@ -191,9 +191,33 @@
       "LOW": "ต่ำ",
       "NORMAL": "ปกติ",
       "HIGH": "สูง",
-      "UNKNOWN": "ไม่มีช่วงปกติ"
+      "UNKNOWN": "ไม่มีช่วงปกติ",
+      "ABNORMAL": "ผิดปกติ"
     },
-    "photo": "รูปใบผล {{index}}"
+    "photo": "รูปใบผล {{index}}",
+    "editTitle": "แก้ไขผลตรวจ",
+    "sections": {
+      "CBC": "ความสมบูรณ์ของเลือด (CBC)",
+      "MORPHOLOGY": "รูปร่างเซลล์เม็ดเลือด",
+      "PARASITE": "พยาธิในเลือด",
+      "CHEMISTRY": "เคมีในเลือด",
+      "URINE": "ปัสสาวะ",
+      "OTHER": "อื่นๆ"
+    },
+    "remark": "หมายเหตุจากแล็บ (ไม่ใส่ก็ได้)",
+    "interpretation": "คุณหมอว่าอย่างไร (ไม่ใส่ก็ได้)",
+    "addTest": "เพิ่มรายการตรวจ",
+    "searchTest": "ค้นหา เช่น ค่าไต หรือ CREA",
+    "addCustom": "เพิ่ม “{{name}}”",
+    "valueHint": "ใส่ตัวเลข หรือข้อความ เช่น 1+ หรือ Not Found",
+    "trendEmpty": "ต้องมีผลที่เป็นตัวเลขอย่างน้อย 2 ครั้งถึงจะแสดงกราฟ",
+    "latestRange": "ช่วงปกติล่าสุด: {{range}}",
+    "notCharted": "ไม่อยู่ในกราฟ (คนละหน่วย)",
+    "history": "ผลทุกครั้ง",
+    "removePhoto": "ลบรูปใบผลตรวจ {{index}}",
+    "openTrend": "ดู {{name}} ตามเวลา",
+    "remarkTitle": "หมายเหตุจากแล็บ",
+    "interpretationTitle": "คุณหมอว่าอย่างไร"
   },
   "meds": {
     "title": "ยา",

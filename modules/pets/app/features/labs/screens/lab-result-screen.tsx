@@ -1,49 +1,27 @@
 import { useMutation, useQuery } from '@apollo/client/react'
-import { Badge, type BadgeTone, EmptyState, ScreenLayout, Skeleton, Text } from '@brain/ui'
-import { useLocalSearchParams } from 'expo-router'
-import { Trash2 } from 'lucide-react-native'
-import { Image, View } from 'react-native'
+import { Badge, EmptyState, Icon, ScreenLayout, Skeleton, Text } from '@brain/ui'
+import { router, useLocalSearchParams } from 'expo-router'
+import { ChevronRight, Pencil, Trash2 } from 'lucide-react-native'
+import { Image, Pressable, View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
-import type { PetLabFlag } from '../../../graphql/generated/graphql'
 import { DeletePetLabResultMutation, PetLabResultQuery } from '../../../graphql/health'
 import { confirmAction } from '../../../lib/confirm'
 import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { LabStatusBadge } from '../components/lab-status-badge'
-
-const FLAG_TONE: Record<PetLabFlag, BadgeTone> = {
-  LOW: 'warning',
-  HIGH: 'warning',
-  NORMAL: 'success',
-  UNKNOWN: 'neutral',
-}
-const FLAG_ICON: Record<PetLabFlag, string> = { LOW: '↓ ', HIGH: '↑ ', NORMAL: '', UNKNOWN: '' }
-
-const formatNumber = (value: number, language: string) =>
-  new Intl.NumberFormat(language.startsWith('th') ? 'th-TH' : 'en-GB', {
-    maximumFractionDigits: 3,
-  }).format(value)
+import { FLAG_TONE, useLabDisplay } from '../lib/lab-display'
+import { groupBySection } from '../lib/lab-form'
 
 export const LabResultScreen = () => {
   const { id, labId } = useLocalSearchParams<{ id: string; labId: string }>()
   const labels = usePetLabels()
-  const { t, language } = labels
+  const { t } = labels
+  const display = useLabDisplay()
   const { data, loading } = useQuery(PetLabResultQuery, { variables: { id, labId } })
   const [deleteResult] = useMutation(DeletePetLabResultMutation, {
     refetchQueries: ['PetLabResults', 'PetTimeline'],
   })
   const result = data?.pet?.labResult
-
-  const range = (low: number | null | undefined, high: number | null | undefined) => {
-    if (low != null && high != null)
-      return t('labs.range', {
-        low: formatNumber(low, language),
-        high: formatNumber(high, language),
-      })
-    if (low != null) return t('labs.rangeLow', { low: formatNumber(low, language) })
-    if (high != null) return t('labs.rangeHigh', { high: formatNumber(high, language) })
-    return null
-  }
 
   const remove = async () => {
     if (!result) return
@@ -81,7 +59,14 @@ export const LabResultScreen = () => {
       <HeaderBar
         backLabel={t('common.back')}
         fallbackHref={`/pets/${id}/labs`}
-        actions={[{ label: t('common.delete'), icon: Trash2, onPress: remove }]}
+        actions={[
+          {
+            label: t('common.edit'),
+            icon: Pencil,
+            onPress: () => router.push(`/pets/${id}/labs/${result.id}/edit`),
+          },
+          { label: t('common.delete'), icon: Trash2, onPress: remove },
+        ]}
       />
       <View className="gap-2">
         <Text variant="title">{result.title}</Text>
@@ -91,33 +76,57 @@ export const LabResultScreen = () => {
         <LabStatusBadge abnormalCount={result.abnormalCount} />
       </View>
 
-      {result.values.length > 0 ? (
-        <View className="rounded-xl border border-border bg-surface px-4">
-          {result.values.map((value, index) => (
-            <View key={value.id} className={index > 0 ? 'border-t border-border py-3' : 'py-3'}>
-              <View className="flex-row items-start justify-between gap-3">
-                <View className="flex-1 gap-0.5">
-                  <Text className="font-sans-medium">{value.name}</Text>
-                  {range(value.refLow, value.refHigh) ? (
-                    <Text variant="caption" tone="muted">
-                      {range(value.refLow, value.refHigh)}
-                    </Text>
-                  ) : null}
+      {groupBySection(result.values).map((group) => (
+        <View key={group.section} className="gap-2">
+          <Text variant="caption" tone="muted" className="font-sans-medium">
+            {t(`labs.sections.${group.section}`)}
+          </Text>
+          <View className="rounded-xl border border-border bg-surface px-4">
+            {group.items.map(({ item: value }, index) => (
+              <Pressable
+                key={value.id}
+                accessibilityRole="button"
+                accessibilityLabel={`${value.name} ${display.result(value)}, ${display.flagLabel(value.flag)}`}
+                accessibilityHint={t('labs.openTrend', { name: value.name })}
+                onPress={() =>
+                  router.push(`/pets/${id}/labs/tests/${encodeURIComponent(value.code)}`)
+                }
+                className={`py-3 active:opacity-70 ${index > 0 ? 'border-t border-border' : ''}`}
+              >
+                <View className="flex-row items-start justify-between gap-3">
+                  <View className="flex-1 gap-0.5">
+                    <Text className="font-sans-medium">{value.name}</Text>
+                    {display.range(value) ? (
+                      <Text variant="caption" tone="muted">
+                        {display.range(value)}
+                      </Text>
+                    ) : null}
+                  </View>
+                  <View className="items-end gap-1">
+                    <Text className="font-sans-bold">{display.result(value)}</Text>
+                    <Badge tone={FLAG_TONE[value.flag]} label={display.flagLabel(value.flag)} />
+                  </View>
+                  <Icon icon={ChevronRight} tone="muted" />
                 </View>
-                <View className="items-end gap-1">
-                  <Text className="font-sans-bold">
-                    {[formatNumber(value.value, language), value.unit].filter(Boolean).join(' ')}
-                  </Text>
-                  <Badge
-                    tone={FLAG_TONE[value.flag]}
-                    label={`${FLAG_ICON[value.flag]}${t(`labs.flags.${value.flag}`)}`}
-                  />
-                </View>
-              </View>
-            </View>
-          ))}
+              </Pressable>
+            ))}
+          </View>
         </View>
-      ) : null}
+      ))}
+
+      {[
+        ['interpretation', result.interpretation],
+        ['remark', result.remark],
+      ].map(([key, text]) =>
+        text ? (
+          <View key={key} className="gap-1">
+            <Text variant="caption" tone="muted" className="font-sans-medium">
+              {t(`labs.${key}Title`)}
+            </Text>
+            <Text>{text}</Text>
+          </View>
+        ) : null,
+      )}
 
       {result.photos.length > 0 ? (
         <View className="gap-2">

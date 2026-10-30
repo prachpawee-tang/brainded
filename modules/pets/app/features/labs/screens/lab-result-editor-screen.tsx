@@ -1,124 +1,175 @@
-import { useMutation } from '@apollo/client/react'
-import { Button, DateField, IconButton, ScreenLayout, Text, TextField, toIsoDate } from '@brain/ui'
+import { useApolloClient, useMutation, useQuery } from '@apollo/client/react'
+import { Button, DateField, ScreenLayout, Skeleton, Text, TextField, toIsoDate } from '@brain/ui'
 import { router, useLocalSearchParams } from 'expo-router'
-import { Plus, Trash2 } from 'lucide-react-native'
-import { useState } from 'react'
+import { Plus } from 'lucide-react-native'
+import { useEffect, useRef, useState } from 'react'
 import { View } from 'react-native'
 import { LAB_PRESETS, labResultInputSchema } from '../../../../shared/health'
+import { findLabTest, type LabTest } from '../../../../shared/lab-catalog'
 import { toValidationIssues } from '../../../../shared/validation'
 import { HeaderBar } from '../../../components/header-bar'
 import { PhotoStrip } from '../../../components/photo-strip'
-import { AddPetLabResultMutation } from '../../../graphql/health'
+import {
+  AddPetLabResultMutation,
+  PetLabResultQuery,
+  PetLabTrendQuery,
+  UpdatePetLabResultMutation,
+} from '../../../graphql/health'
 import { issuesToPathErrors } from '../../../lib/field-errors'
-import { parseDecimal } from '../../../lib/format'
 import { usePetLabels } from '../../../lib/use-pet-labels'
+import { LabValueRow } from '../components/lab-value-row'
+import { type PickedTest, TestPickerSheet } from '../components/test-picker-sheet'
+import {
+  groupBySection,
+  type LabRow,
+  newLabRow,
+  rowFromTest,
+  rowFromValue,
+  toLabValues,
+} from '../lib/lab-form'
 
-type Row = {
-  key: number
-  name: string
-  value: string
-  unit: string
-  refLow: string
-  refHigh: string
+const REFETCH = ['PetLabResults', 'PetLabResult', 'PetLabTrend', 'PetTimeline']
+
+type Form = {
+  takenOn: string
+  title: string
+  clinic: string
+  note: string
+  remark: string
+  interpretation: string
 }
 
-let nextRowKey = 1
-const newRow = (name = '', unit = ''): Row => ({
-  key: nextRowKey++,
-  name,
-  value: '',
-  unit,
-  refLow: '',
-  refHigh: '',
-})
+const EMPTY_FORM: Form = {
+  takenOn: '',
+  title: '',
+  clinic: '',
+  note: '',
+  remark: '',
+  interpretation: '',
+}
 
+/** New result, or edit (`labId` param): the editor always sends the whole result. */
 export const LabResultEditorScreen = () => {
-  const { id } = useLocalSearchParams<{ id: string }>()
+  const { id, labId } = useLocalSearchParams<{ id: string; labId?: string }>()
+  const isEdit = Boolean(labId)
   const labels = usePetLabels()
   const { t } = labels
-  const [takenOn, setTakenOn] = useState(() => toIsoDate(new Date()))
-  const [title, setTitle] = useState('')
-  const [clinic, setClinic] = useState('')
-  const [note, setNote] = useState('')
-  const [rows, setRows] = useState<Row[]>([])
+  const client = useApolloClient()
+  const existing = useQuery(PetLabResultQuery, {
+    variables: { id, labId: labId ?? '' },
+    skip: !isEdit,
+  })
+  const [form, setForm] = useState<Form>(() => ({ ...EMPTY_FORM, takenOn: toIsoDate(new Date()) }))
+  const [rows, setRows] = useState<LabRow[]>([])
   const [photoKeys, setPhotoKeys] = useState<string[]>([])
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [addResult, { loading }] = useMutation(AddPetLabResultMutation, {
-    refetchQueries: ['PetLabResults', 'PetTimeline'],
+  const [isPickerOpen, setIsPickerOpen] = useState(false)
+  const loadedId = useRef<string | null>(null)
+  const [addResult, add] = useMutation(AddPetLabResultMutation, { refetchQueries: REFETCH })
+  const [updateResult, update] = useMutation(UpdatePetLabResultMutation, {
+    refetchQueries: REFETCH,
   })
+  const result = existing.data?.pet?.labResult
 
+  useEffect(() => {
+    if (!result || loadedId.current === result.id) return
+    loadedId.current = result.id
+    setForm({
+      takenOn: result.takenOn,
+      title: result.title,
+      clinic: result.clinic ?? '',
+      note: result.note ?? '',
+      remark: result.remark ?? '',
+      interpretation: result.interpretation ?? '',
+    })
+    setRows(result.values.map(rowFromValue))
+    setPhotoKeys(result.photos.map((p) => p.key))
+  }, [result])
+
+  const set = (key: keyof Form) => (value: string) => setForm((f) => ({ ...f, [key]: value }))
   const error = (path: string) => (errors[path] ? t(`validation.${errors[path]}`) : undefined)
-  const updateRow = (key: number, patch: Partial<Row>) =>
+  const updateRow = (key: number, patch: Partial<LabRow>) =>
     setRows((current) => current.map((r) => (r.key === key ? { ...r, ...patch } : r)))
 
+  /** Prefill unit + range from this pet's latest value of the test; the catalog never guesses ranges. */
+  const addTest = async (test: LabTest) => {
+    const previous = await client
+      .query({ query: PetLabTrendQuery, variables: { id, code: test.code } })
+      .then(({ data }) => data?.pet?.labTrend.at(-1) ?? null)
+      .catch(() => null)
+    setRows((current) => [...current, rowFromTest(test, previous)])
+  }
+
+  const onPick = (picked: PickedTest) =>
+    'test' in picked
+      ? addTest(picked.test)
+      : setRows((current) => [...current, newLabRow({ name: picked.customName })])
+
   const save = async () => {
-    const candidate = {
-      takenOn,
-      title,
-      clinic,
-      note,
-      photoKeys,
-      values: rows.map((row) => ({
-        name: row.name,
-        value: parseDecimal(row.value) ?? Number.NaN,
-        unit: row.unit,
-        refLow: parseDecimal(row.refLow),
-        refHigh: parseDecimal(row.refHigh),
-      })),
-    }
-    const parsed = labResultInputSchema.safeParse(candidate)
+    const parsed = labResultInputSchema.safeParse({ ...form, photoKeys, values: toLabValues(rows) })
     setErrors(issuesToPathErrors(toValidationIssues(parsed.error)))
     if (!parsed.success) return
-    const { data } = await addResult({
-      variables: {
-        input: {
-          petId: id,
-          ...parsed.data,
-          clinic: parsed.data.clinic ?? null,
-          note: parsed.data.note ?? null,
-          values: parsed.data.values.map((v) => ({
-            ...v,
-            unit: v.unit ?? null,
-            refLow: v.refLow ?? null,
-            refHigh: v.refHigh ?? null,
-          })),
-        },
-      },
-    })
-    const payload = data?.addPetLabResult
+    const fields = {
+      ...parsed.data,
+      clinic: parsed.data.clinic ?? null,
+      note: parsed.data.note ?? null,
+      remark: parsed.data.remark ?? null,
+      interpretation: parsed.data.interpretation ?? null,
+      values: parsed.data.values.map((v) => ({
+        ...v,
+        code: v.code ?? null,
+        value: v.value ?? null,
+        textValue: v.textValue ?? null,
+        unit: v.unit ?? null,
+        refLow: v.refLow ?? null,
+        refHigh: v.refHigh ?? null,
+      })),
+    }
+    const { data } = labId
+      ? await updateResult({ variables: { input: { id: labId, ...fields } } })
+      : await addResult({ variables: { input: { petId: id, ...fields } } })
+    const payload =
+      data && ('updatePetLabResult' in data ? data.updatePetLabResult : data.addPetLabResult)
     if (payload?.__typename === 'ValidationError')
       return setErrors(issuesToPathErrors(payload.issues))
-    if (payload?.__typename === 'MutationAddPetLabResultSuccess')
-      router.replace(`/pets/${id}/labs/${payload.data.id}`)
+    if (payload && 'data' in payload) router.replace(`/pets/${id}/labs/${payload.data.id}`)
+  }
+
+  if (isEdit && !result) {
+    return (
+      <ScreenLayout>
+        <Skeleton className="h-64 rounded-xl" />
+      </ScreenLayout>
+    )
   }
 
   return (
     <ScreenLayout>
       <HeaderBar
         backLabel={t('common.back')}
-        fallbackHref={`/pets/${id}`}
-        title={t('labs.newTitle')}
+        fallbackHref={labId ? `/pets/${id}/labs/${labId}` : `/pets/${id}/labs`}
+        title={isEdit ? t('labs.editTitle') : t('labs.newTitle')}
       />
       <View className="gap-4">
         <DateField
           label={t('labs.date')}
-          value={takenOn}
-          onChange={(value) => setTakenOn(value ?? toIsoDate(new Date()))}
+          value={form.takenOn}
+          onChange={(value) => set('takenOn')(value ?? toIsoDate(new Date()))}
           formatValue={labels.date}
-          placeholder={labels.date(takenOn)}
+          placeholder={labels.date(form.takenOn)}
           maximumDate={new Date()}
           error={error('takenOn')}
         />
         <TextField
           label={t('labs.name')}
-          value={title}
-          onChangeText={setTitle}
+          value={form.title}
+          onChangeText={set('title')}
           error={error('title')}
         />
         <TextField
           label={t('labs.clinic')}
-          value={clinic}
-          onChangeText={setClinic}
+          value={form.clinic}
+          onChangeText={set('clinic')}
           error={error('clinic')}
         />
       </View>
@@ -136,81 +187,37 @@ export const LabResultEditorScreen = () => {
                 variant="secondary"
                 size="sm"
                 label={preset.name}
-                onPress={() => setRows((current) => [...current, newRow(preset.name, preset.unit)])}
+                onPress={() => {
+                  const test = findLabTest(preset.name)
+                  if (test) addTest(test)
+                }}
               />
             ))}
           </View>
         </View>
 
-        {rows.map((row, index) => {
-          const n = index + 1
-          const path = (field: string) => `values.${index}.${field}`
-          return (
-            <View key={row.key} className="gap-3 rounded-xl border border-border bg-surface p-4">
-              <View className="flex-row gap-3">
-                <View className="flex-[2]">
-                  <TextField
-                    label={t('labs.valueName')}
-                    accessibilityLabel={`${t('labs.valueName')} ${n}`}
-                    value={row.name}
-                    onChangeText={(name) => updateRow(row.key, { name })}
-                    error={error(path('name'))}
-                  />
-                </View>
-                <View className="flex-1">
-                  <TextField
-                    label={t('labs.unit')}
-                    accessibilityLabel={`${t('labs.unit')} ${n}`}
-                    value={row.unit}
-                    onChangeText={(unit) => updateRow(row.key, { unit })}
-                    autoCapitalize="none"
-                  />
-                </View>
-              </View>
-              <TextField
-                label={t('labs.value')}
-                accessibilityLabel={`${t('labs.value')} ${n}`}
-                value={row.value}
-                onChangeText={(value) => updateRow(row.key, { value })}
-                keyboardType="decimal-pad"
-                error={error(path('value'))}
+        {groupBySection(rows).map((group) => (
+          <View key={group.section} className="gap-2">
+            <Text variant="caption" tone="muted" className="font-sans-medium">
+              {t(`labs.sections.${group.section}`)}
+            </Text>
+            {group.items.map(({ item: row, index }) => (
+              <LabValueRow
+                key={row.key}
+                row={row}
+                n={index + 1}
+                error={(field) => error(`values.${index}.${field}`)}
+                onChange={(patch) => updateRow(row.key, patch)}
+                onRemove={() => setRows((current) => current.filter((r) => r.key !== row.key))}
               />
-              <View className="flex-row gap-3">
-                <View className="flex-1">
-                  <TextField
-                    label={t('labs.refLow')}
-                    accessibilityLabel={`${t('labs.refLow')} ${n}`}
-                    value={row.refLow}
-                    onChangeText={(refLow) => updateRow(row.key, { refLow })}
-                    keyboardType="decimal-pad"
-                    error={error(path('refLow'))}
-                  />
-                </View>
-                <View className="flex-1">
-                  <TextField
-                    label={t('labs.refHigh')}
-                    accessibilityLabel={`${t('labs.refHigh')} ${n}`}
-                    value={row.refHigh}
-                    onChangeText={(refHigh) => updateRow(row.key, { refHigh })}
-                    keyboardType="decimal-pad"
-                    error={error(path('refHigh'))}
-                  />
-                </View>
-              </View>
-              <IconButton
-                icon={Trash2}
-                label={`${t('labs.removeValue')} ${n}`}
-                onPress={() => setRows((current) => current.filter((r) => r.key !== row.key))}
-                className="-mb-2 -mr-2 self-end"
-              />
-            </View>
-          )
-        })}
+            ))}
+          </View>
+        ))}
         <Button
           variant="secondary"
           icon={Plus}
-          label={t('labs.addValue')}
-          onPress={() => setRows((current) => [...current, newRow()])}
+          label={t('labs.addTest')}
+          onPress={() => setIsPickerOpen(true)}
         />
         {error('values') ? (
           <Text accessibilityRole="alert" variant="caption" tone="danger">
@@ -219,15 +226,38 @@ export const LabResultEditorScreen = () => {
         ) : null}
       </View>
 
-      <PhotoStrip label={t('labs.photos')} onChange={setPhotoKeys} />
+      <PhotoStrip
+        label={t('labs.photos')}
+        initial={result?.photos.map((p) => ({ key: p.key, uri: p.url }))}
+        onChange={setPhotoKeys}
+      />
+      <TextField
+        label={t('labs.remark')}
+        value={form.remark}
+        onChangeText={set('remark')}
+        multiline
+        error={error('remark')}
+      />
+      <TextField
+        label={t('labs.interpretation')}
+        value={form.interpretation}
+        onChangeText={set('interpretation')}
+        multiline
+        error={error('interpretation')}
+      />
       <TextField
         label={t('labs.note')}
-        value={note}
-        onChangeText={setNote}
+        value={form.note}
+        onChangeText={set('note')}
         multiline
         error={error('note')}
       />
-      <Button label={t('labs.save')} onPress={save} loading={loading} />
+      <Button label={t('labs.save')} onPress={save} loading={add.loading || update.loading} />
+      <TestPickerSheet
+        visible={isPickerOpen}
+        onClose={() => setIsPickerOpen(false)}
+        onPick={onPick}
+      />
     </ScreenLayout>
   )
 }
