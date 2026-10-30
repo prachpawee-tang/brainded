@@ -29,6 +29,13 @@
       "when": 1793330364371,
       "tag": "0003_core_tasks",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793332834083,
+      "tag": "0004_pets_lab_v2",
+      "breakpoints": true
     }
   ]
 }

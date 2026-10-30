@@ -8,9 +8,11 @@ input AddPetAppointmentInput {
 
 input AddPetLabResultInput {
   clinic: String
+  interpretation: String
   note: String
   petId: ID!
   photoKeys: [String!]
+  remark: String
   takenOn: LocalDate!
   title: String!
   values: [PetLabValueInput!]!
@@ -121,6 +123,7 @@ type Mutation {
   setPetTaskDone(input: SetPetTaskDoneInput!): MutationSetPetTaskDoneResult!
   updatePet(input: UpdatePetInput!): MutationUpdatePetResult!
   updatePetAppointment(input: UpdatePetAppointmentInput!): MutationUpdatePetAppointmentResult!
+  updatePetLabResult(input: UpdatePetLabResultInput!): MutationUpdatePetLabResultResult!
   updatePetMedication(input: UpdatePetMedicationInput!): MutationUpdatePetMedicationResult!
   updatePetTask(input: UpdatePetTaskInput!): MutationUpdatePetTaskResult!
   updatePreferences(input: UpdatePreferencesInput!): MutationUpdatePreferencesResult!
@@ -216,6 +219,12 @@ type MutationUpdatePetAppointmentSuccess {
   data: PetAppointment!
 }
 
+union MutationUpdatePetLabResultResult = ForbiddenError | MutationUpdatePetLabResultSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationUpdatePetLabResultSuccess {
+  data: PetLabResult!
+}
+
 union MutationUpdatePetMedicationResult = MutationUpdatePetMedicationSuccess | NotFoundError | UnauthenticatedError | ValidationError
 
 type MutationUpdatePetMedicationSuccess {
@@ -264,6 +273,7 @@ type Pet implements Node {
   id: ID!
   labResult(id: ID!): PetLabResult
   labResults(first: Int): [PetLabResult!]!
+  labTrend(code: String!): [PetLabTrendPoint!]!
   latestWeight: PetWeight
   medications: [PetMedication!]!
   name: String!
@@ -296,6 +306,7 @@ enum PetAppointmentStatus {
 
 type PetAttachment {
   id: ID!
+  key: String!
   url: String!
 }
 
@@ -308,6 +319,7 @@ type PetDose {
 }
 
 enum PetLabFlag {
+  ABNORMAL
   HIGH
   LOW
   NORMAL
@@ -318,29 +330,59 @@ type PetLabResult {
   abnormalCount: Int!
   clinic: String
   id: ID!
+  interpretation: String
   note: String
   photos: [PetAttachment!]!
+  remark: String
   takenOn: LocalDate!
   title: String!
   values: [PetLabValue!]!
 }
 
+enum PetLabSection {
+  CBC
+  CHEMISTRY
+  MORPHOLOGY
+  OTHER
+  PARASITE
+  URINE
+}
+
+type PetLabTrendPoint {
+  flag: PetLabFlag!
+  id: ID!
+  labResultId: ID!
+  name: String!
+  refHigh: Float
+  refLow: Float
+  takenOn: LocalDate!
+  textValue: String
+  unit: String
+  value: Float
+}
+
 type PetLabValue {
+  code: String!
   flag: PetLabFlag!
   id: ID!
   name: String!
   refHigh: Float
   refLow: Float
+  section: PetLabSection!
+  textValue: String
   unit: String
-  value: Float!
+  value: Float
 }
 
 input PetLabValueInput {
+  code: String
   name: String!
   refHigh: Float
   refLow: Float
+  section: PetLabSection
+  textValue: String
   unit: String
-  value: Float!
+  value: Float
 }
 
 type PetMedication {
@@ -487,6 +529,18 @@ input UpdatePetInput {
   sex: PetSex
   species: PetSpecies
   speciesOther: String
+}
+
+input UpdatePetLabResultInput {
+  clinic: String
+  id: ID!
+  interpretation: String
+  note: String
+  photoKeys: [String!]
+  remark: String
+  takenOn: LocalDate!
+  title: String!
+  values: [PetLabValueInput!]!
 }
 
 input UpdatePetMedicationInput {

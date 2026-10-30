@@ -1,6 +1,6 @@
 # Module: Pets (`pets`)
 
-Status: **Phase 2 MVP ✅ · Phase 3a ✅ · Phase 3b ✅** (to-dos + on-device reminders). Phase 3a scope confirmed 2026-10-20.
+Status: **Phase 2 MVP ✅ · Phase 3a ✅ · Phase 3b ✅ · Phase 4 in progress** (vet results v2). Phase 3a scope confirmed 2026-10-20.
 
 ## Job
 
@@ -107,6 +107,53 @@ A ticked to-do stays struck through for ~1.5 s before it leaves Today.
 - **Settings → Notifications**: a master switch (asks for permission when turned on) plus one switch each for doses, appointments, and to-dos. Settings are stored **per device**, because notifications are per device.
 - Web: reminders are visible in the app (Today) only; the settings section says notifications work in the mobile app.
 - The app shell owns scheduling (`ReminderSync`). Modules only expose a hook that returns reminder items (`usePetsReminderItems`), so future modules can add their own.
+
+
+## Phase 4 — vet results v2
+
+Learned from a real lab report (sections CBC / morphology / parasite / chemistry) and a vet's LINE summary.
+
+### Result
+- A result gains a **report remark** (printed by the lab) and the **vet's interpretation** (what the vet said), next to the owner's own note.
+- **Edit** an existing result (`/pets/[id]/labs/[labId]/edit`, same editor). Saving replaces its values; photos can be added or removed.
+
+### Values
+- Each value belongs to a **section**: `CBC`, `MORPHOLOGY`, `PARASITE`, `CHEMISTRY`, `URINE`, `OTHER`. The detail screen groups by section in that order.
+- A value is **numeric** (`value`) or **qualitative** (`textValue`: `1+`, `Few`, `Not Found`, `Positive`, …). The editor has one input. If the text parses as a number, it is numeric. Otherwise it is qualitative.
+- **Number input**: a comma followed by exactly 3 digits is a thousands separator (`12,200` → 12200, `1,234.5` → 1234.5). Otherwise a comma is a decimal point (`4,5` → 4.5).
+- **Flags**:
+  - Numeric values are `LOW` / `NORMAL` / `HIGH` against the range, or `UNKNOWN` without one.
+  - Qualitative values are `NORMAL` when the catalog lists the answer as normal (e.g. parasite `Not Found` / `Negative`). They are `ABNORMAL` when it lists the answer as abnormal (`Positive`, `Found`, `1+`…`4+`). Otherwise they are `UNKNOWN`.
+  - `abnormalCount` counts `LOW`, `HIGH` and `ABNORMAL`.
+
+### Test catalog (`shared/lab-catalog.ts`)
+- Per test:
+  - code (e.g. `WBC`)
+  - section
+  - English name
+  - **Thai names vets use** ("ค่าไต" = CREA, "ค่าถุงน้ำดี" = ALP, "ค่าของเสียในเลือด" = BUN, "ค่าตับ" = ALT, "เม็ดเลือดแดง" = HCT)
+  - kind (numeric or qualitative)
+  - canonical unit
+  - unit aliases, each with a factor to the canonical unit
+- The editor's "add test" search matches code, English and Thai names. Custom tests are always allowed: their code is the trimmed, upper-cased name.
+- **No built-in reference ranges.** They differ by lab and analyser, and inventing medical numbers is unsafe. Instead the editor **prefills unit and range from this pet's latest value of the same test**. The report remains the source of truth.
+
+### Units
+- Values keep the unit as entered. For comparison, `normalizeLabValue(code, value, unit)` converts them to the catalog's canonical unit with the alias factor.
+  - Example: `12,200 cells/µL` and `12.2 ×10³ cell/mm³` are both 12.2 ×10³/µL.
+- An unknown unit is not converted and is charted separately (never silently mixed).
+
+### Trend per test
+- Tapping a value opens `/pets/[id]/labs/tests/[code]`. It shows a line chart of the normalized values over time, the latest range as text, and a list of every value (date, as entered, flag).
+- API: `Pet.labTrend(code)` returns values with their result date, oldest first.
+
+### Data
+- `pets_lab_results` gains `remark` and `interpretation`.
+- `pets_lab_values` gains `section`, `code` and `text_value`. `value` becomes nullable, with a check that exactly one of `value` / `text_value` is set.
+- Existing rows get `code` = the upper-cased name and `section` = `OTHER`. Migration `0004`.
+
+### Out of scope here
+AI import from a photo or LINE text (Phase 5). Comparing with breed/age norms.
 
 ### Later
 Comparing weight against age/breed norms (see `docs/roadmap.md`).

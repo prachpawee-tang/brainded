@@ -1,5 +1,6 @@
-import { authUsers, ownedColumns } from '@brain/db'
+import { authUsers, ownedColumns, sql } from '@brain/db'
 import {
+  check,
   date,
   doublePrecision,
   index,
@@ -72,6 +73,8 @@ export const petLabResults = pgTable(
     title: text('title').notNull(),
     clinic: text('clinic'),
     note: text('note'),
+    remark: text('remark'),
+    interpretation: text('interpretation'),
   },
   (table) => [
     index('pets_lab_results_pet_idx').on(table.petId, table.takenOn.desc(), table.id.desc()),
@@ -87,13 +90,24 @@ export const petLabValues = pgTable(
       .notNull()
       .references(() => petLabResults.id, { onDelete: 'cascade' }),
     position: integer('position').notNull().default(0),
+    section: text('section').notNull().default('OTHER'),
+    /** Catalog code (`CREA`) or the custom name upper-cased; groups values across results. */
+    code: text('code').notNull(),
     name: text('name').notNull(),
-    value: doublePrecision('value').notNull(),
+    value: doublePrecision('value'),
+    textValue: text('text_value'),
     unit: text('unit'),
     refLow: doublePrecision('ref_low'),
     refHigh: doublePrecision('ref_high'),
   },
-  (table) => [index('pets_lab_values_result_idx').on(table.labResultId, table.position)],
+  (table) => [
+    index('pets_lab_values_result_idx').on(table.labResultId, table.position),
+    index('pets_lab_values_code_idx').on(table.ownerId, table.code),
+    check(
+      'pets_lab_values_one_value',
+      sql`(${table.value} is null) <> (${table.textValue} is null)`,
+    ),
+  ],
 )
 
 export const petMedications = pgTable(

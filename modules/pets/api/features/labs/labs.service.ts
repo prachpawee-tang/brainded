@@ -4,9 +4,10 @@ import {
   recordTimelineEvent,
   removeAttachmentsFor,
 } from '@brain/core/server'
-import { and, asc, desc, eq, inArray, notDeleted } from '@brain/db'
+import { and, asc, type Database, desc, eq, inArray, notDeleted } from '@brain/db'
 import { ForbiddenError, NotFoundError } from '@brain/graphql'
-import { labResultInputSchema } from '../../../shared/health'
+import { type LabResultInput, labResultInputSchema } from '../../../shared/health'
+import { labCodeFor } from '../../../shared/lab-catalog'
 import { petLabResults, petLabValues } from '../../db/schema'
 import { type PetsServiceContext, parseOrThrow } from '../../lib/context'
 import { requirePet } from '../profile/profile.service'
@@ -24,6 +25,24 @@ const assertKeysOwned = (ownerId: string, keys: readonly string[]) => {
     throw new ForbiddenError('PHOTO_NOT_OWNED')
 }
 
+const insertValues = async (
+  tx: Database,
+  ownerId: string,
+  labResultId: string,
+  values: LabResultInput['values'],
+) => {
+  if (values.length === 0) return
+  await tx.insert(petLabValues).values(
+    values.map(({ code, ...value }, position) => ({
+      ...value,
+      code: code ?? labCodeFor(value.name),
+      position,
+      ownerId,
+      labResultId,
+    })),
+  )
+}
+
 export const addLabResult = async (
   context: PetsServiceContext,
   petId: string | null,
@@ -38,16 +57,7 @@ export const addLabResult = async (
       .values({ ...result, ownerId: context.ownerId, petId: pet.id })
       .returning()
     if (!row) throw new Error('Failed to insert lab result')
-    if (values.length > 0) {
-      await tx.insert(petLabValues).values(
-        values.map((value, position) => ({
-          ...value,
-          position,
-          ownerId: context.ownerId,
-          labResultId: row.id,
-        })),
-      )
-    }
+    await insertValues(tx, context.ownerId, row.id, values)
     await addAttachments(tx, {
       ownerId: context.ownerId,
       entityType: LAB_RESULT_ENTITY_TYPE,
@@ -66,6 +76,59 @@ export const addLabResult = async (
     return row
   })
 }
+
+/** Edit = replace: fields, every value and the photo list (the editor always sends them all). */
+export const updateLabResult = async (
+  context: PetsServiceContext,
+  id: string | null,
+  input: unknown,
+) => {
+  const existing = await findLabResult(context, id)
+  if (!existing) throw new NotFoundError('LAB_RESULT_NOT_FOUND')
+  const { values, photoKeys, ...result } = parseOrThrow(labResultInputSchema, input)
+  assertKeysOwned(context.ownerId, photoKeys)
+  const entity = {
+    ownerId: context.ownerId,
+    entityType: LAB_RESULT_ENTITY_TYPE,
+    entityId: existing.id,
+  }
+  return context.db.transaction(async (tx) => {
+    const [row] = await tx
+      .update(petLabResults)
+      .set({
+        clinic: null,
+        note: null,
+        remark: null,
+        interpretation: null,
+        ...result,
+        updatedAt: new Date(),
+      })
+      .where(eq(petLabResults.id, existing.id))
+      .returning()
+    if (!row) throw new Error('Failed to update lab result')
+    await tx.delete(petLabValues).where(eq(petLabValues.labResultId, existing.id))
+    await insertValues(tx, context.ownerId, existing.id, values)
+    await removeAttachmentsFor(tx, entity)
+    await addAttachments(tx, { ...entity, storageKeys: photoKeys })
+    return row
+  })
+}
+
+/** One test across all of a pet's results, oldest first, each with its result's date. */
+export const listLabTrend = (context: PetsServiceContext, petId: string, code: string) =>
+  context.db
+    .select({ value: petLabValues, takenOn: petLabResults.takenOn })
+    .from(petLabValues)
+    .innerJoin(petLabResults, eq(petLabValues.labResultId, petLabResults.id))
+    .where(
+      and(
+        eq(petLabValues.ownerId, context.ownerId),
+        eq(petLabValues.code, code),
+        eq(petLabResults.petId, petId),
+        notDeleted(petLabResults),
+      ),
+    )
+    .orderBy(asc(petLabResults.takenOn), asc(petLabValues.id))
 
 export const listLabResults = (context: PetsServiceContext, petId: string, limit = DEFAULT_LIMIT) =>
   context.db

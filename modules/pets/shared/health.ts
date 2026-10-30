@@ -20,7 +20,7 @@ const optionalNumber = z.number('INVALID').finite('INVALID').nullish()
 
 // ── Vet results ──────────────────────────────────────────────────────────────
 
-export const LAB_FLAGS = ['LOW', 'NORMAL', 'HIGH', 'UNKNOWN'] as const
+export const LAB_FLAGS = ['LOW', 'NORMAL', 'HIGH', 'ABNORMAL', 'UNKNOWN'] as const
 export type LabFlag = (typeof LAB_FLAGS)[number]
 
 export const labFlag = (
@@ -46,15 +46,34 @@ export const LAB_PRESETS = [
   { name: 'GLU', unit: 'mg/dL' },
 ] as const
 
+export const LAB_SECTIONS = [
+  'CBC',
+  'MORPHOLOGY',
+  'PARASITE',
+  'CHEMISTRY',
+  'URINE',
+  'OTHER',
+] as const
+export type LabSection = (typeof LAB_SECTIONS)[number]
+
+/** A value is a number (`value`) or a qualitative answer (`textValue`, e.g. "1+", "Not Found"). */
 export const labValueSchema = z
   .object({
+    section: z.enum(LAB_SECTIONS, 'INVALID').default('OTHER'),
     name: z.string().trim().min(1, 'REQUIRED').max(40, 'TOO_LONG'),
-    value: z.number('INVALID').finite('INVALID'),
+    code: optionalText(40),
+    value: optionalNumber,
+    textValue: optionalText(40),
     unit: optionalText(20),
     refLow: optionalNumber,
     refHigh: optionalNumber,
   })
   .superRefine((value, ctx) => {
+    const hasNumber = value.value != null
+    const hasText = value.textValue != null
+    if (!hasNumber && !hasText)
+      ctx.addIssue({ code: 'custom', path: ['value'], message: 'REQUIRED' })
+    if (hasNumber && hasText) ctx.addIssue({ code: 'custom', path: ['value'], message: 'INVALID' })
     if (value.refLow != null && value.refHigh != null && value.refLow > value.refHigh) {
       ctx.addIssue({ code: 'custom', path: ['refHigh'], message: 'RANGE_INVERTED' })
     }
@@ -66,6 +85,8 @@ export const labResultInputSchema = z
     title: z.string().trim().min(1, 'REQUIRED').max(80, 'TOO_LONG'),
     clinic: optionalText(80),
     note: optionalText(2000),
+    remark: optionalText(2000),
+    interpretation: optionalText(2000),
     values: z.array(labValueSchema).max(60, 'TOO_LONG'),
     photoKeys: z.array(z.string()).max(10, 'TOO_LONG').default([]),
   })
