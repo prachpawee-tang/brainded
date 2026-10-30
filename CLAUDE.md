@@ -334,12 +334,19 @@ pnpm commit                           # commitizen (cz-git)
 
 ## 14. Roadmap
 
+Full plan with scope per phase: **`docs/roadmap.md`** (agreed 2026-10-30). Summary:
+
 | Phase | Scope |
 |---|---|
 | 0. Foundation ✅ | Monorepo, tooling, CI, tokens, ui atoms, i18n, test harness, API health, app home |
-| 1. Shell + Auth ✅ | Login (username/email + password, Google), account linking, home module tiles, settings (language, theme, modules, accounts). **Later:** Facebook, Apple, email verification, password reset |
-| 2. Pets MVP ✅ | Pet profile (name, species, breed, birthday, sex, photo, notes), weight log, history timeline (core `TimelineEvent`), photo upload (object storage). Spec: `docs/modules/pets.md` |
-| 3a. Pets health ✅ | Weight chart + stats, vet results (values, flags, report photos via core `Attachment`), medications with daily doses, appointments |
-| 3b. Pets reminders | To-dos + local device notifications (core `Reminder`/`Task`) |
-| 4. Pets AI | Photo/body-condition analysis via `packages/ai` |
-| 5. Second-brain core | Quick capture, global search, tags, cross-module links, timeline view |
+| 1. Shell + Auth ✅ | Login (username/email + password, Google), account linking, module tiles, settings. **Later:** Facebook, Apple, email verification, password reset |
+| 2. Pets MVP ✅ | Pet profile, weight log, timeline (core `TimelineEvent`), photo upload |
+| 3a. Pets health ✅ | Weight chart + stats, vet results (core `Attachment`), medications + doses, appointments |
+| 3b. Pets reminders | To-dos (core `Task`) + on-device notifications (planned from data, `expo-notifications`) |
+| 4. Vet results v2 | Sections, qualitative values, unit multipliers, species test catalog + Thai names, per-test trends, edit |
+| 5. AI foundation | `packages/ai`, input safety, cost caps, lab-report import (photo/text → reviewed draft), pet body analysis |
+| 6. Colors module | Wada color combinations: search, nearest color, pick from photo, favorites |
+| 7. Nutrition module | Meal log, targets from body profile, macro progress; 7b meal-photo AI |
+| 8. AI chat + core | Read-only tools per module, cited answers; quick capture, global search, tags, links |
+| 9. People module | Plain personal CRM: people, topic facts, typed relationships, filters (no bubble/gamification) |
+| 10. Launch | Deploy, PDPA, billing (freemium), onboarding |
