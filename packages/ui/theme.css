@@ -41,6 +41,7 @@
       --color-warning: #b7791f;
       --color-danger: #d93b3b;
       --color-module-pets: #e8833a;
+      --color-module-colors: #3f9e94;
     }
     @variant dark {
       --color-bg: #141311;
@@ -56,6 +57,7 @@
       --color-warning: #f5b841;
       --color-danger: #ff6b6b;
       --color-module-pets: #f5a05a;
+      --color-module-colors: #5fc2b6;
     }
   }
 }

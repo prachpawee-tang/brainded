@@ -43,6 +43,13 @@
       "when": 1793334442328,
       "tag": "0005_hide_deleted_lab_history",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793351309582,
+      "tag": "0006_colors_favorites",
+      "breakpoints": true
     }
   ]
 }

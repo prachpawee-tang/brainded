@@ -38,7 +38,10 @@ describe('viewer', () => {
       email: 'tnk@example.com',
       locale: 'TH',
       theme: 'SYSTEM',
-      modules: [{ moduleId: 'pets', enabled: true }],
+      modules: [
+        { moduleId: 'pets', enabled: true },
+        { moduleId: 'colors', enabled: true },
+      ],
     })
   })
 })
@@ -87,8 +90,14 @@ describe('setModuleEnabled', () => {
 
     const aliceView = await gql<{ viewer: { modules: unknown[] } }>(VIEWER, { cookie: alice })
     const bobView = await gql<{ viewer: { modules: unknown[] } }>(VIEWER, { cookie: bob })
-    expect(aliceView.data?.viewer.modules).toEqual([{ moduleId: 'pets', enabled: false }])
-    expect(bobView.data?.viewer.modules).toEqual([{ moduleId: 'pets', enabled: true }])
+    expect(aliceView.data?.viewer.modules).toEqual([
+      { moduleId: 'pets', enabled: false },
+      { moduleId: 'colors', enabled: true },
+    ])
+    expect(bobView.data?.viewer.modules).toEqual([
+      { moduleId: 'pets', enabled: true },
+      { moduleId: 'colors', enabled: true },
+    ])
 
     const on = await gql(SET_MODULE_ENABLED, {
       cookie: alice,

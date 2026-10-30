@@ -1,0 +1,55 @@
+{
+  "module": {
+    "name": "คู่สี",
+    "description": "ชุดสี 348 แบบจากหนังสือของ Sanzo Wada"
+  },
+  "common": {
+    "back": "กลับ"
+  },
+  "browse": {
+    "title": "คู่สี",
+    "search": "ค้นหาด้วยชื่อหรือ HEX (เช่น #f9c1ce)",
+    "noResults": "ไม่เจอสีที่ตรงกัน",
+    "tabs": {
+      "combinations": "ชุดสี",
+      "colors": "สี",
+      "favorites": "ที่ชอบ"
+    },
+    "sizes": {
+      "all": "ทั้งหมด",
+      "2": "2 สี",
+      "3": "3 สี",
+      "4": "4 สี"
+    },
+    "showMore": "ดูเพิ่ม",
+    "about": "สีจากหนังสือ A Dictionary of Color Combinations ของ Sanzo Wada (ชุดข้อมูลโดย Matt DesLauriers, MIT) สีบนจออาจต่างจากสีที่พิมพ์เล็กน้อย"
+  },
+  "combination": {
+    "number": "ชุดที่ {{n}}",
+    "copyAll": "คัดลอก HEX ทั้งหมด",
+    "notFound": "ไม่มีชุดสีนี้"
+  },
+  "color": {
+    "notFound": "ไม่มีสีนี้",
+    "usedIn_one": "อยู่ใน {{count}} ชุดสี",
+    "usedIn_other": "อยู่ใน {{count}} ชุดสี"
+  },
+  "match": {
+    "deltaE": "ΔE {{value}}",
+    "almostExact": "แทบเหมือนกัน"
+  },
+  "codes": {
+    "hex": "HEX",
+    "rgb": "RGB",
+    "cmyk": "CMYK",
+    "copy": "คัดลอก {{label}}",
+    "copied": "คัดลอกแล้ว"
+  },
+  "favorites": {
+    "add": "เพิ่มในที่ชอบ",
+    "remove": "เอาออกจากที่ชอบ",
+    "empty": "แตะ ♡ ที่สีหรือชุดสี เพื่อเก็บไว้ตรงนี้",
+    "combinations": "ชุดสี",
+    "colors": "สี"
+  }
+}

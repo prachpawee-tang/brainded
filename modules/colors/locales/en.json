@@ -1,0 +1,55 @@
+{
+  "module": {
+    "name": "Colors",
+    "description": "Sanzo Wada's 348 color combinations"
+  },
+  "common": {
+    "back": "Back"
+  },
+  "browse": {
+    "title": "Colors",
+    "search": "Search by name or HEX (e.g. #f9c1ce)",
+    "noResults": "No colors match",
+    "tabs": {
+      "combinations": "Combinations",
+      "colors": "Colors",
+      "favorites": "Favorites"
+    },
+    "sizes": {
+      "all": "All",
+      "2": "2 colors",
+      "3": "3 colors",
+      "4": "4 colors"
+    },
+    "showMore": "Show more",
+    "about": "Colors from Sanzo Wada's A Dictionary of Color Combinations (dataset by Matt DesLauriers, MIT). Screen colors may differ slightly from print."
+  },
+  "combination": {
+    "number": "No. {{n}}",
+    "copyAll": "Copy all HEX codes",
+    "notFound": "This combination doesn't exist"
+  },
+  "color": {
+    "notFound": "This color doesn't exist",
+    "usedIn_one": "In {{count}} combination",
+    "usedIn_other": "In {{count}} combinations"
+  },
+  "match": {
+    "deltaE": "ΔE {{value}}",
+    "almostExact": "Almost exact"
+  },
+  "codes": {
+    "hex": "HEX",
+    "rgb": "RGB",
+    "cmyk": "CMYK",
+    "copy": "Copy {{label}}",
+    "copied": "Copied"
+  },
+  "favorites": {
+    "add": "Add to favorites",
+    "remove": "Remove from favorites",
+    "empty": "Tap ♡ on a color or combination to keep it here.",
+    "combinations": "Combinations",
+    "colors": "Colors"
+  }
+}

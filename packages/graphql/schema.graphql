@@ -47,6 +47,18 @@ input ArchivePetInput {
   id: ID!
 }
 
+type ColorFavorite {
+  createdAt: DateTime!
+  id: ID!
+  kind: ColorFavoriteKind!
+  ref: String!
+}
+
+enum ColorFavoriteKind {
+  COLOR
+  COMBINATION
+}
+
 input CreatePetInput {
   birthDate: LocalDate
   breed: String
@@ -117,6 +129,7 @@ type Mutation {
   deletePetLabResult(input: DeletePetLabResultInput!): MutationDeletePetLabResultResult!
   deletePetTask(input: DeletePetTaskInput!): MutationDeletePetTaskResult!
   logPetWeight(input: LogPetWeightInput!): MutationLogPetWeightResult!
+  setColorFavorite(input: SetColorFavoriteInput!): MutationSetColorFavoriteResult!
   setDoseTaken(input: SetDoseTakenInput!): MutationSetDoseTakenResult!
   setModuleEnabled(input: SetModuleEnabledInput!): MutationSetModuleEnabledResult!
   setPetAppointmentStatus(input: SetPetAppointmentStatusInput!): MutationSetPetAppointmentStatusResult!
@@ -187,6 +200,12 @@ union MutationLogPetWeightResult = MutationLogPetWeightSuccess | NotFoundError |
 
 type MutationLogPetWeightSuccess {
   data: Pet!
+}
+
+union MutationSetColorFavoriteResult = MutationSetColorFavoriteSuccess | UnauthenticatedError | ValidationError
+
+type MutationSetColorFavoriteSuccess {
+  data: [ColorFavorite!]!
 }
 
 union MutationSetDoseTakenResult = MutationSetDoseTakenSuccess | NotFoundError | UnauthenticatedError
@@ -460,6 +479,7 @@ type PetWeight {
 }
 
 type Query {
+  colorFavorites: [ColorFavorite!]!
   health: Health!
   node(id: ID!): Node
   nodes(ids: [ID!]!): [Node]!
@@ -476,6 +496,12 @@ type QueryPetsConnection {
 type QueryPetsConnectionEdge {
   cursor: String!
   node: Pet!
+}
+
+input SetColorFavoriteInput {
+  isFavorite: Boolean!
+  kind: ColorFavoriteKind!
+  ref: String!
 }
 
 input SetDoseTakenInput {

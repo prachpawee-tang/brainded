@@ -21,7 +21,7 @@ describe('useModuleAccent', () => {
     expect(result.current).toBe('#e7e1d8')
   })
 
-  it('registers the pets module', () => {
-    expect(MODULES.map((m) => m.id)).toEqual(['pets'])
+  it('registers every module in display order', () => {
+    expect(MODULES.map((m) => m.id)).toEqual(['pets', 'colors'])
   })
 })

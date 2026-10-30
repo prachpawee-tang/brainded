@@ -19,6 +19,7 @@ export const SCOPES = [
   'release',
   // modules
   'pets',
+  'colors',
 ] as const
 
 const config: UserConfig = {

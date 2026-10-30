@@ -20,6 +20,7 @@
     "@brain/core": "workspace:*",
     "@brain/db": "workspace:*",
     "@brain/graphql": "workspace:*",
+    "@brain/module-colors": "workspace:*",
     "@brain/module-pets": "workspace:*",
     "@brain/storage": "workspace:*",
     "@graphql-yoga/plugin-disable-introspection": "^2.25.6",

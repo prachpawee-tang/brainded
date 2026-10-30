@@ -1,5 +1,6 @@
 import { fileURLToPath } from 'node:url'
 import { createBuilder } from '@brain/graphql'
+import { registerColorsModule } from '@brain/module-colors/api'
 import { registerPetsModule } from '@brain/module-pets/api'
 import { lexicographicSortSchema, printSchema } from 'graphql'
 import { registerHealth } from './core/health'
@@ -15,6 +16,7 @@ export const buildApiSchema = () => {
   registerHealth(builder)
   registerViewer(builder)
   registerPetsModule(builder)
+  registerColorsModule(builder)
   return builder.toSchema()
 }
 

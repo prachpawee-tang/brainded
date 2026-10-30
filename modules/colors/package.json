@@ -1,0 +1,70 @@
+{
+  "name": "@brain/module-colors",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./manifest": "./src/manifest.ts",
+    "./locales": "./src/locales.ts",
+    "./shared": "./shared/validation.ts",
+    "./shared/palette": "./shared/palette.ts",
+    "./shared/color-math": "./shared/color-math.ts",
+    "./api": "./api/index.ts",
+    "./app": "./app/index.ts"
+  },
+  "scripts": {
+    "test": "vitest run && jest",
+    "test:unit": "vitest run --exclude \"**/*.int.test.ts\" && jest --testPathIgnorePatterns int.test",
+    "test:coverage": "vitest run --coverage && jest --coverage",
+    "typecheck": "tsc -p tsconfig.json && tsc -p tsconfig.app.json",
+    "test:int": "vitest run int.test && jest --testPathPatterns int.test",
+    "codegen": "graphql-codegen --config codegen.ts"
+  },
+  "dependencies": {
+    "@brain/core": "workspace:*",
+    "@brain/db": "workspace:*",
+    "@brain/graphql": "workspace:*",
+    "@brain/i18n": "workspace:*",
+    "@brain/ui": "workspace:*",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@apollo/client": "^4.3.4",
+    "@brain/config": "workspace:*",
+    "@brain/storage": "workspace:*",
+    "@electric-sql/pglite": "^0.5.10",
+    "@graphql-codegen/cli": "^7.4.6",
+    "@graphql-codegen/client-preset": "^6.2.3",
+    "@graphql-typed-document-node/core": "^3.2.0",
+    "@testing-library/react-native": "^14.1.0",
+    "@types/jest": "30.0.0",
+    "@types/react": "~19.3.0",
+    "expo": "~58.0.16",
+    "expo-clipboard": "~58.0.4",
+    "expo-router": "^58.0.24",
+    "graphql": "^16.14.2",
+    "i18next": "^26.5.2",
+    "jest": "~30.5.2",
+    "jest-expo": "~58.0.11",
+    "lucide-react-native": "1.60.0",
+    "react": "^19.3.0",
+    "react-i18next": "^17.1.0",
+    "react-native": "^0.88.0",
+    "react-native-safe-area-context": "^5.10.1",
+    "rxjs": "^7.8.2",
+    "typescript": "~6.0.3",
+    "uniwind": "^1.12.2"
+  },
+  "peerDependencies": {
+    "@apollo/client": "*",
+    "expo-router": "*",
+    "graphql": "*",
+    "i18next": "*",
+    "react": "*",
+    "react-i18next": "*",
+    "react-native": "*",
+    "react-native-safe-area-context": "*",
+    "lucide-react-native": "*",
+    "expo-clipboard": "*"
+  }
+}

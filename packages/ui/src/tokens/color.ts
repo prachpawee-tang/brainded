@@ -51,6 +51,7 @@ export const colors: Record<Theme, SemanticColors> = {
 /** One playful accent per module, keyed by module id. */
 export const moduleColors: Record<string, Record<Theme, string>> = {
   pets: { light: '#e8833a', dark: '#f5a05a' },
+  colors: { light: '#3f9e94', dark: '#5fc2b6' },
 }
 
 /**
