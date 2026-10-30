@@ -75,3 +75,31 @@ export const listTimelineEvents = async (
     .limit(limit + 1)
   return { events: rows.slice(0, limit), hasNextPage: rows.length > limit }
 }
+
+/** Events a module linked to one of its records through `data` (e.g. `{ labResultId }`). */
+export type LinkedEventMatch = { ownerId: string; kind: string; data: Record<string, string> }
+
+const linkedTo = ({ ownerId, kind, data }: LinkedEventMatch) =>
+  and(
+    eq(timelineEvents.ownerId, ownerId),
+    eq(timelineEvents.kind, kind),
+    sql`${timelineEvents.data} @> ${JSON.stringify(data)}::jsonb`,
+    notDeleted(timelineEvents),
+  )
+
+/** Keep history in step when the source record is edited (date, title). */
+export const updateTimelineEvents = async (
+  db: Database,
+  match: LinkedEventMatch,
+  patch: { occurredOn?: string; body?: string | null },
+) => {
+  await db
+    .update(timelineEvents)
+    .set({ ...patch, updatedAt: new Date() })
+    .where(linkedTo(match))
+}
+
+/** Soft-delete the history entries of a deleted source record. */
+export const removeTimelineEvents = async (db: Database, match: LinkedEventMatch) => {
+  await db.update(timelineEvents).set({ deletedAt: new Date() }).where(linkedTo(match))
+}

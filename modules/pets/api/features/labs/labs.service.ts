@@ -3,6 +3,8 @@ import {
   listAttachments,
   recordTimelineEvent,
   removeAttachmentsFor,
+  removeTimelineEvents,
+  updateTimelineEvents,
 } from '@brain/core/server'
 import { and, asc, type Database, desc, eq, inArray, notDeleted } from '@brain/db'
 import { ForbiddenError, NotFoundError } from '@brain/graphql'
@@ -16,6 +18,13 @@ import { PET_ENTITY_TYPE } from '../weight/weight.service'
 export const LAB_RESULT_ENTITY_TYPE = 'pets.lab_result'
 const LAB_RESULT_EVENT_KIND = 'pets.lab_result'
 const DEFAULT_LIMIT = 20
+
+/** The pet-timeline entry recorded for a result (linked through `data.labResultId`). */
+const historyOf = (ownerId: string, labResultId: string) => ({
+  ownerId,
+  kind: LAB_RESULT_EVENT_KIND,
+  data: { labResultId },
+})
 
 export type LabResultRow = typeof petLabResults.$inferSelect
 export type LabValueRow = typeof petLabValues.$inferSelect
@@ -110,6 +119,10 @@ export const updateLabResult = async (
     await insertValues(tx, context.ownerId, existing.id, values)
     await removeAttachmentsFor(tx, entity)
     await addAttachments(tx, { ...entity, storageKeys: photoKeys })
+    await updateTimelineEvents(tx, historyOf(context.ownerId, row.id), {
+      occurredOn: row.takenOn,
+      body: row.title,
+    })
     return row
   })
 }
@@ -176,6 +189,7 @@ export const deleteLabResult = async (context: PetsServiceContext, id: string | 
     entityType: LAB_RESULT_ENTITY_TYPE,
     entityId: row.id,
   })
+  await removeTimelineEvents(context.db, historyOf(context.ownerId, row.id))
   return requirePet(context, row.petId)
 }
 

@@ -18,9 +18,12 @@ export {
 export {
   decodeTimelineCursor,
   encodeTimelineCursor,
+  type LinkedEventMatch,
   listTimelineEvents,
   type RecordTimelineEventInput,
   recordTimelineEvent,
+  removeTimelineEvents,
   type TimelineCursor,
   type TimelineEvent,
+  updateTimelineEvents,
 } from './timeline/timeline'

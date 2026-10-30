@@ -227,4 +227,20 @@ describe('vet results v2', () => {
     ])
     expect(res.data?.pet.labTrend[1]).toMatchObject({ refLow: 0.8, refHigh: 1.8, flag: 'NORMAL' })
   })
+
+  it('keeps the history in step: edits update the entry, deletes remove it', async () => {
+    const { run } = await createPetsHarness()
+    const petId = await createPet(run)
+    const id = (await run(ADD_V2, report(petId))).data?.addPetLabResult.data.id
+    await run(UPDATE, {
+      input: { id, takenOn: '2026-10-03', title: 'Redo', values: [{ name: 'ALT', value: 1 }] },
+    })
+    const history = async () =>
+      (await run(LIST, { id: petId })).data?.pet.timeline.edges.map(
+        (e: { node: unknown }) => e.node,
+      )
+    expect(await history()).toEqual([{ kind: 'LAB_RESULT', body: 'Redo' }])
+    await run(DELETE, { input: { id } })
+    expect(await history()).toEqual([])
+  })
 })

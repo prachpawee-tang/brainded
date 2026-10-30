@@ -315,7 +315,7 @@ pnpm commit                           # commitizen (cz-git)
 - **Apollo 4 + MockedProvider** need `__typename` in mock results. Codegen uses `nonOptionalTypename: true`, so fixtures must include it (`src/test/viewer-fixture.ts`).
 - **Typed routes are off**: they are generated only by `expo start` into the gitignored `.expo/`, which would break CI typecheck.
 - A RN `View` with `accessibilityRole` isn't queryable by RNTL `getByRole` unless it is `accessible`. Assert on the children (e.g. radios) instead.
-- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init`, `0001_pets_and_timeline` and `0002_pets_health`; `0003_core_tasks`; `0004_pets_lab_v2` is generated but must still be applied.
+- Migrations: `pnpm --filter @brain/db db:generate` creates them and `pnpm --filter @brain/db db:migrate` applies them to Neon (direct URL). drizzle.config reads core tables and `modules/*/api/db/schema.ts`. Neon's `production` branch currently has `0000_init`, `0001_pets_and_timeline` and `0002_pets_health`; `0003_core_tasks`, `0004_pets_lab_v2`; `0005_hide_deleted_lab_history` (data fix) is generated but must still be applied.
 - Pothos relay connection typenames come from the field, not the node: `QueryPetsConnection(Edge)`, `PetTimelineConnection(Edge)`. Mock fixtures must use them.
 - `@brain/core` root export must stay isomorphic (the app imports it). DB code goes in `@brain/core/server`.
 - Jest configs set `testTimeout: 30_000` and the Vitest preset sets 30s, because PGlite/screen tests are slow when turbo runs packages in parallel.

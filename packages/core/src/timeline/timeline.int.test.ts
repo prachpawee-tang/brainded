@@ -6,6 +6,8 @@ import {
   encodeTimelineCursor,
   listTimelineEvents,
   recordTimelineEvent,
+  removeTimelineEvents,
+  updateTimelineEvents,
 } from './timeline'
 
 const PET = '0190f0f0-0000-7000-8000-0000000000aa'
@@ -101,5 +103,47 @@ describe('timeline', () => {
 
   it('rejects malformed cursors', () => {
     expect(() => decodeTimelineCursor('nope')).toThrow('Invalid cursor')
+  })
+
+  describe('events linked to a source record', () => {
+    const linked = (labResultId: string, owner = ownerId) =>
+      recordTimelineEvent(db, {
+        ownerId: owner,
+        entityType: 'pets.pet',
+        entityId: PET,
+        kind: 'pets.lab_result',
+        occurredOn: '2026-10-01',
+        body: 'Blood test',
+        data: { labResultId },
+      })
+    const list = (owner = ownerId) =>
+      listTimelineEvents(db, { ownerId: owner, entityType: 'pets.pet', entityId: PET, limit: 10 })
+
+    it('updates only the matching events of that owner', async () => {
+      await linked('r1')
+      await linked('r2')
+      await linked('r1', strangerId)
+      await updateTimelineEvents(
+        db,
+        { ownerId, kind: 'pets.lab_result', data: { labResultId: 'r1' } },
+        { occurredOn: '2026-10-05', body: 'Redo' },
+      )
+      expect((await list()).events.map((e) => [e.data, e.occurredOn, e.body])).toEqual([
+        [{ labResultId: 'r1' }, '2026-10-05', 'Redo'],
+        [{ labResultId: 'r2' }, '2026-10-01', 'Blood test'],
+      ])
+      expect((await list(strangerId)).events[0]?.body).toBe('Blood test')
+    })
+
+    it('removes them from the timeline', async () => {
+      await linked('r1')
+      await linked('r2')
+      await removeTimelineEvents(db, {
+        ownerId,
+        kind: 'pets.lab_result',
+        data: { labResultId: 'r1' },
+      })
+      expect((await list()).events.map((e) => e.data)).toEqual([{ labResultId: 'r2' }])
+    })
   })
 })
