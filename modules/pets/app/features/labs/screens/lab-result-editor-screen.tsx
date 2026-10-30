@@ -23,6 +23,7 @@ import {
   groupBySection,
   type LabRow,
   newLabRow,
+  patchRow,
   rowFromTest,
   rowFromValue,
   toLabValues,
@@ -38,6 +39,16 @@ type Form = {
   remark: string
   interpretation: string
 }
+
+/** 1-based position on screen (sections reorder rows), for accessible names like "Result 2". */
+const visualNumber = (
+  groups: readonly { items: readonly { item: LabRow }[] }[],
+  groupIndex: number,
+  key: number,
+) =>
+  groups.slice(0, groupIndex).reduce((sum, g) => sum + g.items.length, 0) +
+  (groups[groupIndex]?.items.findIndex(({ item }) => item.key === key) ?? 0) +
+  1
 
 const EMPTY_FORM: Form = {
   takenOn: '',
@@ -89,12 +100,16 @@ export const LabResultEditorScreen = () => {
   const set = (key: keyof Form) => (value: string) => setForm((f) => ({ ...f, [key]: value }))
   const error = (path: string) => (errors[path] ? t(`validation.${errors[path]}`) : undefined)
   const updateRow = (key: number, patch: Partial<LabRow>) =>
-    setRows((current) => current.map((r) => (r.key === key ? { ...r, ...patch } : r)))
+    setRows((current) => current.map((r) => (r.key === key ? { ...r, ...patchRow(r, patch) } : r)))
 
   /** Prefill unit + range from this pet's latest value of the test; the catalog never guesses ranges. */
   const addTest = async (test: LabTest) => {
     const previous = await client
-      .query({ query: PetLabTrendQuery, variables: { id, code: test.code } })
+      .query({
+        query: PetLabTrendQuery,
+        variables: { id, code: test.code },
+        fetchPolicy: 'network-only',
+      })
       .then(({ data }) => data?.pet?.labTrend.at(-1) ?? null)
       .catch(() => null)
     setRows((current) => [...current, rowFromTest(test, previous)])
@@ -196,7 +211,7 @@ export const LabResultEditorScreen = () => {
           </View>
         </View>
 
-        {groupBySection(rows).map((group) => (
+        {groupBySection(rows).map((group, groupIndex, groups) => (
           <View key={group.section} className="gap-2">
             <Text variant="caption" tone="muted" className="font-sans-medium">
               {t(`labs.sections.${group.section}`)}
@@ -205,7 +220,7 @@ export const LabResultEditorScreen = () => {
               <LabValueRow
                 key={row.key}
                 row={row}
-                n={index + 1}
+                n={visualNumber(groups, groupIndex, row.key)}
                 error={(field) => error(`values.${index}.${field}`)}
                 onChange={(patch) => updateRow(row.key, patch)}
                 onRemove={() => setRows((current) => current.filter((r) => r.key !== row.key))}

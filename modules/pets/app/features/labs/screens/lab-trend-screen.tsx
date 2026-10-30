@@ -19,7 +19,11 @@ export const LabTrendScreen = () => {
   const { t, language } = labels
   const display = useLabDisplay()
   const color = usePetsChartColor()
-  const { data, loading } = useQuery(PetLabTrendQuery, { variables: { id, code } })
+  const { data, loading } = useQuery(PetLabTrendQuery, {
+    variables: { id, code },
+    // The editor's prefill caches this query while it isn't on screen; always check for newer results.
+    fetchPolicy: 'cache-and-network',
+  })
   const points = data?.pet?.labTrend ?? []
   const test = findLabTest(code)
   const title = test

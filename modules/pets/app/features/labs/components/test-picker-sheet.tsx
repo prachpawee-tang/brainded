@@ -2,7 +2,12 @@ import { Icon, ListItem, Sheet, TextField } from '@brain/ui'
 import { Plus } from 'lucide-react-native'
 import { useEffect, useState } from 'react'
 import { View } from 'react-native'
-import { type LabTest, searchLabTests } from '../../../../shared/lab-catalog'
+import {
+  findLabTest,
+  type LabTest,
+  labCodeFor,
+  searchLabTests,
+} from '../../../../shared/lab-catalog'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 
 const MAX_RESULTS = 12
@@ -23,6 +28,8 @@ export const TestPickerSheet = ({
   const [query, setQuery] = useState('')
   const matches = searchLabTests(query).slice(0, MAX_RESULTS)
   const trimmed = query.trim()
+  /** Offer a custom test only when the text isn't already a catalog name. */
+  const canAddCustom = trimmed !== '' && !findLabTest(labCodeFor(trimmed))
 
   useEffect(() => {
     if (visible) setQuery('')
@@ -48,13 +55,6 @@ export const TestPickerSheet = ({
         autoCorrect={false}
       />
       <View>
-        {trimmed ? (
-          <ListItem
-            leading={<Icon icon={Plus} tone="primary" />}
-            title={t('labs.addCustom', { name: trimmed })}
-            onPress={() => pick({ customName: trimmed })}
-          />
-        ) : null}
         {matches.map((test) => (
           <ListItem
             key={test.code}
@@ -64,6 +64,13 @@ export const TestPickerSheet = ({
             onPress={() => pick({ test })}
           />
         ))}
+        {canAddCustom ? (
+          <ListItem
+            leading={<Icon icon={Plus} tone="primary" />}
+            title={t('labs.addCustom', { name: trimmed })}
+            onPress={() => pick({ customName: trimmed })}
+          />
+        ) : null}
       </View>
     </Sheet>
   )

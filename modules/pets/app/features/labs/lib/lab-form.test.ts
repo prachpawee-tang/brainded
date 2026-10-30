@@ -1,5 +1,12 @@
 import { findLabTest } from '../../../../shared/lab-catalog'
-import { groupBySection, newLabRow, rowFromTest, rowFromValue, toLabValues } from './lab-form'
+import {
+  groupBySection,
+  newLabRow,
+  patchRow,
+  rowFromTest,
+  rowFromValue,
+  toLabValues,
+} from './lab-form'
 
 describe('lab form', () => {
   it('starts a catalog row with its section, code, short name and canonical unit', () => {
@@ -115,5 +122,25 @@ describe('lab form', () => {
       ['CBC', [1]],
       ['CHEMISTRY', [0, 2]],
     ])
+  })
+})
+
+describe('changing a unit', () => {
+  const wbc = () => {
+    const test = findLabTest('WBC')
+    if (!test) throw new Error('catalog')
+    return rowFromTest(test, { unit: 'cells/µL', refLow: 5500, refHigh: 19500 })
+  }
+
+  it('converts a prefilled range once the new unit is recognised', () => {
+    let row = wbc()
+    for (const unit of ['', '×10³', '×10³ cell/mm³']) row = { ...row, ...patchRow(row, { unit }) }
+    expect(row).toMatchObject({ unit: '×10³ cell/mm³', refLow: '5.5', refHigh: '19.5' })
+  })
+
+  it('leaves the range alone for units it cannot convert, and after a manual range edit', () => {
+    expect(patchRow(wbc(), { unit: '%' })).toEqual({ unit: '%' })
+    const edited = { ...wbc(), ...patchRow(wbc(), { refLow: '4' }) }
+    expect(patchRow(edited, { unit: '×10³/µL' })).toEqual({ unit: '×10³/µL' })
   })
 })

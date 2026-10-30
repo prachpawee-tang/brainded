@@ -370,6 +370,7 @@ describe('LabResultEditorScreen v2', () => {
     await user.type(screen.getByLabelText('Title (e.g. Blood test)'), 'Kidney check')
     await user.press(screen.getByRole('button', { name: 'Add a test' }))
     await user.type(screen.getByLabelText('Search, e.g. ค่าไต or CREA'), 'ค่าไต')
+    expect(screen.queryByRole('button', { name: 'Add “ค่าไต”' })).not.toBeOnTheScreen()
     await user.press(screen.getByRole('button', { name: 'CREA Creatinine' }))
     expect(await screen.findByDisplayValue('0.8')).toBeOnTheScreen()
     expect(screen.getByDisplayValue('1.8')).toBeOnTheScreen()
@@ -377,7 +378,9 @@ describe('LabResultEditorScreen v2', () => {
     await user.press(screen.getByRole('button', { name: 'Add a test' }))
     await user.type(screen.getByLabelText('Search, e.g. ค่าไต or CREA'), 'พยาธิ')
     await user.press(screen.getByRole('button', { name: 'Blood parasites' }))
-    await user.type(await screen.findByLabelText('Result 2'), 'Not Found')
+    // Parasites come before chemistry on the report, so the new row is first on screen.
+    await screen.findByLabelText('Result 2')
+    await user.type(screen.getByLabelText('Result 1'), 'Not Found')
     expect(screen.getByText('Blood parasites', { exact: false })).toBeOnTheScreen()
     await user.press(screen.getByRole('button', { name: 'Save results' }))
     await waitFor(() => expect(result).toHaveBeenCalled())
