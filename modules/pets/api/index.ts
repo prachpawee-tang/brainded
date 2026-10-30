@@ -4,6 +4,7 @@ import { registerLabs } from './features/labs/labs.schema'
 import { registerMedications } from './features/medications/medications.schema'
 import { registerNotes } from './features/notes/notes.schema'
 import { registerProfile } from './features/profile/profile.schema'
+import { registerTasks } from './features/tasks/tasks.schema'
 import { registerWeight } from './features/weight/weight.schema'
 
 /** Adds the pets module's types, queries and mutations to the shared builder. */
@@ -14,4 +15,5 @@ export const registerPetsModule = (builder: Builder) => {
   registerLabs(builder, Pet)
   registerMedications(builder, Pet)
   registerAppointments(builder, Pet)
+  registerTasks(builder, Pet)
 }

@@ -36,9 +36,12 @@ type Dose = {
   dosage?: string | null
 }
 
+type TodayTask = { id: string; title: string; dueOn: string | null }
+
 export const todayMock = (
   doses: Dose[],
   next: { reason: string; scheduledAt: string; clinic?: string | null } | null = null,
+  tasks: TodayTask[] = [],
 ) => ({
   request: { query: PetTodayQuery, variables: { id: PET_ID, date: TODAY } },
   result: {
@@ -61,6 +64,7 @@ export const todayMock = (
         nextAppointment: next
           ? { __typename: 'PetAppointment' as const, id: 'a-next', clinic: null, ...next }
           : null,
+        tasks: tasks.map((t) => ({ __typename: 'PetTask' as const, completedAt: null, ...t })),
       },
     },
   },
@@ -145,4 +149,10 @@ export const inDays = (days: number, hour = 9) => {
   date.setDate(date.getDate() + days)
   date.setHours(hour, 30, 0, 0)
   return date.toISOString()
+}
+
+export const daysFromToday = (days: number) => {
+  const date = new Date()
+  date.setDate(date.getDate() + days)
+  return toIsoDate(date)
 }

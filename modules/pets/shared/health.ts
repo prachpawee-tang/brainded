@@ -147,3 +147,13 @@ export const weightStats = (grams: readonly number[]) => {
     change: last - first,
   }
 }
+
+// ── To-dos ───────────────────────────────────────────────────────────────────
+
+export const taskInputSchema = z.object({
+  title: z.string().trim().min(1, 'REQUIRED').max(120, 'TOO_LONG'),
+  note: optionalText(1000),
+  dueOn: isoDate.nullish(),
+})
+
+export type TaskInput = z.infer<typeof taskInputSchema>

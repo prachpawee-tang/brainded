@@ -33,6 +33,12 @@ export const PetTodayQuery = graphql(`
         reason
         clinic
       }
+      tasks {
+        id
+        title
+        dueOn
+        completedAt
+      }
     }
   }
 `)

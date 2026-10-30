@@ -2,7 +2,7 @@ import { screen, userEvent, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { SetDoseTakenMutation } from '../../../graphql/health'
 import { PET_ID } from '../../../test/fixtures'
-import { inDays, TODAY, todayMock } from '../../../test/health-fixtures'
+import { daysFromToday, inDays, TODAY, todayMock } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
 import { TodayCard } from '../components/today-card'
 
@@ -69,5 +69,24 @@ describe('TodayCard', () => {
   it('says when nothing is scheduled', async () => {
     await renderPets(<TodayCard petId={PET_ID} />, { mocks: [todayMock([])] })
     expect(await screen.findByText('No upcoming appointments')).toBeOnTheScreen()
+  })
+})
+
+describe('TodayCard to-dos', () => {
+  it('lists open to-dos due today or overdue, and hides future ones', async () => {
+    await renderPets(<TodayCard petId={PET_ID} />, {
+      mocks: [
+        todayMock([], null, [
+          { id: 't1', title: 'Overdue chore', dueOn: daysFromToday(-2) },
+          { id: 't2', title: 'Due today', dueOn: daysFromToday(0) },
+          { id: 't3', title: 'Next week', dueOn: daysFromToday(7) },
+          { id: 't4', title: 'No date', dueOn: null },
+        ]),
+      ],
+    })
+    expect(await screen.findByRole('checkbox', { name: 'Overdue chore' })).toBeOnTheScreen()
+    expect(screen.getByRole('checkbox', { name: 'Due today' })).toBeOnTheScreen()
+    expect(screen.queryByText('Next week')).not.toBeOnTheScreen()
+    expect(screen.queryByText('No date')).not.toBeOnTheScreen()
   })
 })

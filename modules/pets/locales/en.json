@@ -250,5 +250,34 @@
       "CANCELLED": "Cancelled"
     },
     "when": "{{date}} · {{time}}"
+  },
+  "tasks": {
+    "title": "To-dos",
+    "add": "Add to-do",
+    "empty": "Nothing to do",
+    "listTitle": "To-dos",
+    "open": "To do",
+    "done": "Done",
+    "sheetNew": "New to-do",
+    "sheetEdit": "Edit to-do",
+    "name": "What needs doing?",
+    "dueOn": "Due date (optional)",
+    "duePlaceholder": "No due date",
+    "note": "Note (optional)",
+    "overdue": "Overdue · {{date}}",
+    "due": "Due {{date}}",
+    "dueToday": "Today",
+    "delete": "Delete to-do",
+    "deleteConfirm": "Delete this to-do?"
+  },
+  "reminders": {
+    "doseTitle": "💊 {{pet}} · {{name}}",
+    "doseBody": "Time for {{detail}}",
+    "doseBodyPlain": "Time for this dose",
+    "appointmentTitle": "🩺 {{pet}} · {{reason}}",
+    "appointment1d": "Vet visit tomorrow",
+    "appointment2h": "Vet visit in 2 hours",
+    "taskTitle": "📝 {{pet}} · {{title}}",
+    "taskBody": "Due today"
   }
 }

@@ -250,5 +250,34 @@
       "CANCELLED": "ยกเลิก"
     },
     "when": "{{date}} · {{time}} น."
+  },
+  "tasks": {
+    "title": "สิ่งที่ต้องทำ",
+    "add": "เพิ่มสิ่งที่ต้องทำ",
+    "empty": "ไม่มีอะไรต้องทำ",
+    "listTitle": "สิ่งที่ต้องทำ",
+    "open": "ยังไม่ได้ทำ",
+    "done": "ทำแล้ว",
+    "sheetNew": "เพิ่มสิ่งที่ต้องทำ",
+    "sheetEdit": "แก้ไขสิ่งที่ต้องทำ",
+    "name": "ต้องทำอะไร?",
+    "dueOn": "กำหนดวัน (ไม่ใส่ก็ได้)",
+    "duePlaceholder": "ไม่มีกำหนด",
+    "note": "หมายเหตุ (ไม่ใส่ก็ได้)",
+    "overdue": "เลยกำหนด · {{date}}",
+    "due": "ภายใน {{date}}",
+    "dueToday": "วันนี้",
+    "delete": "ลบสิ่งที่ต้องทำ",
+    "deleteConfirm": "ลบรายการนี้ไหม?"
+  },
+  "reminders": {
+    "doseTitle": "💊 {{pet}} · {{name}}",
+    "doseBody": "ถึงเวลาให้ยา {{detail}}",
+    "doseBodyPlain": "ถึงเวลาให้ยาแล้ว",
+    "appointmentTitle": "🩺 {{pet}} · {{reason}}",
+    "appointment1d": "พรุ่งนี้มีนัดหมอ",
+    "appointment2h": "อีก 2 ชั่วโมงมีนัดหมอ",
+    "taskTitle": "📝 {{pet}} · {{title}}",
+    "taskBody": "ครบกำหนดวันนี้"
   }
 }

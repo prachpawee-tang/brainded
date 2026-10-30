@@ -1,6 +1,6 @@
 # Module: Pets (`pets`)
 
-Status: **Phase 2 MVP ✅ · Phase 3a ✅** (vet results, weight chart, medications, appointments). Phase 3a scope confirmed 2026-10-20.
+Status: **Phase 2 MVP ✅ · Phase 3a ✅ · Phase 3b ✅** (to-dos + on-device reminders). Phase 3a scope confirmed 2026-10-20.
 
 ## Job
 
@@ -88,8 +88,26 @@ Success:
 ### Profile layout (top to bottom)
 Hero, key facts, **Today** (doses due + next appointment), **Weight** (chart + stats), **Vet results** (latest 2 + see all), **Medications** (active), **Appointments** (upcoming), timeline. The quick-log bar stays pinned.
 
-### Deferred to Phase 3b
-To-dos, and local notifications on the device for doses and appointments (built on the core `Reminder` primitive). Comparing weight against age/breed norms comes in a later phase.
+## Phase 3b — to-dos + reminders
+
+### To-dos
+- Built on the core **Task** primitive (`core_tasks`, entity `pets.pet`). A to-do has a title, an optional due date and note, and a done state (`completedAt`).
+- **Profile → To-dos** section lists open to-dos (overdue first, then by due date, then undated). Tick to complete, tap to edit or delete, and use + to add (sheet).
+- A list screen `/pets/[id]/tasks` shows open and done to-dos.
+- **Today** also shows open to-dos due today or overdue, tickable.
+
+### Reminders (local notifications)
+- **Planned on the device from data**, with no server push and no server-side reminder table. A pure planner (`shared/reminders.ts`) turns active medications, upcoming appointments, and open dated to-dos into reminder items for the next 7 days:
+  - **Dose:** at the dose time, on dosing days.
+  - **Appointment:** 1 day before and 2 hours before. Both are skipped if already past.
+  - **To-do:** at 09:00 on the due date.
+- The app schedules them with `expo-notifications` (DATE triggers), sorted by time and capped at 60 (iOS keeps ~64). It re-syncs whenever the planned set changes (after app open, mutations, settings). Tapping a notification opens the pet's profile.
+- **Settings → Notifications**: a master switch (asks for permission when turned on) plus one switch each for doses, appointments, and to-dos. Settings are stored **per device**, because notifications are per device.
+- Web: reminders are visible in the app (Today) only; the settings section says notifications work in the mobile app.
+- The app shell owns scheduling (`ReminderSync`). Modules only expose a hook that returns reminder items (`usePetsReminderItems`), so future modules can add their own.
+
+### Later
+Comparing weight against age/breed norms (see `docs/roadmap.md`).
 
 ## Out of scope (later phases)
 

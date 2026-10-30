@@ -134,7 +134,8 @@
         "**/src/test/**",
         "**/app/test/**",
         "**/api/test/**",
-        "modules/pets/app/features/today/components/today-card.tsx"
+        "modules/pets/app/features/today/components/today-card.tsx",
+        "modules/pets/app/features/tasks/lib/use-toggle-task.ts"
       ],
       "linter": {
         "rules": {

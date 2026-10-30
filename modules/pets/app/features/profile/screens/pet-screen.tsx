@@ -15,6 +15,7 @@ import { LabResultsSection } from '../../labs/components/lab-results-section'
 import { NoteSheet } from '../../logging/components/note-sheet'
 import { WeightSheet } from '../../logging/components/weight-sheet'
 import { MedicationsSection } from '../../medications/components/medications-section'
+import { TasksSection } from '../../tasks/components/tasks-section'
 import { TodayCard } from '../../today/components/today-card'
 import { WeightTrendCard } from '../../weight-trend/components/weight-trend-card'
 import { KeyFacts } from '../components/key-facts'
@@ -139,6 +140,7 @@ export const PetScreen = () => {
       <LabResultsSection petId={pet.id} />
       <MedicationsSection petId={pet.id} />
       <AppointmentsSection petId={pet.id} />
+      <TasksSection petId={pet.id} />
 
       <View className="gap-3">
         <Text variant="heading">{t('profile.timeline')}</Text>

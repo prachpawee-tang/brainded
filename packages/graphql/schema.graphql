@@ -34,6 +34,13 @@ input AddPetNoteInput {
   type: PetNoteType!
 }
 
+input AddPetTaskInput {
+  dueOn: LocalDate
+  note: String
+  petId: ID!
+  title: String!
+}
+
 input ArchivePetInput {
   id: ID!
 }
@@ -55,6 +62,10 @@ A date-time string at UTC, such as 2007-12-03T10:15:30Z, compliant with the `dat
 scalar DateTime
 
 input DeletePetLabResultInput {
+  id: ID!
+}
+
+input DeletePetTaskInput {
   id: ID!
 }
 
@@ -98,16 +109,20 @@ type Mutation {
   addPetLabResult(input: AddPetLabResultInput!): MutationAddPetLabResultResult!
   addPetMedication(input: AddPetMedicationInput!): MutationAddPetMedicationResult!
   addPetNote(input: AddPetNoteInput!): MutationAddPetNoteResult!
+  addPetTask(input: AddPetTaskInput!): MutationAddPetTaskResult!
   archivePet(input: ArchivePetInput!): MutationArchivePetResult!
   createPet(input: CreatePetInput!): MutationCreatePetResult!
   deletePetLabResult(input: DeletePetLabResultInput!): MutationDeletePetLabResultResult!
+  deletePetTask(input: DeletePetTaskInput!): MutationDeletePetTaskResult!
   logPetWeight(input: LogPetWeightInput!): MutationLogPetWeightResult!
   setDoseTaken(input: SetDoseTakenInput!): MutationSetDoseTakenResult!
   setModuleEnabled(input: SetModuleEnabledInput!): MutationSetModuleEnabledResult!
   setPetAppointmentStatus(input: SetPetAppointmentStatusInput!): MutationSetPetAppointmentStatusResult!
+  setPetTaskDone(input: SetPetTaskDoneInput!): MutationSetPetTaskDoneResult!
   updatePet(input: UpdatePetInput!): MutationUpdatePetResult!
   updatePetAppointment(input: UpdatePetAppointmentInput!): MutationUpdatePetAppointmentResult!
   updatePetMedication(input: UpdatePetMedicationInput!): MutationUpdatePetMedicationResult!
+  updatePetTask(input: UpdatePetTaskInput!): MutationUpdatePetTaskResult!
   updatePreferences(input: UpdatePreferencesInput!): MutationUpdatePreferencesResult!
 }
 
@@ -135,6 +150,12 @@ type MutationAddPetNoteSuccess {
   data: Pet!
 }
 
+union MutationAddPetTaskResult = MutationAddPetTaskSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationAddPetTaskSuccess {
+  data: PetTask!
+}
+
 union MutationArchivePetResult = MutationArchivePetSuccess | NotFoundError | UnauthenticatedError
 
 type MutationArchivePetSuccess {
@@ -151,6 +172,12 @@ union MutationDeletePetLabResultResult = MutationDeletePetLabResultSuccess | Not
 
 type MutationDeletePetLabResultSuccess {
   data: Pet!
+}
+
+union MutationDeletePetTaskResult = MutationDeletePetTaskSuccess | NotFoundError | UnauthenticatedError
+
+type MutationDeletePetTaskSuccess {
+  data: Boolean!
 }
 
 union MutationLogPetWeightResult = MutationLogPetWeightSuccess | NotFoundError | UnauthenticatedError | ValidationError
@@ -177,6 +204,12 @@ type MutationSetPetAppointmentStatusSuccess {
   data: PetAppointment!
 }
 
+union MutationSetPetTaskDoneResult = MutationSetPetTaskDoneSuccess | NotFoundError | UnauthenticatedError
+
+type MutationSetPetTaskDoneSuccess {
+  data: PetTask!
+}
+
 union MutationUpdatePetAppointmentResult = MutationUpdatePetAppointmentSuccess | NotFoundError | UnauthenticatedError | ValidationError
 
 type MutationUpdatePetAppointmentSuccess {
@@ -193,6 +226,12 @@ union MutationUpdatePetResult = ForbiddenError | MutationUpdatePetSuccess | NotF
 
 type MutationUpdatePetSuccess {
   data: Pet!
+}
+
+union MutationUpdatePetTaskResult = MutationUpdatePetTaskSuccess | NotFoundError | UnauthenticatedError | ValidationError
+
+type MutationUpdatePetTaskSuccess {
+  data: PetTask!
 }
 
 union MutationUpdatePreferencesResult = MutationUpdatePreferencesSuccess | UnauthenticatedError
@@ -235,6 +274,7 @@ type Pet implements Node {
   sex: PetSex!
   species: PetSpecies!
   speciesOther: String
+  tasks(includeDone: Boolean): [PetTask!]!
   timeline(after: String, before: String, first: Int, last: Int): PetTimelineConnection!
   weights(since: LocalDate): [PetWeight!]!
 }
@@ -333,6 +373,14 @@ enum PetSpecies {
   OTHER
 }
 
+type PetTask {
+  completedAt: DateTime
+  dueOn: LocalDate
+  id: ID!
+  note: String
+  title: String!
+}
+
 type PetTimelineConnection {
   edges: [PetTimelineConnectionEdge!]!
   pageInfo: PageInfo!
@@ -406,6 +454,11 @@ input SetPetAppointmentStatusInput {
   status: PetAppointmentStatus!
 }
 
+input SetPetTaskDoneInput {
+  done: Boolean!
+  id: ID!
+}
+
 enum ThemePreference {
   DARK
   LIGHT
@@ -445,6 +498,13 @@ input UpdatePetMedicationInput {
   note: String
   startOn: LocalDate!
   times: [String!]!
+}
+
+input UpdatePetTaskInput {
+  dueOn: LocalDate
+  id: ID!
+  note: String
+  title: String!
 }
 
 input UpdatePreferencesInput {

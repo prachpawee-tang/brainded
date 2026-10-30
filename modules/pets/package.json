@@ -9,7 +9,8 @@
     "./shared": "./shared/validation.ts",
     "./api": "./api/index.ts",
     "./app": "./app/index.ts",
-    "./shared/health": "./shared/health.ts"
+    "./shared/health": "./shared/health.ts",
+    "./shared/reminders": "./shared/reminders.ts"
   },
   "scripts": {
     "test": "vitest run && jest",
