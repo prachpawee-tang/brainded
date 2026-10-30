@@ -355,7 +355,7 @@ Full plan with scope per phase: **`docs/roadmap.md`** (agreed 2026-10-30). Summa
 | 3b. Pets reminders ✅ | To-dos (core `Task`) + on-device notifications (planned from data, `expo-notifications`) |
 | 4. Vet results v2 ✅ | Sections, qualitative values, unit multipliers, species test catalog + Thai names, per-test trends, edit |
 | 5. AI foundation | `packages/ai`, input safety, cost caps, lab-report import (photo/text → reviewed draft), pet body analysis |
-| 6a. Colors module ✅ | Wada color combinations: search, nearest color, pick from photo, favorites |
+| 6a. Colors module ✅ | Wada color combinations: browse, search, nearest color (ΔE OKLab), copy codes, favorites. **6b next:** pick a color from a photo |
 | 7. Nutrition module | Meal log, targets from body profile, macro progress; 7b meal-photo AI |
 | 8. AI chat + core | Read-only tools per module, cited answers; quick capture, global search, tags, links |
 | 9. People module | Plain personal CRM: people, topic facts, typed relationships, filters (no bubble/gamification) |
