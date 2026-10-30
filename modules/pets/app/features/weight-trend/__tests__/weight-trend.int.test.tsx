@@ -1,5 +1,4 @@
-import { screen, userEvent } from '@testing-library/react-native'
-import { router } from 'expo-router'
+import { screen, userEvent, within } from '@testing-library/react-native'
 import { rangeSince } from '../../../lib/format'
 import { PET_ID } from '../../../test/fixtures'
 import { weightsMock } from '../../../test/health-fixtures'
@@ -48,21 +47,22 @@ describe('WeightTrendCard', () => {
     expect(screen.getByText('+1.3 kg')).toBeOnTheScreen()
   })
 
-  it('asks for more data with fewer than two weights and links to the full log', async () => {
-    const user = userEvent.setup()
+  it('asks for more data with fewer than two weights', async () => {
     await renderPets(<WeightTrendCard petId={PET_ID} />, {
       mocks: [weightsMock(SIX_MONTHS, [[4000, '2026-10-01']])],
     })
     expect(await screen.findByText('Log two weights to see the trend')).toBeOnTheScreen()
-    await user.press(screen.getByRole('button', { name: 'All weights' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/weights`)
   })
 })
 
 describe('WeightsScreen', () => {
-  it('lists every weight, newest first', async () => {
-    await renderPets(<WeightsScreen />, { mocks: [weightsMock(null, WEIGHTS)] })
-    const rows = await screen.findAllByText(/kg$/)
+  it('shows the trend above every weight, newest first', async () => {
+    await renderPets(<WeightsScreen />, {
+      mocks: [weightsMock(null, WEIGHTS), weightsMock(SIX_MONTHS, WEIGHTS)],
+    })
+    expect(await screen.findByRole('radio', { name: '6M' })).toBeChecked()
+    expect(await screen.findByText('Average')).toBeOnTheScreen()
+    const rows = within(await screen.findByTestId('weight-log')).getAllByText(/kg$/)
     expect(rows.map((r) => r.props.children)).toEqual(['4.3 kg', '4.4 kg', '4 kg'])
   })
 })

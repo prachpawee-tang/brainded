@@ -1,7 +1,5 @@
 import { useQuery } from '@apollo/client/react'
-import { IconButton, LineChart, SegmentedControl, Skeleton, Text } from '@brain/ui'
-import { router } from 'expo-router'
-import { List } from 'lucide-react-native'
+import { LineChart, SegmentedControl, Skeleton, Text } from '@brain/ui'
 import { useState } from 'react'
 import { View } from 'react-native'
 import { weightStats } from '../../../../shared/health'
@@ -82,24 +80,14 @@ export const WeightTrendCard = ({ petId }: { petId: string }) => {
   }
 
   return (
-    <View className="gap-3">
-      <View className="-mr-2 flex-row items-center justify-between">
-        <Text variant="heading">{t('weight.title')}</Text>
-        <IconButton
-          icon={List}
-          label={t('weight.allWeights')}
-          onPress={() => router.push(`/pets/${petId}/weights`)}
-        />
-      </View>
-      <View className="gap-4 rounded-xl border border-border bg-surface p-4">
-        <SegmentedControl
-          label={t('weight.title')}
-          options={WEIGHT_RANGES.map((value) => ({ value, label: t(`weight.ranges.${value}`) }))}
-          value={range}
-          onChange={setRange}
-        />
-        {chart()}
-      </View>
+    <View className="gap-4 rounded-xl border border-border bg-surface p-4">
+      <SegmentedControl
+        label={t('weight.title')}
+        options={WEIGHT_RANGES.map((value) => ({ value, label: t(`weight.ranges.${value}`) }))}
+        value={range}
+        onChange={setRange}
+      />
+      {chart()}
     </View>
   )
 }

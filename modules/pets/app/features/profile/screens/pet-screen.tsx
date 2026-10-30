@@ -10,16 +10,11 @@ import { usePetsAccent } from '../../../lib/accent'
 import { speciesEmoji } from '../../../lib/format'
 import { goBack } from '../../../lib/navigation'
 import { usePetLabels } from '../../../lib/use-pet-labels'
-import { AppointmentsSection } from '../../appointments/components/appointments-section'
-import { LabResultsSection } from '../../labs/components/lab-results-section'
 import { NoteSheet } from '../../logging/components/note-sheet'
 import { WeightSheet } from '../../logging/components/weight-sheet'
-import { MedicationsSection } from '../../medications/components/medications-section'
-import { TasksSection } from '../../tasks/components/tasks-section'
 import { TodayCard } from '../../today/components/today-card'
-import { WeightTrendCard } from '../../weight-trend/components/weight-trend-card'
+import { DetailLinks } from '../components/detail-links'
 import { KeyFacts } from '../components/key-facts'
-import { PetTimeline } from '../components/pet-timeline'
 
 const SAVED_BANNER_MS = 2500
 
@@ -87,6 +82,7 @@ export const PetScreen = () => {
               className="flex-1"
               icon={Scale}
               label={t('profile.logWeight')}
+              accessibilityLabel={t('weightSheet.title')}
               onPress={() => setOpenSheet('weight')}
             />
             <Button
@@ -94,6 +90,7 @@ export const PetScreen = () => {
               variant="secondary"
               icon={NotebookPen}
               label={t('profile.addNote')}
+              accessibilityLabel={t('noteSheet.title')}
               onPress={() => setOpenSheet('note')}
             />
           </View>
@@ -136,16 +133,7 @@ export const PetScreen = () => {
       </View>
 
       <TodayCard petId={pet.id} />
-      <WeightTrendCard petId={pet.id} />
-      <LabResultsSection petId={pet.id} />
-      <MedicationsSection petId={pet.id} />
-      <AppointmentsSection petId={pet.id} />
-      <TasksSection petId={pet.id} />
-
-      <View className="gap-3">
-        <Text variant="heading">{t('profile.timeline')}</Text>
-        <PetTimeline petId={pet.id} />
-      </View>
+      <DetailLinks petId={pet.id} />
 
       <WeightSheet
         petId={pet.id}

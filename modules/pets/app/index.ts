@@ -2,6 +2,7 @@
 
 export { AppointmentsScreen } from './features/appointments/screens/appointments-screen'
 export { PetEditorScreen } from './features/editor/screens/pet-editor-screen'
+export { HistoryScreen } from './features/history/screens/history-screen'
 export { LabResultEditorScreen } from './features/labs/screens/lab-result-editor-screen'
 export { LabResultScreen } from './features/labs/screens/lab-result-screen'
 export { LabResultsScreen } from './features/labs/screens/lab-results-screen'

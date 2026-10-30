@@ -12,7 +12,6 @@ import { PET_ID } from '../../../test/fixtures'
 import { appointmentsMock, inDays, TODAY } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
 import { AppointmentSheet } from '../components/appointment-sheet'
-import { AppointmentsSection } from '../components/appointments-section'
 import { AppointmentsScreen } from '../screens/appointments-screen'
 
 jest.mock('expo-router', () => ({
@@ -36,37 +35,6 @@ const existing = {
   note: null,
   status: 'SCHEDULED' as const,
 }
-
-describe('AppointmentsSection', () => {
-  beforeEach(() => jest.clearAllMocks())
-
-  it('shows only upcoming scheduled appointments', async () => {
-    const user = userEvent.setup()
-    await renderPets(<AppointmentsSection petId={PET_ID} />, {
-      mocks: [appointmentsMock(APPOINTMENTS)],
-    })
-    expect(await screen.findByRole('button', { name: 'Vaccines' })).toBeOnTheScreen()
-    expect(screen.getByRole('button', { name: 'Dental' })).toBeOnTheScreen()
-    expect(screen.queryByText('Old checkup')).not.toBeOnTheScreen()
-    expect(screen.queryByText('Skipped')).not.toBeOnTheScreen()
-    await user.press(screen.getByRole('button', { name: 'See all' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/appointments`)
-  })
-
-  it('opens the editor for an appointment', async () => {
-    const user = userEvent.setup()
-    await renderPets(<AppointmentsSection petId={PET_ID} />, {
-      mocks: [appointmentsMock(APPOINTMENTS)],
-    })
-    await user.press(await screen.findByRole('button', { name: 'Vaccines' }))
-    expect(screen.getByRole('header', { name: 'Edit appointment' })).toBeOnTheScreen()
-  })
-
-  it('says when nothing is coming up', async () => {
-    await renderPets(<AppointmentsSection petId={PET_ID} />, { mocks: [appointmentsMock([])] })
-    expect(await screen.findByText('No upcoming appointments')).toBeOnTheScreen()
-  })
-})
 
 describe('AppointmentSheet', () => {
   beforeEach(() => jest.clearAllMocks())

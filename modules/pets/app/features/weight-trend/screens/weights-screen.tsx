@@ -5,8 +5,9 @@ import { View } from 'react-native'
 import { HeaderBar } from '../../../components/header-bar'
 import { PetWeightsQuery } from '../../../graphql/health'
 import { usePetLabels } from '../../../lib/use-pet-labels'
+import { WeightTrendCard } from '../components/weight-trend-card'
 
-/** The full weight log — the accessible table view behind the chart. */
+/** Weight trend (chart + stats) above the full log, which is also the chart's accessible table. */
 export const WeightsScreen = () => {
   const { id } = useLocalSearchParams<{ id: string }>()
   const labels = usePetLabels()
@@ -17,13 +18,14 @@ export const WeightsScreen = () => {
   return (
     <ScreenLayout>
       <HeaderBar backLabel={t('common.back')} fallbackHref={`/pets/${id}`} />
-      <Text variant="display">{t('weight.listTitle')}</Text>
+      <Text variant="display">{t('weight.title')}</Text>
+      <WeightTrendCard petId={id} />
       {loading && !data ? (
         <Skeleton className="h-40 rounded-xl" />
       ) : weights.length === 0 ? (
         <EmptyState glyph="⚖️" message={t('overview.noWeight')} />
       ) : (
-        <View className="rounded-xl border border-border bg-surface px-4">
+        <View testID="weight-log" className="rounded-xl border border-border bg-surface px-4">
           {weights.map((weight) => (
             <ListItem
               key={weight.id}

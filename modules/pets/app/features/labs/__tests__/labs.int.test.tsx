@@ -10,7 +10,6 @@ import {
 import { PET_ID } from '../../../test/fixtures'
 import { labsMock, TODAY } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
-import { LabResultsSection } from '../components/lab-results-section'
 import { LabResultEditorScreen } from '../screens/lab-result-editor-screen'
 import { LabResultScreen } from '../screens/lab-result-screen'
 import { LabResultsScreen } from '../screens/lab-results-screen'
@@ -95,26 +94,6 @@ const detailMock = {
 beforeEach(() => {
   jest.clearAllMocks()
   params.mockReturnValue({ id: PET_ID, labId: 'l1' })
-})
-
-describe('LabResultsSection', () => {
-  it('shows the latest results with their status and links', async () => {
-    const user = userEvent.setup()
-    await renderPets(<LabResultsSection petId={PET_ID} />, { mocks: [labsMock(LABS, 2)] })
-    expect(await screen.findByText('2 outside range')).toBeOnTheScreen()
-    expect(screen.getByText('All in range')).toBeOnTheScreen()
-    await user.press(screen.getByRole('button', { name: 'Blood test' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/labs/l1`)
-    await user.press(screen.getByRole('button', { name: 'Add results' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/labs/new`)
-    await user.press(screen.getByRole('button', { name: 'See all' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/labs`)
-  })
-
-  it('invites adding the first result', async () => {
-    await renderPets(<LabResultsSection petId={PET_ID} />, { mocks: [labsMock([], 2)] })
-    expect(await screen.findByText('No results yet. Add them after a vet visit.')).toBeOnTheScreen()
-  })
 })
 
 describe('LabResultsScreen', () => {

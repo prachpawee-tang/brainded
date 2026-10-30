@@ -2,13 +2,7 @@ import { toIsoDate } from '@brain/ui'
 import { screen, userEvent, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { AddPetNoteMutation, LogPetWeightMutation } from '../../../graphql/pets'
-import {
-  buildProfile,
-  PET_ID,
-  profileMock,
-  timelineEdge,
-  timelineMock,
-} from '../../../test/fixtures'
+import { buildProfile, PET_ID, profileMock } from '../../../test/fixtures'
 import { renderPets } from '../../../test/render'
 import { PetScreen } from '../screens/pet-screen'
 
@@ -19,18 +13,9 @@ jest.mock('expo-router', () => ({
 
 const TODAY = toIsoDate(new Date())
 
-const timeline = timelineMock(
-  [
-    timelineEdge('e1', { kind: 'NOTE_VACCINE', occurredOn: '2026-10-05', body: 'Yearly shots' }),
-    timelineEdge('e2', { kind: 'WEIGHT', occurredOn: '2026-10-01', weightGrams: 4350 }),
-    timelineEdge('e3', { kind: 'NOTE_VET_VISIT', occurredOn: '2026-09-12', body: 'Checkup' }),
-  ],
-  { hasNextPage: true },
-)
-
 const setup = async (mocks: unknown[] = []) => {
   const user = userEvent.setup()
-  await renderPets(<PetScreen />, { mocks: [profileMock(), timeline, ...(mocks as never[])] })
+  await renderPets(<PetScreen />, { mocks: [profileMock(), ...(mocks as never[])] })
   await screen.findByRole('header', { name: 'Mango' })
   return user
 }
@@ -47,23 +32,11 @@ describe('PetScreen', () => {
     expect(screen.getByText('Allergic to chicken')).toBeOnTheScreen()
   })
 
-  it('shows the history grouped by month', async () => {
+  it('keeps the first screen to essentials and links to the details', async () => {
     await setup()
-    expect(await screen.findByText('Yearly shots')).toBeOnTheScreen()
-    expect(screen.getByText('Vaccine')).toBeOnTheScreen()
-    expect(screen.getByText('Weight 4.35 kg')).toBeOnTheScreen()
-    expect(screen.getByText('October 2026')).toBeOnTheScreen()
-    expect(screen.getByText('September 2026')).toBeOnTheScreen()
-  })
-
-  it('loads older history', async () => {
-    const user = await setup([
-      timelineMock([timelineEdge('e4', { occurredOn: '2026-08-01', body: 'Older note' })], {
-        after: 'c-e3',
-      }),
-    ])
-    await user.press(await screen.findByRole('button', { name: 'Show older' }))
-    expect(await screen.findByText('Older note')).toBeOnTheScreen()
+    expect(screen.getByText('Details')).toBeOnTheScreen()
+    expect(screen.getByRole('button', { name: /^History/ })).toBeOnTheScreen()
+    expect(screen.queryByText('Yearly shots')).not.toBeOnTheScreen()
   })
 
   it('logs a weight from the quick-log sheet', async () => {
@@ -98,9 +71,8 @@ describe('PetScreen', () => {
         },
         result,
       },
-      timeline,
     ])
-    await user.press(screen.getByRole('button', { name: 'Weight' }))
+    await user.press(screen.getByRole('button', { name: 'Log weight' }))
     await user.type(screen.getByLabelText('Weight (kg)'), '4,5')
     await user.press(screen.getByRole('button', { name: 'Save' }))
     await waitFor(() => expect(result).toHaveBeenCalled())
@@ -109,7 +81,7 @@ describe('PetScreen', () => {
 
   it('validates the weight before saving', async () => {
     const user = await setup()
-    await user.press(screen.getByRole('button', { name: 'Weight' }))
+    await user.press(screen.getByRole('button', { name: 'Log weight' }))
     await user.type(screen.getByLabelText('Weight (kg)'), '0')
     await user.press(screen.getByRole('button', { name: 'Save' }))
     expect(await screen.findByText("That's below 0.1 kg")).toBeOnTheScreen()
@@ -129,9 +101,8 @@ describe('PetScreen', () => {
         },
         result,
       },
-      timeline,
     ])
-    await user.press(screen.getByRole('button', { name: 'Note' }))
+    await user.press(screen.getByRole('button', { name: 'Add a note' }))
     await user.press(screen.getByRole('radio', { name: 'Vaccine' }))
     await user.type(screen.getByLabelText('What happened?'), 'Rabies')
     await user.press(screen.getByRole('button', { name: 'Save' }))
@@ -145,7 +116,7 @@ describe('PetScreen', () => {
   })
 
   it('handles a missing pet', async () => {
-    await renderPets(<PetScreen />, { mocks: [profileMock(null), timelineMock([])] })
+    await renderPets(<PetScreen />, { mocks: [profileMock(null)] })
     expect(await screen.findByText("We couldn't find this pet")).toBeOnTheScreen()
   })
 
@@ -161,14 +132,10 @@ describe('PetScreen', () => {
             breed: null,
           }),
         ),
-        timelineMock([]),
       ],
     })
     expect(await screen.findByText('Birthday not set')).toBeOnTheScreen()
     expect(screen.getByText('No weight yet')).toBeOnTheScreen()
     expect(screen.getByText('No notes')).toBeOnTheScreen()
-    expect(
-      await screen.findByText('Nothing logged yet. Start with a weight or a note.'),
-    ).toBeOnTheScreen()
   })
 })

@@ -1,18 +1,14 @@
 import { screen, userEvent, waitFor } from '@testing-library/react-native'
-import { router } from 'expo-router'
 import { Alert } from 'react-native'
 import {
   AddPetTaskMutation,
   DeletePetTaskMutation,
-  SetPetTaskDoneMutation,
   UpdatePetTaskMutation,
 } from '../../../graphql/tasks'
 import { PET_ID } from '../../../test/fixtures'
-import { daysFromToday } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
 import { tasksMock } from '../../../test/task-fixtures'
 import { TaskSheet } from '../components/task-sheet'
-import { TasksSection } from '../components/tasks-section'
 import { TasksScreen } from '../screens/tasks-screen'
 
 jest.mock('expo-router', () => ({
@@ -20,7 +16,7 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'UGV0OnBldC0x' }),
 }))
 
-const doneResult = (id: string, completedAt: string | null) =>
+const _doneResult = (id: string, completedAt: string | null) =>
   jest.fn(() => ({
     data: {
       setPetTaskDone: {
@@ -29,51 +25,6 @@ const doneResult = (id: string, completedAt: string | null) =>
       },
     },
   }))
-
-describe('TasksSection', () => {
-  beforeEach(() => jest.clearAllMocks())
-
-  it('lists open to-dos with due labels and ticks one off', async () => {
-    const user = userEvent.setup()
-    const result = doneResult('t1', '2026-11-04T03:00:00.000Z')
-    await renderPets(<TasksSection petId={PET_ID} />, {
-      mocks: [
-        tasksMock([
-          { id: 't1', title: 'Buy flea drops', dueOn: daysFromToday(-1) },
-          { id: 't2', title: 'Book grooming', dueOn: daysFromToday(0) },
-          { id: 't3', title: 'Someday' },
-        ]),
-        {
-          request: {
-            query: SetPetTaskDoneMutation,
-            variables: { input: { id: 't1', done: true } },
-          },
-          result,
-        },
-      ],
-    })
-    expect(await screen.findByText(/^Overdue · /)).toBeOnTheScreen()
-    expect(screen.getByText('Today')).toBeOnTheScreen()
-    await user.press(screen.getByRole('checkbox', { name: 'Buy flea drops' }))
-    await waitFor(() => expect(result).toHaveBeenCalled())
-    await user.press(screen.getByRole('button', { name: 'See all' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/tasks`)
-  })
-
-  it('opens the editor for a to-do and for a new one', async () => {
-    const user = userEvent.setup()
-    await renderPets(<TasksSection petId={PET_ID} />, {
-      mocks: [tasksMock([{ id: 't3', title: 'Someday' }])],
-    })
-    await user.press(await screen.findByRole('button', { name: 'Someday' }))
-    expect(screen.getByRole('header', { name: 'Edit to-do' })).toBeOnTheScreen()
-  })
-
-  it('says when there is nothing to do', async () => {
-    await renderPets(<TasksSection petId={PET_ID} />, { mocks: [tasksMock([])] })
-    expect(await screen.findByText('Nothing to do')).toBeOnTheScreen()
-  })
-})
 
 describe('TaskSheet', () => {
   beforeEach(() => jest.clearAllMocks())

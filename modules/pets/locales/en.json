@@ -279,5 +279,18 @@
     "appointment2h": "Vet visit in 2 hours",
     "taskTitle": "📝 {{pet}} · {{title}}",
     "taskBody": "Due today"
+  },
+  "details": {
+    "title": "Details",
+    "weightCount_one": "{{count}} entry",
+    "weightCount_other": "{{count}} entries",
+    "labsLatest": "{{title}} · {{date}}",
+    "labsEmpty": "No results yet",
+    "medsActive_one": "{{count}} active",
+    "medsActive_other": "{{count}} active",
+    "nextAppointment": "Next: {{when}}",
+    "tasksOpen_one": "{{count}} open",
+    "tasksOpen_other": "{{count}} open",
+    "historyHint": "Everything logged, newest first"
   }
 }

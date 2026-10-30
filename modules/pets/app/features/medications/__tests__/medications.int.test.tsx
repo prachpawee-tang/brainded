@@ -1,11 +1,9 @@
 import { screen, userEvent, waitFor } from '@testing-library/react-native'
-import { router } from 'expo-router'
 import { AddPetMedicationMutation, UpdatePetMedicationMutation } from '../../../graphql/health'
 import { PET_ID } from '../../../test/fixtures'
 import { medicationsMock, TODAY } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
 import { MedicationSheet } from '../components/medication-sheet'
-import { MedicationsSection } from '../components/medications-section'
 import { MedicationsScreen } from '../screens/medications-screen'
 
 jest.mock('expo-router', () => ({
@@ -28,33 +26,6 @@ const addResult = () =>
       },
     },
   }))
-
-describe('MedicationsSection', () => {
-  beforeEach(() => jest.clearAllMocks())
-
-  it('lists current medications with their schedule and hides ended ones', async () => {
-    const user = userEvent.setup()
-    await renderPets(<MedicationsSection petId={PET_ID} />, { mocks: [medicationsMock(MEDS)] })
-    expect(await screen.findByText('08:00, 20:00 · Daily')).toBeOnTheScreen()
-    expect(screen.getByText('09:00 · Every 30 days')).toBeOnTheScreen()
-    expect(screen.queryByText('Antibiotic')).not.toBeOnTheScreen()
-    await user.press(screen.getByRole('button', { name: 'See all' }))
-    expect(router.push).toHaveBeenCalledWith(`/pets/${PET_ID}/medications`)
-  })
-
-  it('opens the editor prefilled when a medication is tapped', async () => {
-    const user = userEvent.setup()
-    await renderPets(<MedicationsSection petId={PET_ID} />, { mocks: [medicationsMock(MEDS)] })
-    await user.press(await screen.findByRole('button', { name: 'Apoquel' }))
-    expect(screen.getByRole('header', { name: 'Edit medication' })).toBeOnTheScreen()
-    expect(screen.getByDisplayValue('½ tablet')).toBeOnTheScreen()
-  })
-
-  it('says when there are none', async () => {
-    await renderPets(<MedicationsSection petId={PET_ID} />, { mocks: [medicationsMock([])] })
-    expect(await screen.findByText('No medications')).toBeOnTheScreen()
-  })
-})
 
 describe('MedicationSheet', () => {
   beforeEach(() => jest.clearAllMocks())

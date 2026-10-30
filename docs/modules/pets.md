@@ -86,7 +86,9 @@ Success:
 - The profile shows the next upcoming appointment. Marking it done writes a timeline event (`APPOINTMENT_DONE`) and offers "add results".
 
 ### Profile layout (top to bottom)
-Hero, key facts, **Today** (doses due + next appointment), **Weight** (chart + stats), **Vet results** (latest 2 + see all), **Medications** (active), **Appointments** (upcoming), timeline. The quick-log bar stays pinned.
+**Decision (2026-10-30): the profile shows only what is needed now; depth lives on its own pages.**
+Hero, key facts, **Today** (doses and due to-dos to tick + next appointment), then **Details**: one row per page with a one-line summary — Weight (chart + stats + log), Vet results (latest, abnormal badge), Medications (active count), Appointments (next), To-dos (open count), History (timeline). The quick-log bar stays pinned.
+A ticked to-do stays struck through for ~1.5 s before it leaves Today.
 
 ## Phase 3b — to-dos + reminders
 
