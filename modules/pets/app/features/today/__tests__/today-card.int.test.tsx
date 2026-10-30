@@ -1,6 +1,7 @@
 import { screen, userEvent, waitFor } from '@testing-library/react-native'
 import { router } from 'expo-router'
 import { SetDoseTakenMutation } from '../../../graphql/health'
+import { SetPetTaskDoneMutation } from '../../../graphql/tasks'
 import { PET_ID } from '../../../test/fixtures'
 import { daysFromToday, inDays, TODAY, todayMock } from '../../../test/health-fixtures'
 import { renderPets } from '../../../test/render'
@@ -88,5 +89,40 @@ describe('TodayCard to-dos', () => {
     expect(screen.getByRole('checkbox', { name: 'Due today' })).toBeOnTheScreen()
     expect(screen.queryByText('Next week')).not.toBeOnTheScreen()
     expect(screen.queryByText('No date')).not.toBeOnTheScreen()
+  })
+})
+
+describe('TodayCard ticking a to-do', () => {
+  it('keeps it struck through for a moment before it goes', async () => {
+    const user = userEvent.setup()
+    const task = { id: 't1', title: 'Due today', dueOn: daysFromToday(0) }
+    const result = jest.fn(() => ({
+      data: {
+        setPetTaskDone: {
+          __typename: 'MutationSetPetTaskDoneSuccess',
+          data: { __typename: 'PetTask', id: 't1', completedAt: new Date().toISOString() },
+        },
+      },
+    }))
+    await renderPets(<TodayCard petId={PET_ID} />, {
+      mocks: [
+        todayMock([], null, [task]),
+        {
+          request: {
+            query: SetPetTaskDoneMutation,
+            variables: { input: { id: 't1', done: true } },
+          },
+          result,
+        },
+        todayMock([], null, []),
+      ],
+    })
+    await user.press(await screen.findByRole('checkbox', { name: 'Due today' }))
+    expect(screen.getByRole('checkbox', { name: 'Due today' })).toBeChecked()
+    await waitFor(() => expect(result).toHaveBeenCalled())
+    expect(screen.getByText('Due today')).toBeOnTheScreen()
+    await waitFor(() => expect(screen.queryByText('Due today')).not.toBeOnTheScreen(), {
+      timeout: 3000,
+    })
   })
 })

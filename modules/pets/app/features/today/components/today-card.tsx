@@ -7,7 +7,7 @@ import { PetTodayQuery, SetDoseTakenMutation } from '../../../graphql/health'
 import { usePetLabels } from '../../../lib/use-pet-labels'
 import { TaskRows } from '../../tasks/components/task-rows'
 import { isDue } from '../../tasks/lib/types'
-import { useToggleTask } from '../../tasks/lib/use-toggle-task'
+import { useLingeringToggle } from '../../tasks/lib/use-lingering-toggle'
 
 /** What needs doing for this pet today: doses and due to-dos to tick off + the next vet visit. */
 export const TodayCard = ({ petId }: { petId: string }) => {
@@ -18,8 +18,7 @@ export const TodayCard = ({ petId }: { petId: string }) => {
   const [setDoseTaken] = useMutation(SetDoseTakenMutation)
   const doses = data?.pet?.dosesOn ?? []
   const next = data?.pet?.nextAppointment
-  const toggleTask = useToggleTask()
-  const dueTasks = (data?.pet?.tasks ?? []).filter((task) => isDue(task, date))
+  const dueTasks = useLingeringToggle((data?.pet?.tasks ?? []).filter((task) => isDue(task, date)))
 
   const toggle = (dose: (typeof doses)[number], taken: boolean) =>
     setDoseTaken({
@@ -72,7 +71,7 @@ export const TodayCard = ({ petId }: { petId: string }) => {
             )
           })
         )}
-        <TaskRows tasks={dueTasks} onToggle={(task, done) => toggleTask(task.id, done)} />
+        <TaskRows tasks={dueTasks.rows} onToggle={dueTasks.onToggle} />
         <View className="my-1 h-px bg-border" />
         {next ? (
           <ListItem
